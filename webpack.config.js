@@ -4,7 +4,7 @@ var buildPath = path.join(__dirname, 'dist');
 var webpack = require('webpack');
 
 module.exports = {
-  entry: path.join(clientSrcPath, 'public', 'app.js'),
+  entry: path.join(clientSrcPath, 'public', 'client-start.js'),
   output: {
     path: buildPath,
     publicPath: '/dist/',

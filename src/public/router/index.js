@@ -12,8 +12,8 @@ export default new Router({
   routes: [
     { path: '/notifications-status', component: templatesList },
     { path: '/notifications-sent', name: 'new', component: templatesList },
-    { path: '/templates', component: templatesList },
+    { path: '/templates-list', component: templatesList },
     { path: '/campaigns', component: campaignsList },
-    { path: '/', redirect: '/templates' }
+    { path: '/', redirect: '/templates-list' }
   ]
 })

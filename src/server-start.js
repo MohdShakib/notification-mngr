@@ -7,8 +7,11 @@ var express = require('express'),
     favicon = require('serve-favicon'),
     bodyParser = require('body-parser'),
     compression = require('compression'),
-    logger = require('services/loggerService');
+    logger = require('services/loggerService'),
+    routeService = require('services/routeService');
 
+    var CONFIG_PATH = process.env.CONFIG_PATH || path.join(__dirname, '..', '.env');
+    require('dotenv').config({path: CONFIG_PATH});
 
 var app = express();
 
@@ -66,13 +69,7 @@ app.use(bodyParser.urlencoded({
 
 app.locals.environment = app.get('env'); //environment setting
 
-
-app.use('*', function(req, res, next){
-    logger.info('hi...... yoho....');
-    res.send({
-        message : 'Hi man !!'
-    })
-});
-
+// Routing
+routeService.setup(app, router); // handles all routing related logic
 
 module.exports = app;

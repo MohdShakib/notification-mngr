@@ -10,9 +10,6 @@ var app = require('server-start');
 var http = require('http');
 var logger = require('services/loggerService');
 
-var CONFIG_PATH = process.env.CONFIG_PATH || path.join(__dirname, '..', '.env');
-require('dotenv').config({path: CONFIG_PATH});
-
 var port = normalizePort(process.env.PORT);
 app.set('port', port);
 

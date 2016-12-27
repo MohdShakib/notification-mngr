@@ -19,5 +19,7 @@ module.exports.setup = function(app, router){
         return next();
     });
 
+
     app.get('/templates-details', require('api-handlers/templatesDetails'));
+    app.get('/notifications-details', require('api-handlers/notificationsDetails'));
 }

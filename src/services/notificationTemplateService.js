@@ -123,13 +123,16 @@ function getAllTemplates(mediumId) {
 //
 // }
 //
-// function getNotificationTypesByMedium(mediumId) {
-//     var query = 'SELECT t2.id, t2.name AS name FROM notification.notification_type_notification_medium_mapping t1 JOIN notification_type t2 ON t2.id=t1.notification_type_id where notification_medium_id = ' + mediumId + ' ORDER BY t2.name';
-//     return mysqlService.execQuery(query).then(function(rows) {
-//
-//         return rows;
-//     });
-// }
+
+function getNotificationTypesByMedium(mediumId) {
+    var query = `SELECT t2.id, t2.name AS name FROM ${tables.NOTIFICATION_TYPE_NOTIFICATION_MEDIUM_MAPPING} t1
+    JOIN ${tables.NOTIFICATION_TYPE} t2 ON t2.id=t1.notification_type_id
+    where notification_medium_id = ${mediumId}
+    ORDER BY t2.name`;
+    return mysqlService.execQuery(query).then(function(rows) {
+        return rows;
+    });
+}
 //
 // function getBlogEmailId() {
 //     var query = 'SELECT t1.id, t2.name FROM `notification_type_notification_medium_mapping` t1 JOIN notification_type t2 ON t2.id=t1.notification_type_id WHERE t1.notification_medium_id = 1';
@@ -148,5 +151,6 @@ function getAllTemplates(mediumId) {
 // }
 
 module.exports = {
-    getAllTemplates
+    getAllTemplates,
+    getNotificationTypesByMedium
 }

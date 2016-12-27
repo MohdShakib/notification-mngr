@@ -12,10 +12,10 @@ pre {
 <template>
 
 <tr>
-    <td class="col-lg-1 text-center">{{index + 1}}</td>
-    <td class="col-lg-1">{{item.mediumname}}</td>
-    <td class="col-lg-1">{{item.notificationname}}</td>
-    <td class="col-lg-5">
+    <td class="text-center">{{index + 1}}</td>
+    <td>{{item.mediumname}}</td>
+    <td>{{item.notificationname}}</td>
+    <td>
         <template v-if="item.type == 'object' ">
             <div class="">
                 <code>{{item.prop1}}</code>
@@ -28,7 +28,7 @@ pre {
             <pre>{{item.template}}</pre>
         </template>
     </td>
-    <td class="col-lg-4 text-center">
+    <td class="text-center">
         <form class="form-group">
             <button type="button" class="btn btn-primary" >
                 <span class="glyphicon glyphicon-pencil"></span>
@@ -51,11 +51,8 @@ pre {
 
 <script>
 
-import modal from '../../components/modal.vue'
-
 export default {
     name: 'templates-item',
-    components: { modal },
     props: ['item', 'index']
 }
 

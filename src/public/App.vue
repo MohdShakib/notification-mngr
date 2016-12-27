@@ -23,7 +23,7 @@
                             <router-link to="/notifications-status">Notification Status</router-link>
                         </li>
                         <li>
-                            <router-link to="/templates">Templates</router-link>
+                            <router-link to="/templates-list">Templates</router-link>
                         </li>
                         <li>
                             <router-link to="/campaigns">Campaigns</router-link>
@@ -40,7 +40,7 @@
         </div>
     </nav>
 
-    <modal2 :show="showModal"></modal2>
+    <!-- <modal2 :show="showModal"></modal2> -->
 
     <!-- </header> -->
     <div class="container-fluid">

@@ -69,6 +69,11 @@ app.use(bodyParser.urlencoded({
 
 app.locals.environment = app.get('env'); //environment setting
 
+app.use(function(req, res, next){
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8080');
+    next();
+});
+
 // Routing
 routeService.setup(app, router); // handles all routing related logic
 

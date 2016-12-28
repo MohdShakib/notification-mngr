@@ -100,7 +100,7 @@ function getNotificationGenerated({notificationTypeId, mediumId, status, openSta
             t1.updated_at AS updatedAt ${openQuerySelector} FROM
             ( ${subQuery} ) t1
             JOIN notification_medium t2 ON t2.id=t1.notification_medium_id
-            JOIN notification_type t3 ON t3.id=t1.notification_type_id  ${orderPrefix} + t1.${orderSuffix}`;
+            JOIN notification_type t3 ON t3.id=t1.notification_type_id ${orderPrefix} t1.${orderSuffix}`;
 
     if (showCount) {
         return mysqlService.execQuery(subQuery).then(function(rows) {

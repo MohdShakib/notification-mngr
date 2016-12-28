@@ -20,6 +20,6 @@ module.exports.setup = function(app, router){
     });
 
 
-    app.get('/templates-details', require('api-handlers/templatesDetails'));
-    app.get('/notifications-details', require('api-handlers/notificationsDetails'));
+    app.get('/template-listings', require('api-handlers/templateListings'));
+    app.get('/notification-listings', require('api-handlers/notificationListings'));
 }

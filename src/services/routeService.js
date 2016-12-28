@@ -20,7 +20,10 @@ module.exports.setup = function(app, router){
     });
 
 
-    app.get('/template-listings', require('api-handlers/templateListings'));
     app.get('/template-detail', require('api-handlers/templateDetail'));
+    app.get('/template-listings', require('api-handlers/templateListings'));
+    app.get('/notification-types', require('api-handlers/notificationDetail').notificationTypesList);
+    app.get('/notification-mediums', require('api-handlers/notificationDetail').notificationMediumsList);
+    app.get('/notification-detail/:id', require('api-handlers/notificationDetail').notificationDetailsById);
     app.get('/notification-listings', require('api-handlers/notificationListings'));
 }

@@ -1,3 +1,5 @@
+"use strict";
+
 var notificationTemplateService = require('../services/queries/notificationTemplateQuery'),
     templateParser = require('../parsers/templateParser'),
     getData = require('velocity').Data

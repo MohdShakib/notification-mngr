@@ -1,3 +1,4 @@
+"use strict";
 //var notificationTemplateService = require('../services/notificationTemplateService');
 //var notificationMediumsService = require('../services/notificationMediumsService');
 //var notificationTypesService = require('../services/notificationTypesService');

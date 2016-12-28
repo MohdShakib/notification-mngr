@@ -1,3 +1,5 @@
+"use strict";
+
 var mysqlService = require('./mysqlService');
 
 var tables = {
@@ -26,8 +28,8 @@ function getAllTemplates(mediumId) {
     });
 }
 
-function checkExistingTemplate(typeid, mediumid) {
-    var obj = [typeid, mediumid];
+function checkExistingTemplate(typeId, mediumId) {
+    var obj = [typeId, mediumId];
     var query = `SELECT * FROM ${tables.NOTIFICATION_TYPE_NOTIFICATION_MEDIUM_MAPPING}
     WHERE notification_type_id =? AND notification_medium_id=?`;
 

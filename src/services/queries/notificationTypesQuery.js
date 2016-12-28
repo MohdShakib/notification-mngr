@@ -1,3 +1,5 @@
+"use strict";
+
 var mysqlService = require('./mysqlService');
 
 var NOTIFICATION_TYPE = 'notification.notification_type';

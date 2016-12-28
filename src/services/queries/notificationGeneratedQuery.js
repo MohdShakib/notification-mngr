@@ -1,3 +1,4 @@
+"use strict";
 var mysqlService = require('./mysqlService');
 
 var tables = {
@@ -219,32 +220,35 @@ function getMediumsCountByStatus(queryParams) {
     });
 }
 
+*/
+
 function getNotificationDataByGeneratedId(id) {
-    var query = 'SELECT ' +
-        'nmt.name as mediumName, ' +
-        'ngt.notification_medium_id as mediumId, ' +
-        'ngt.notification_message_id as messageId, ' +
-        'nolt.id as isOpen, ' +
-        'ntt.name as typeName, ' +
-        'ngt.notification_type_id as typeId, ' +
-        'ngt.user_id as user_id, ' +
-        'ngt.id as id, ' +
-        'ngt.status as status, ' +
-        'ngt.created_at as created_at, ' +
-        'ngt.schedule_date as schedule_date, ' +
-        'ngt.data as data ' +
-        'FROM notification_generated ngt ' +
-        'JOIN notification_medium nmt ON ngt.notification_medium_id = nmt.id ' +
-        'JOIN notification_type ntt ON ngt.notification_type_id = ntt.id ' +
-        'left outer join notification_opened nolt on ngt.id = nolt.notification_generated_id ' +
-        'where ngt.id = ' + id + ';';
+    var query = `SELECT
+        nmt.name as mediumName,
+        ngt.notification_medium_id as mediumId,
+        ngt.notification_message_id as messageId,
+        nolt.id as isOpen,
+        ntt.name as typeName,
+        ngt.notification_type_id as typeId,
+        ngt.user_id as user_id,
+        ngt.id as id,
+        ngt.status as status,
+        ngt.created_at as created_at,
+        ngt.schedule_date as schedule_date,
+        ngt.data as data
+        FROM notification_generated ngt
+        JOIN notification_medium nmt ON ngt.notification_medium_id = nmt.id
+        JOIN notification_type ntt ON ngt.notification_type_id = ntt.id
+        left outer join notification_opened nolt on ngt.id = nolt.notification_generated_id
+        where ngt.id = ${id} `;
 
     return mysqlService.execQuery(query).then(function(rows) {
         return rows[0];
     });
 
-}*/
+}
 
 module.exports = {
-    getNotificationGenerated
+    getNotificationGenerated,
+    getNotificationDataByGeneratedId
 }

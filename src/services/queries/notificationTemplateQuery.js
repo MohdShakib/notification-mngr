@@ -26,14 +26,27 @@ function getAllTemplates(mediumId) {
     });
 }
 
-// function checkExistingTemplate(typeid, mediumid) {
-//     var query = 'SELECT * FROM notification_type_notification_medium_mapping WHERE notification_type_id =? AND notification_medium_id=?';
-//     var obj = [typeid, mediumid];
-//
-//     return mysqlService.execQueryParams(query, obj).then(function(rows) {
-//         return rows;
-//     });
-// }
+function checkExistingTemplate(typeid, mediumid) {
+    var obj = [typeid, mediumid];
+    var query = `SELECT * FROM ${tables.NOTIFICATION_TYPE_NOTIFICATION_MEDIUM_MAPPING}
+    WHERE notification_type_id =? AND notification_medium_id=?`;
+
+    return mysqlService.execQueryParams(query, obj).then(function(rows) {
+        return rows;
+    });
+}
+
+function getNotificationTypesByMedium(mediumId) {
+    var query = `SELECT t2.id, t2.name AS name FROM ${tables.NOTIFICATION_TYPE_NOTIFICATION_MEDIUM_MAPPING} t1
+    JOIN ${tables.NOTIFICATION_TYPE} t2 ON t2.id=t1.notification_type_id
+    where notification_medium_id = ${mediumId}
+    ORDER BY t2.name`;
+    return mysqlService.execQuery(query).then(function(rows) {
+        return rows;
+    });
+}
+
+
 //
 // function addGenericNotificationTemplate(content) {
 //     var query = 'INSERT INTO notification_type_notification_medium_mapping SET ?';
@@ -124,15 +137,6 @@ function getAllTemplates(mediumId) {
 // }
 //
 
-function getNotificationTypesByMedium(mediumId) {
-    var query = `SELECT t2.id, t2.name AS name FROM ${tables.NOTIFICATION_TYPE_NOTIFICATION_MEDIUM_MAPPING} t1
-    JOIN ${tables.NOTIFICATION_TYPE} t2 ON t2.id=t1.notification_type_id
-    where notification_medium_id = ${mediumId}
-    ORDER BY t2.name`;
-    return mysqlService.execQuery(query).then(function(rows) {
-        return rows;
-    });
-}
 //
 // function getBlogEmailId() {
 //     var query = 'SELECT t1.id, t2.name FROM `notification_type_notification_medium_mapping` t1 JOIN notification_type t2 ON t2.id=t1.notification_type_id WHERE t1.notification_medium_id = 1';
@@ -152,5 +156,6 @@ function getNotificationTypesByMedium(mediumId) {
 
 module.exports = {
     getAllTemplates,
+    checkExistingTemplate,
     getNotificationTypesByMedium
 }

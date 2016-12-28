@@ -1,7 +1,7 @@
 //var notificationTemplateService = require('../services/notificationTemplateService');
 //var notificationMediumsService = require('../services/notificationMediumsService');
 //var notificationTypesService = require('../services/notificationTypesService');
-var notificationGeneratedService = require('../services/notificationGeneratedService');
+var notificationGeneratedService = require('../services/queries/notificationGeneratedQuery');
 var typeId, mediumId;
 var async = require('async')
 

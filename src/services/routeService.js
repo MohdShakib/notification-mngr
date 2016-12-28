@@ -21,5 +21,6 @@ module.exports.setup = function(app, router){
 
 
     app.get('/template-listings', require('api-handlers/templateListings'));
+    app.get('/template-detail', require('api-handlers/templateDetail'));
     app.get('/notification-listings', require('api-handlers/notificationListings'));
 }

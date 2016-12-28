@@ -1,30 +1,21 @@
-var notificationTemplateService = require('../services/notificationTemplateService');
-    notificationMediumsService = require('../services/notificationMediumsService');
-    notificationTypesService = require('../services/notificationTypesService');
+var notificationTemplateService = require('../services/queries/notificationTemplateQuery');
+    notificationMediumsService = require('../services/queries/notificationMediumsQuery');
+    notificationTypesService = require('../services/queries/notificationTypesQuery'),
+    templateParser = require('../parsers/templateParser');
 
 
 function _parseTemplates(templatesData){
-    var data = [], templatesData = templatesData || [];
+    var data = [], parsedContent;
+    templatesData = templatesData || [];
     for (var i = 0; i < templatesData.length; i++) {
         data[i] = templatesData[i];
-        data[i].template = (data[i].template).replace(/\n|\t/g, "")
 
-        data[i].template = (data[i].template).replace(/  +/g, ' ');
-        try {
-            data[i].template = JSON.parse(data[i].template);
-            data[i].type = 'object';
+        parsedContent = templateParser.getTemplateContent(data[i].template, data[i].id);
 
-            if (typeof(data[i].template) != 'object') {
-                data[i].template = JSON.parse(data[i].template);
-                data[i].type = 'object';
-
-            }
-
-            data[i].prop1 = (Object.getOwnPropertyNames(data[i].template)[0])
-            data[i].prop2 = (Object.getOwnPropertyNames(data[i].template)[1])
-        } catch (e) {
-            data[i].type = 'string';
-        }
+        data[i].template = parsedContent.template;
+        data[i].prop1 = parsedContent.prop1;
+        data[i].prop2 = parsedContent.prop2;
+        data[i].type = parsedContent.type;
     }
     return data;
 }

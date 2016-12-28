@@ -1,7 +1,9 @@
 <template>
 
 <tr>
-    <td class="text-center">{{item.id}}</td>
+    <td class="text-center">
+        <router-link :to="{name:'notification-detail', params: {id: item.id}}" tag="a">{{item.id}}</router-link>
+    </td>
     <td>{{item.mediumname}}</td>
     <td>{{item.notificationname}}</td>
     <td>{{item.createdAt}}</td>

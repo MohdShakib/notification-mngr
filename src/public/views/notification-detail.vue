@@ -12,13 +12,15 @@
                 </div>
                 <div class="panel-body">
                     <div class="notification-details">
-                        <key-value label="notification id" :value="id"></key-value>
-                        <key-value label="notification medium" :value="mediumName"></key-value>
-                        <key-value label="notification type" :value="typeName"></key-value>
-                        <key-value label="notification status" :value="status"></key-value>
-                        <key-value label="open status" :value="openStatus"></key-value>
-                        <key-value label="created at" :value="created_at"></key-value>
-                        <key-value label="schedule at" :value="schedule_at"></key-value>
+                        <ul class="list-group">
+                            <key-value class="list-group-item" label="notification id" :value="id"></key-value>
+                            <key-value class="list-group-item" label="notification medium" :value="mediumName"></key-value>
+                            <key-value class="list-group-item" label="notification type" :value="typeName"></key-value>
+                            <key-value class="list-group-item" label="notification status" :value="status"></key-value>
+                            <key-value class="list-group-item" label="open status" :value="openStatus"></key-value>
+                            <key-value class="list-group-item" label="created at" :value="created_at"></key-value>
+                            <key-value class="list-group-item" label="schedule at" :value="schedule_at"></key-value>
+                        </ul>
                     </div>
                 </div>
             </div>

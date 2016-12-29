@@ -2,35 +2,39 @@
 
 <template>
 
-<div class="col-sm-12">
-    <div class="col-lg-4">
-        <div class="panel panel-primary">
-            <div class="panel-title">
-                <h4 class="text-capitalize text-center">notification details</h4>
-            </div>
-          <div class="panel-body">
-            <div class="notification-details">
-                <key-value label="notification id" :value="id"></key-value>
-                <key-value label="notification medium" :value="mediumName"></key-value>
-                <key-value label="notification type" :value="typeName"></key-value>
-                <key-value label="notification status" :value="status"></key-value>
-                <key-value label="open status" :value="openStatus"></key-value>
-                <key-value label="created at" :value="created_at"></key-value>
-                <key-value label="schedule at" :value="schedule_at"></key-value>
-           </div>
-          </div>
-        </div>
-    </div>
-    <div class="col-lg-8">
-        <div class="panel panel-primary">
-            <div class="panel-body" v-if="prop1">
-                <code v-if="prop1">{{prop1}}</code>
-                <div v-html="template[prop1]"></div><br/>
-                <code v-if="prop2">{{prop2}}</code>
-                <div v-html="template[prop2]">
+<div>
+    <spinner :show="loading"></spinner>
+    <div class="col-sm-12" v-if="!loading">
+        <div class="col-lg-4">
+            <div class="panel panel-primary">
+                <div class="panel-title">
+                    <h4 class="text-capitalize text-center">notification details</h4>
+                </div>
+                <div class="panel-body">
+                    <div class="notification-details">
+                        <key-value label="notification id" :value="id"></key-value>
+                        <key-value label="notification medium" :value="mediumName"></key-value>
+                        <key-value label="notification type" :value="typeName"></key-value>
+                        <key-value label="notification status" :value="status"></key-value>
+                        <key-value label="open status" :value="openStatus"></key-value>
+                        <key-value label="created at" :value="created_at"></key-value>
+                        <key-value label="schedule at" :value="schedule_at"></key-value>
+                    </div>
                 </div>
             </div>
-            <div class="panel-body" v-html="template" v-else>
+        </div>
+        <div class="col-lg-8">
+            <div class="panel panel-primary">
+                <div class="panel-body" v-if="prop1">
+                    <code v-if="prop1">{{prop1}}</code>
+                    <div v-html="template[prop1]"></div>
+                    <br/>
+                    <code v-if="prop2">{{prop2}}</code>
+                    <div v-html="template[prop2]">
+                    </div>
+                </div>
+                <div class="panel-body" v-html="template" v-else>
+                </div>
             </div>
         </div>
     </div>
@@ -44,16 +48,17 @@ export default {
     name: 'notification-detail',
     data() {
         return {
-            id : '',
-            status : '',
-            mediumName : '',
-            typeName : '',
-            created_at : '',
-            schedule_date : '',
-            openStatus : '',
-            template : '',
-            prop1 : '',
-            prop2 : '',
+            id: '',
+            status: '',
+            mediumName: '',
+            typeName: '',
+            created_at: '',
+            schedule_date: '',
+            openStatus: '',
+            template: '',
+            prop1: '',
+            prop2: '',
+            loading: true
         }
     },
     components: {
@@ -65,18 +70,19 @@ export default {
                     <strong class="text-capitalize">{{label}}</strong> : <span>{{value}}</sapn>
                 </p>
             `
-         }
+        }
     },
-    mounted(){
+    mounted() {
         this.fetchData();
     },
     methods: {
-        fetchData: function(){
+        fetchData: function() {
+            this.loading = true;
+            this.$http.get(`http://localhost:9009/notification-detail/${this.$route.params.id}`).then((response) => {
+                let data = response && response.body && response.body.data && response.body.data || {};
 
-            this.$http.get(`http://localhost:9009/notification-detail/${this.$route.params.id}`).then((response)=>{
-                let data  = response && response.body && response.body.data && response.body.data || {};
-
-                if(data.type === 'object'){
+                this.loading = false;
+                if (data.type === 'object') {
                     this.prop1 = data.prop1;
                     this.prop2 = data.prop2;
                 }
@@ -89,7 +95,8 @@ export default {
                 this.created_at = data.created_at;
                 this.schedule_at = data.schedule_at;
 
-            }, (error)=>{
+            }, (error) => {
+                this.loading = false;
                 console.log('error-callback............');
             });
 

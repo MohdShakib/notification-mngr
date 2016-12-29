@@ -4,6 +4,11 @@
     margin-top: 70px;
 }
 
+.glyphicon-right-spinner {
+    -webkit-animation: glyphicon-spin-r 3s infinite linear;
+    animation: glyphicon-spin-r 3s infinite linear;
+}
+
 </style>
 
 <template>

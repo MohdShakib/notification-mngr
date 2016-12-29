@@ -3,6 +3,7 @@
 <template>
 
 <div>
+    <spinner :show="loading"></spinner>
     <table class="table table-bordered table-striped">
         <thead>
             <tr>
@@ -48,7 +49,8 @@ export default {
         return {
             templatesList: [],
             notificationMediums: [],
-            notificationTypes: []
+            notificationTypes: [],
+            loading: true
         }
     },
     mounted(){
@@ -57,13 +59,16 @@ export default {
     methods: {
         fetchData: function(){
             //this.$http.get('https://www.makaan.com/petra/app/v1/listing/2627399?sourceDomain=Makaan').then((response)=>{
+            this.loading = true;
             this.$http.get('http://localhost:3479/templates').then((response)=>{
                 console.log(response);
+                this.loading = false;
                 let data  = response && response.body || {};
                 this.templatesList = data.content || [];
                 this.notificationMediums = data.medium || [];
                 this.notificationTypes = data.notification || [];
             }, (error)=>{
+                this.loading = false;
                 console.log('error-callback............');
             });
         }

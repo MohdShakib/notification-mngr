@@ -3,6 +3,7 @@
 <template>
 
 <div>
+    <spinner :show="loading"></spinner>
     <table class="table table-bordered table-striped">
         <thead>
             <tr>
@@ -41,7 +42,8 @@ export default {
         return {
             notificationsList: [],
             notificationMediums: [],
-            notificationTypes: []
+            notificationTypes: [],
+            loading: true
         }
     },
     mounted(){
@@ -49,13 +51,17 @@ export default {
     },
     methods: {
         fetchData: function(){
+            this.loading = true;
             this.$http.get('http://localhost:9009/notification-listings').then((response)=>{
                 console.log(response);
+                this.loading = false;
                 let data  = response && response.body && response.body.data || {};
                 this.notificationsList = data.content || [];
                 this.notificationMediums = data.medium || [];
                 this.notificationTypes = data.notification || [];
+
             }, (error)=>{
+                this.loading = false;
                 console.log('error-callback............');
             });
         }

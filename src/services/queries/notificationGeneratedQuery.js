@@ -222,6 +222,7 @@ function getMediumsCountByStatus(queryParams) {
 
 */
 
+
 function getNotificationDataByGeneratedId(id) {
     var query = `SELECT
         nmt.name as mediumName,
@@ -235,11 +236,16 @@ function getNotificationDataByGeneratedId(id) {
         ngt.status as status,
         ngt.created_at as created_at,
         ngt.schedule_date as schedule_date,
-        ngt.data as data
+        ngt.data as data,
+        sn.populated_message as populated_message,
+        ntnmm.send_template as send_template
         FROM notification_generated ngt
         JOIN notification_medium nmt ON ngt.notification_medium_id = nmt.id
         JOIN notification_type ntt ON ngt.notification_type_id = ntt.id
-        left outer join notification_opened nolt on ngt.id = nolt.notification_generated_id
+        LEFT OUTER JOIN notification.saved_notification sn ON sn.notification_generated_id = ngt.id
+        LEFT OUTER JOIN notification_opened nolt ON ngt.id = nolt.notification_generated_id
+        LEFT OUTER JOIN notification.notification_type_notification_medium_mapping ntnmm
+        ON (ntnmm.notification_type_id = ngt.notification_type_id and ntnmm.notification_medium_id = ngt.notification_medium_id)
         where ngt.id = ${id} `;
 
     return mysqlService.execQuery(query).then(function(rows) {

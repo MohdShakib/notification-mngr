@@ -3,10 +3,9 @@
 <template>
 
 <div>
-    loading chill.......
-
-    {{yo}}
-
+    <div class="text-center">
+        loading chill.......
+    </div
     <div v-html="content">
     </div>
 </div>

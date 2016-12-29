@@ -2,8 +2,6 @@
 
 const   notificationTypesQuery = require('../services/queries/notificationTypesQuery'),
         notificationMediumsQuery = require('../services/queries/notificationMediumsQuery'),
-        notificationTemplateQuery = require('../services/queries/notificationTemplateQuery'),
-        savedNotificationQuery = require('../services/queries/savedNotificationQuery'),
         notificationGeneratedQuery = require('../services/queries/notificationGeneratedQuery'),
         templateParser = require('../parsers/templateParser'),
         Engine = require('velocity').Engine,
@@ -12,23 +10,13 @@ const   notificationTypesQuery = require('../services/queries/notificationTypesQ
 var     templateColumn = "send_template",
         populatedMessageColumn = "populated_message";
 
-        function notificationDetailsById(req, res){
+        function notificationDetailsById(req, res, next){
             async.auto({
                 notificationData: function(callback) {
                     return notificationGeneratedQuery.getNotificationDataByGeneratedId(req.params.id).then((response) => {
                         callback(null, response);
                     });
                 },
-                savedNotificationData: function(callback) {
-                    return savedNotificationQuery.getPopulatedMessage(req.params.id).then((response) => {
-                        callback(null, response);
-                    });
-                },
-                existingTemplateData: ['notificationData', function(results, callback) {
-                    return notificationTemplateQuery.checkExistingTemplate(results.notificationData.typeId, results.notificationData.mediumId).then((response) => {
-                        callback(null, response);
-                    });
-                }],
                 // userDetail: ['notificationData', function(results, callback) {
                 //     return apiService.get(config.getUserDetails, "userId=" + results.notificationData.user_id).then(function(response) {
                 //         callback(null, response);
@@ -40,28 +28,29 @@ var     templateColumn = "send_template",
 
                     let data = {}, content;
 
-                    let savedNotificationData = results.savedNotificationData || [],
-                        notificationData = results.notificationData;
+                    let notificationData = results.notificationData || {};
 
-                    if(savedNotificationData.length){
-                        content = savedNotificationData[0][populatedMessageColumn];
+                    if(notificationData[populatedMessageColumn]){
+                        content = notificationData[populatedMessageColumn];
                         content = content.replace(/\n|\t/g, "").replace(/  +/g, ' ');
                         content = JSON.stringify(content);
                     }else {
-                        let extraAttributes = JSON.parse(results.notificationData.data).extraAttributes;
-                        let velocityTemplate = results.existingTemplateData && results.existingTemplateData[0] && JSON.stringify(results.existingTemplateData[0][templateColumn]);
+                        let extraAttributes = JSON.parse(notificationData.data).extraAttributes;
+                        let velocityTemplate = notificationData[templateColumn] || '';
                         velocityTemplate = velocityTemplate.replace(/\n|\t/g, "").replace(/  +/g, ' ');
 
                         try {
-                            velocityTemplate = JSON.parse(velocityTemplate)
-                        } catch (e) {
-
+                            let engine = new Engine({ template: velocityTemplate });
+                            content = engine.render(extraAttributes);
+                            content = content.replace(/\n|\t/g, "").replace(/  +/g, ' ');
+                        } catch (err) {
+                            //next(err);
                         }
-
-                        let engine = new Engine({ template: velocityTemplate });
-                        content = engine.render(extraAttributes);
-                        content = content.replace(/\n|\t/g, "").replace(/  +/g, ' ');
                     }
+
+
+                    delete notificationData[templateColumn];
+                    delete notificationData[populatedMessageColumn];
 
                     let parsedContent = templateParser.getTemplateContent(content);
 

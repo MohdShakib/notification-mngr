@@ -1,8 +1,8 @@
 "use strict";
 
-const   notificationTemplateService = require('../services/queries/notificationTemplateQuery'),
-        notificationMediumsService = require('../services/queries/notificationMediumsQuery'),
-        notificationTypesService = require('../services/queries/notificationTypesQuery'),
+const   notificationTemplateQuery = require('../services/queries/notificationTemplateQuery'),
+        notificationMediumsQuery = require('../services/queries/notificationMediumsQuery'),
+        notificationTypesQuery = require('../services/queries/notificationTypesQuery'),
         templateParser = require('../parsers/templateParser');
 
 
@@ -27,9 +27,9 @@ const   notificationTemplateService = require('../services/queries/notificationT
             if (!req.query.medium)
                 mediumId = 0;
 
-            var allTemplates = notificationTemplateService.getAllTemplates(mediumId),
-                notificationMediums = notificationMediumsService.getNotificationMediums(),
-                notificationTypes = notificationTypesService.getNotificationTypes();
+            var allTemplates = notificationTemplateQuery.getAllTemplates(mediumId),
+                notificationMediums = notificationMediumsQuery.getNotificationMediums(),
+                notificationTypes = notificationTypesQuery.getNotificationTypes();
 
             Promise.all([allTemplates, notificationMediums, notificationTypes]).then((promiseAllData) => {
                 allTemplates = _parseTemplates(promiseAllData[0]);

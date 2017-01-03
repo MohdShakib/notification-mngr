@@ -35,7 +35,9 @@
                     <div v-html="template[prop2]">
                     </div>
                 </div>
-                <div class="panel-body" v-html="template" v-else>
+                <div class="panel-body" v-else>
+                    <code v-if="mediumName">{{mediumName}}</code>
+                    <div v-html="template"></div>
                 </div>
             </div>
         </div>

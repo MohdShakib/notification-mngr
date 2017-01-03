@@ -7,7 +7,7 @@
     <table class="table table-bordered table-striped">
         <thead>
             <tr>
-                <th class="col-lg-1 text-center">#</th>
+                <th class="col-lg-1 text-center">#Id</th>
                 <th class="col-lg-2">Notification Medium
                     <!-- <select class="form-control input-sm">
                         <option value="0" selected>All</option>
@@ -30,7 +30,7 @@
             </tr>
         </thead>
         <tbody>
-            <templatesItem v-for="(item,index) in templatesList" :item="item" :index="index"></templatesItem>
+            <templatesItem v-for="(item,index) in templatesList" :item="item" :key="item.id" ></templatesItem>
         </tbody>
     </table>
 </div>
@@ -60,13 +60,13 @@ export default {
         fetchData: function(){
             //this.$http.get('https://www.makaan.com/petra/app/v1/listing/2627399?sourceDomain=Makaan').then((response)=>{
             this.loading = true;
-            this.$http.get('http://localhost:3479/templates').then((response)=>{
+            this.$http.get('http://localhost:9009/template-listings').then((response)=>{
                 console.log(response);
                 this.loading = false;
-                let data  = response && response.body || {};
-                this.templatesList = data.content || [];
-                this.notificationMediums = data.medium || [];
-                this.notificationTypes = data.notification || [];
+                let data  = response && response.body && response.body.data || {};
+                this.templatesList = data.allTemplates || [];
+                this.notificationMediums = data.notificationMediums || [];
+                this.notificationTypes = data.notificationTypes || [];
             }, (error)=>{
                 this.loading = false;
                 console.log('error-callback............');

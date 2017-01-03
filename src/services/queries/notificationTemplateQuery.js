@@ -48,6 +48,17 @@ function getNotificationTypesByMedium(mediumId) {
     });
 }
 
+function getTemplate(templateId) {
+    var query = `SELECT t1.id AS id, t1.notification_type_id AS notification_type_id, t1.notification_medium_id AS notification_medium_id,
+    t2.name AS mediumname, t3.name AS notificationname, t1.send_template AS send_template
+    FROM ${tables.NOTIFICATION_TYPE_NOTIFICATION_MEDIUM_MAPPING} t1, ${tables.NOTIFICATION_MEDIUM} t2, ${tables.NOTIFICATION_TYPE} t3
+    WHERE t2.id=t1.notification_medium_id
+    AND t3.id=t1.notification_type_id AND t1.id = ?`;
+    var obj = templateId;
+    return mysqlService.execQueryParams(query, obj).then(function(rows) {
+        return rows;
+    });
+}
 
 //
 // function addGenericNotificationTemplate(content) {
@@ -106,14 +117,7 @@ function getNotificationTypesByMedium(mediumId) {
 //
 // }
 //
-// function getTemplate(id) {
-//
-//     var query = 'SELECT t1.id AS id, t1.notification_type_id AS notification_type_id, t1.notification_medium_id AS notification_medium_id, t2.name AS mediumname, t3.name AS notificationname, t1.send_template AS send_template FROM notification_type_notification_medium_mapping t1, notification_medium t2, notification_type t3 WHERE t2.id=t1.notification_medium_id AND t3.id=t1.notification_type_id AND t1.id = ?';
-//     var obj = id;
-//     return mysqlService.execQueryParams(query, obj).then(function(rows) {
-//         return rows;
-//     });
-// }
+
 //
 //
 // function getTemplateParams(type, medium) {
@@ -157,6 +161,7 @@ function getNotificationTypesByMedium(mediumId) {
 // }
 
 module.exports = {
+    getTemplate,
     getAllTemplates,
     checkExistingTemplate,
     getNotificationTypesByMedium

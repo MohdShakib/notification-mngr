@@ -12,7 +12,7 @@ pre {
 <template>
 
 <tr>
-    <td class="text-center">{{index + 1}}</td>
+    <td class="text-center">{{item.id}}</td>
     <td>{{item.mediumname}}</td>
     <td>{{item.notificationname}}</td>
     <td>
@@ -30,9 +30,10 @@ pre {
     </td>
     <td class="text-center">
         <form class="form-group">
-            <button type="button" class="btn btn-primary" >
+            <router-link  type="button" class="btn btn-primary" :to="{name:'template-update', params: {id: item.id}}" tag="button">
                 <span class="glyphicon glyphicon-pencil"></span>
-            </button>&nbsp;
+            </router-link>
+            &nbsp;
             <button type="button" class="btn btn-primary">
                 <span class="glyphicon glyphicon-eye-open"></span>
             </button>&nbsp;

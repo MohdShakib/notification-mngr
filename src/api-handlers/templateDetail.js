@@ -1,6 +1,6 @@
 "use strict";
 
-var notificationTemplateService = require('../services/queries/notificationTemplateQuery'),
+var notificationTemplateQuery = require('../services/queries/notificationTemplateQuery'),
     templateParser = require('../parsers/templateParser'),
     getData = require('velocity').Data
 
@@ -9,14 +9,22 @@ var templateColumn = "send_template";
 
 
 function getTemplateDetails(req, res){
-    let notificationTypeId = req.query.notificationTypeId,
+    let templateId = req.params.id,
+        notificationTypeId = req.query.notificationTypeId,
         mediumId = req.query.mediumId;
 
-    if(notificationTypeId && mediumId){
-        notificationTemplateService.checkExistingTemplate(notificationTypeId, mediumId).then(function(templateDetails) {
-            let data = null, parsedContent,
-                extractData, extractResult;
+    let data = null, parsedContent,
+        extractData, extractResult,
+        getTemplatePromise;
 
+    if(templateId){
+        getTemplatePromise = notificationTemplateQuery.getTemplate(templateId);
+    }else if(notificationTypeId && mediumId){
+        getTemplatePromise = notificationTemplateQuery.checkExistingTemplate(notificationTypeId, mediumId);
+    }
+
+    if(getTemplatePromise){
+        getTemplatePromise.then((templateDetails) => {
             templateDetails = templateDetails && templateDetails[0];
             if(templateDetails){
 

@@ -34,6 +34,8 @@ function getTemplateDetails(req, res){
                 data.id = templateDetails.id;
                 data.mediumId = templateDetails.notification_medium_id;
                 data.notificationTypeId = templateDetails.notification_type_id;
+                data.notificationName = templateDetails.notificationname;
+                data.mediumName = templateDetails.mediumname;
                 data.template = parsedContent.template;
                 data.extractData = parsedContent.extractData;
                 data.prop1 = parsedContent.prop1;
@@ -47,6 +49,7 @@ function getTemplateDetails(req, res){
         });
     }
 }
+
 
 module.exports = function(req, res, next){
     var method = req.method;

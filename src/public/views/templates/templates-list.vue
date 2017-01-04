@@ -58,12 +58,11 @@ export default {
     },
     methods: {
         fetchData: function(){
-            //this.$http.get('https://www.makaan.com/petra/app/v1/listing/2627399?sourceDomain=Makaan').then((response)=>{
             this.loading = true;
-            this.$http.get('http://localhost:9009/template-listings').then((response)=>{
+            this.$apiService.get('http://localhost:9009/template-listings').then((response)=>{
                 console.log(response);
                 this.loading = false;
-                let data  = response && response.body && response.body.data || {};
+                let data  = response && response.data || {};
                 this.templatesList = data.allTemplates || [];
                 this.notificationMediums = data.notificationMediums || [];
                 this.notificationTypes = data.notificationTypes || [];

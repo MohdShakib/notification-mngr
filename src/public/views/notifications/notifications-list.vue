@@ -52,10 +52,10 @@ export default {
     methods: {
         fetchData: function(){
             this.loading = true;
-            this.$http.get('http://localhost:9009/notification-listings').then((response)=>{
+            this.$apiService.get('http://localhost:9009/notification-listings').then((response)=>{
                 console.log(response);
                 this.loading = false;
-                let data  = response && response.body && response.body.data || {};
+                let data  = response && response.data || {};
                 this.notificationsList = data.content || [];
                 this.notificationMediums = data.medium || [];
                 this.notificationTypes = data.notification || [];

@@ -26,4 +26,7 @@ module.exports.setup = function(app, router){
     app.get('/notification-mediums', require('api-handlers/notificationDetail').notificationMediumsList);
     app.get('/notification-detail/:id', require('api-handlers/notificationDetail').notificationDetailsById);
     app.get('/notification-listings', require('api-handlers/notificationListings'));
+
+
+    app.post('/template/update/:id', require('api-handlers/updateTemplateDetail'));
 }

@@ -82,8 +82,8 @@ export default {
     methods: {
         fetchData: function() {
             this.loading = true;
-            this.$http.get(`http://localhost:9009/notification-detail/${this.$route.params.id}`).then((response) => {
-                let data = response && response.body && response.body.data && response.body.data || {};
+            this.$apiService.get(`http://localhost:9009/notification-detail/${this.$route.params.id}`).then((response) => {
+                let data = response && response.data || {};
 
                 this.loading = false;
                 if (data.type === 'object') {

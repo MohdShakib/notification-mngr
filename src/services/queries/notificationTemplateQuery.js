@@ -60,6 +60,15 @@ function getTemplate(templateId) {
     });
 }
 
+function updateNotificationTemplate(content, id) {
+    var query = `UPDATE ${tables.NOTIFICATION_TYPE_NOTIFICATION_MEDIUM_MAPPING}
+    SET send_template=? WHERE id=?`;
+    var obj = [content, id];
+    return mysqlService.execQueryParams(query, obj).then(function(rows) {
+        return rows;
+    });
+}
+
 //
 // function addGenericNotificationTemplate(content) {
 //     var query = 'INSERT INTO notification_type_notification_medium_mapping SET ?';
@@ -85,17 +94,7 @@ function getTemplate(templateId) {
 // }
 //
 //
-// function updateNotificationTemplate(content, id) {
-//
-//     var query = 'UPDATE notification_type_notification_medium_mapping SET send_template=? WHERE id=?';
-//     var obj = [content, id];
-//     return mysqlService.execQueryParams(query, obj).then(function(rows) {
-//
-//         return rows;
-//     });
-//
-//
-// }
+
 //
 // function findNotificationName(name) {
 //     var query = 'SELECT * from notification_type where name = ?';
@@ -164,5 +163,6 @@ module.exports = {
     getTemplate,
     getAllTemplates,
     checkExistingTemplate,
+    updateNotificationTemplate,
     getNotificationTypesByMedium
 }

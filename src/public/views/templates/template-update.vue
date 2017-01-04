@@ -49,7 +49,6 @@ export default {
             notificationName: '',
             type: '',
             isTemplateObject: false,
-            prevData: {},
             loading: true
         }
     },
@@ -76,8 +75,13 @@ export default {
                 this.mediumName = data.mediumName;
                 this.notificationName = data.notificationName;
 
-                this.prevData.extractData = data.extractData;
-                this.prevData.template = data.template;
+                this.prevData = {
+                    extractData: data.extractData,
+                    template: data.template,
+                    mediumId: data.mediumId,
+                    notificationTypeId: data.notificationTypeId
+                }
+
 
                 this.loading = false;
             }, (error) => {
@@ -97,11 +101,13 @@ export default {
                 postData.template = this.template;
             }
             postData.type = this.type;
-            postData.prevData = this.prevData;
+            postData.prevData = this.prevData || {};
             console.log('peviousData..........', postData);
 
             this.$apiService.post(`http://localhost:9009/template/update/${this.$route.params.id}`, postData).then(() => {
                 console.log('updated........');
+            }, (err) => {
+                console.log('erorr callback....',err);
             });
 
         }

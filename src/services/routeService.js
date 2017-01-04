@@ -29,4 +29,12 @@ module.exports.setup = function(app, router){
 
 
     app.post('/template/update/:id', require('api-handlers/updateTemplateDetail'));
+
+    app.use(function(err, req, res, next) {
+        let statusCode = err.status || 500;
+        return res.status(statusCode).send({
+            message: err && err.message,
+            stack: err && err.stack
+        });
+    });
 }

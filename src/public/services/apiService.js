@@ -12,6 +12,7 @@ axios.interceptors.request.use(function (config) {
 
 //response interceptor
 axios.interceptors.response.use(function (response) {
+    console.log('////////////',response);
     return response && response.data;
 }, function (error) {
     // Do something with response error

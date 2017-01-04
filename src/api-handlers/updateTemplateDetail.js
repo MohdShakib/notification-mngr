@@ -2,6 +2,9 @@
 
 
 const notificationTemplateQuery = require('../services/queries/notificationTemplateQuery'),
+    templateLoggingQuery = require('../services/queries/templateLoggingQuery'),
+    apiConfig = require('../config/apiConfig'),
+    apiService = require('../services/apiService'),
     templateParser = require('../parsers/templateParser'),
     templateColumn = "send_template";
 
@@ -12,22 +15,38 @@ var getData = require('velocity').Data,
 
 var additionalVariables = ['unSubscribedLink'];
 
+var updatedObj = {
+    data: null,
+    message: 'template updated successfully.'
+};
+
 module.exports = function(req, res, next){
 
-    let data = req.body || {},
+    let templateId = req.params.id,
+        data = req.body || {},
         prevData = data.prevData || {},
         isTypeObject = data.type == 'object' ? true : false,
         currentTemplate = data.template,
+        prevTemplate = prevData.template,
         validate = true;
 
     if(isTypeObject){
+        prevTemplate = JSON.stringify(prevTemplate);
         currentTemplate = JSON.stringify(currentTemplate);
     }
 
+    prevTemplate = prevTemplate.replace(/(?:\\[rnt])+/g, "").trim();
+    prevTemplate = prevTemplate.replace(/  +/g, ' ');
+
+    currentTemplate = currentTemplate.replace(/(?:\\[rnt])+/g, "").trim();
+    currentTemplate = currentTemplate.replace(/  +/g, ' ');
+
     if(!isTypeObject && data.template == prevData.template){
-        console.log('awesome everything is perfect');
-    }else if(isTypeObject && currentTemplate == JSON.stringify(prevData.template)) {
-        console.log('awesome perfectOOO FOR Objects');
+        // no update required
+        return res.send(updatedObj);
+    }else if(isTypeObject && currentTemplate == prevTemplate) {
+        // no update required
+        return res.send(updatedObj);
     }else{
 
         try {
@@ -57,37 +76,49 @@ module.exports = function(req, res, next){
             if (oldProps.length == newProps.length){
                 for (var i = 0; i < newProps.length; i++) {
                     if (oldProps.indexOf(newProps[i]) == -1){
-                        console.log('......',oldProps.indexOf(newProps[i]), newProps[i]);
                         validate = false;
                     }
                 }
             }else {
-                console.log('______');
                 validate = false;
             }
 
-            console.log('diff in length:  ',oldProps, newProps);
-
             if(!validate){
-                res.status(404).send({
-
-                });
-                return;
+                let e = new Error('additional or deletion of existing variables is not allowed.');
+                e.status = 400;
+                return next(e);
             }
 
-            res.send({
+            notificationTemplateQuery.updateNotificationTemplate(currentTemplate, templateId).then((response) => {
+                // template updated successfully
 
+                let urlData = `notificationMediumId=${prevData.mediumId}&notificationTypeId=${prevData.notificationTypeId}`;
+                let flushApi = apiService.get(apiConfig.flushApi, urlData);
+                flushApi.then((flushData) => {
+                    if (flushData.statusCode == '2XX') {
+                        templateLoggingQuery.generateTemplateLog({
+                            templateId,
+                            notificationTypeId: prevData.notificationTypeId,
+                            mediumId: prevData.mediumId,
+                            content: prevTemplate,
+                            userId: 6807740
+                        }).then(() => {
+                            return res.send(updatedObj);
+                        });
+                    }else {
+                        return res.send(updatedObj);
+                    }
+                }, () => {
+                    return res.send(updatedObj);
+                });
+
+            }, () => {
+                let e = new Error('update template query failed.');
+                return next(e);
             });
-
-
 
         } catch (err) {
-            console.log('errrrrrrrrrrrr',err);
-            res.send({
-                err
-            });
+            return next(err);
         }
-
-
     }
 }

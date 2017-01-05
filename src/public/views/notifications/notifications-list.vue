@@ -4,7 +4,7 @@
 
 <div>
     <spinner :show="loading"></spinner>
-    <table class="table table-bordered table-striped">
+    <table class="table table-bordered table-striped" v-if="!loading">
         <thead>
             <tr>
                 <th class="col-lg-1 text-center">#Id</th>
@@ -24,6 +24,9 @@
             </tr>
         </thead>
         <tbody>
+            <tableRowMessage v-if="!notificationsList.length" cols="7">
+                No notification available
+            </tableRowMessage>
             <notificationsItem v-for="(item,index) in notificationsList" :item="item" :index="index"></notificationsItem>
         </tbody>
     </table>

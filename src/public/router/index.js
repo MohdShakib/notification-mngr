@@ -4,7 +4,8 @@ import Router from 'vue-router'
 Vue.use(Router);
 
 import templatesList from  '../views/templates/templates-list.vue'
-import templatesUpdate from  '../views/templates/template-update.vue'
+import updateTemplate from  '../views/templates/update-template.vue'
+import addTemplate from  '../views/templates/add-template.vue'
 import notificationsList from  '../views/notifications/notifications-list.vue'
 import notificationDetail from  '../views/notifications/notification-detail.vue'
 import campaignsList from  '../views/campaigns-list.vue'
@@ -17,8 +18,9 @@ export default new Router({
     { path: '/notification/:id', name: 'notification-detail', component: notificationDetail },
     { path: '/notifications-status', name: 'notifications-status', component: notificationsList },
     { path: '/notifications-sent', name: 'notifications-sent', component: templatesList },
+    { path: '/update-template/:id', name: 'update-template', component: updateTemplate },
+    { path: '/add-template/:notificationTypeId/:mediumId', name: 'add-template', component: addTemplate },
     { path: '/templates-list/:mediumId?', name: 'templates-list', component: templatesList },
-    { path: '/template/:id', name: 'template-update', component: templatesUpdate },
     { path: '/campaigns', component: campaignsList },
     { path: '/', redirect: '/templates-list' },
     { path: '*', component: notFound}

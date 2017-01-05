@@ -15,7 +15,7 @@ var getData = require('velocity').Data,
 
 var additionalVariables = ['unSubscribedLink'];
 
-var updatedObj = {
+var successRes = {
     data: null,
     message: 'template updated successfully.'
 };
@@ -43,10 +43,10 @@ module.exports = function(req, res, next){
 
     if(!isTypeObject && data.template == prevData.template){
         // no update required
-        return res.send(updatedObj);
+        return res.send(successRes);
     }else if(isTypeObject && currentTemplate == prevTemplate) {
         // no update required
-        return res.send(updatedObj);
+        return res.send(successRes);
     }else{
 
         try {
@@ -103,13 +103,13 @@ module.exports = function(req, res, next){
                             content: prevTemplate,
                             userId: 6807740
                         }).then(() => {
-                            return res.send(updatedObj);
+                            return res.send(successRes);
                         });
                     }else {
-                        return res.send(updatedObj);
+                        return res.send(successRes);
                     }
                 }, () => {
-                    return res.send(updatedObj);
+                    return res.send(successRes);
                 });
 
             }, () => {

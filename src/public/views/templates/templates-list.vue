@@ -4,7 +4,7 @@
 
 <div>
     <spinner :show="loading"></spinner>
-    <table class="table table-bordered table-striped">
+    <table class="table table-bordered table-striped" v-if="!loading">
         <thead>
             <tr>
                 <th class="col-lg-1 text-center">#Id</th>
@@ -34,6 +34,16 @@
             </tr>
         </thead>
         <tbody>
+            <tableRowMessage v-if="!filteredTemplates.length" cols="5">
+                <div v-if="notificationTypeId && mediumId">
+                    <router-link :to="{name: 'add-template', params: {notificationTypeId: 1, mediumId: 1}}" class="btn btn-primary" tag="button">
+                        add new template
+                    </router-link>
+                </div>
+                <div v-else>
+                    No Template Found
+                <div>
+            </tableRowMessage>
             <templatesItem v-for="(item,index) in filteredTemplates" :item="item" :key="item.id" ></templatesItem>
         </tbody>
     </table>

@@ -30,7 +30,7 @@ pre {
     </td>
     <td class="text-center">
         <form class="form-group">
-            <router-link  type="button" class="btn btn-primary" :to="{name:'template-update', params: {id: item.id}}" tag="button">
+            <router-link  type="button" class="btn btn-primary" :to="{name:'update-template', params: {id: item.id}}" tag="button">
                 <span class="glyphicon glyphicon-pencil"></span>
             </router-link>
             &nbsp;

@@ -10,6 +10,7 @@ Vue.use(VueResource);
 // Vue.http.options.emulateJSON = true;
 
 Vue.prototype.$apiService = apiService;
+
 Vue.component('spinner', spinner);
 Vue.component('tableRowMessage', tableRowMessage);
 

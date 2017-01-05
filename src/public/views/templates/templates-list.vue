@@ -44,7 +44,7 @@
                     No Template Found
                 <div>
             </tableRowMessage>
-            <templatesItem v-for="(item,index) in filteredTemplates" :item="item" :key="item.id" ></templatesItem>
+            <templatesItem v-for="(item,index) in filteredTemplates" :item="item"  :index="index" :key="item.id" ></templatesItem>
         </tbody>
     </table>
 </div>
@@ -55,6 +55,7 @@
 
 import templatesItem from './template-item.vue'
 import modal from '../../components/modal.vue'
+import { getNotificationTypes, getNotificationMediums } from '../../services/notificationService'
 
 export default {
     name: 'templates-list',
@@ -71,6 +72,13 @@ export default {
     },
     mounted(){
         this.fetchData();
+        getNotificationTypes().then((notificationTypes) => {
+            this.notificationTypes = notificationTypes.data || [];
+        });
+
+        getNotificationMediums().then((notificationMediums) => {
+            this.notificationMediums = notificationMediums.data || [];
+        });
     },
     created(){
         this.mediumId = this.$route.params.mediumId || '';
@@ -94,16 +102,13 @@ export default {
         },
         fetchData: function(){
             this.loading = true;
-            let templateListingApi = 'http://localhost:9009/template-listings',
+            let templateListingApi = '/template-listings',
                 mediumId = this.mediumId;
                 templateListingApi += `${mediumId ? '/'+mediumId : ''}`;
 
             this.$apiService.get(templateListingApi).then((response)=>{
                 this.loading = false;
-                let data  = response && response.data || {};
-                this.templatesList = data.allTemplates || [];
-                this.notificationMediums = data.notificationMediums || [];
-                this.notificationTypes = data.notificationTypes || [];
+                this.templatesList = response && response.data || [];
             }, (error)=>{
                 this.loading = false;
             });

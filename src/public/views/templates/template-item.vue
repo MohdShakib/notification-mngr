@@ -12,7 +12,7 @@ pre {
 <template>
 
 <tr>
-    <td class="text-center">{{item.id}}</td>
+    <td class="text-center">{{index+1}}</td>
     <td>{{item.mediumname}}</td>
     <td>{{item.notificationname}}</td>
     <td>

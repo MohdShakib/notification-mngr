@@ -1,8 +1,6 @@
 "use strict";
 
 const   notificationTemplateQuery = require('../services/queries/notificationTemplateQuery'),
-        notificationMediumsQuery = require('../services/queries/notificationMediumsQuery'),
-        notificationTypesQuery = require('../services/queries/notificationTypesQuery'),
         templateParser = require('../parsers/templateParser');
 
 
@@ -22,25 +20,15 @@ const   notificationTemplateQuery = require('../services/queries/notificationTem
             return data;
         }
 
-        module.exports = function(req, res) {
+        module.exports = function(req, res, next) {
             var mediumId = req.params.mediumId;
-
-            var allTemplates = notificationTemplateQuery.getAllTemplates(mediumId),
-                notificationMediums = notificationMediumsQuery.getNotificationMediums(),
-                notificationTypes = notificationTypesQuery.getNotificationTypes();
-
-            Promise.all([allTemplates, notificationMediums, notificationTypes]).then((promiseAllData) => {
-                allTemplates = _parseTemplates(promiseAllData[0]);
-                notificationMediums = promiseAllData[1];
-                notificationTypes = promiseAllData[2];
+            var allTemplates = notificationTemplateQuery.getAllTemplates(mediumId);
+            allTemplates.then((templatesData) => {
+                let templates = _parseTemplates(templatesData);
                 res.send({
-                    data: {
-                        allTemplates,
-                        notificationTypes,
-                        notificationMediums
-                    }
+                    data: templates
                 })
-            }, (error) => {
-
+            }, () => {
+                next(err);
             });
         }

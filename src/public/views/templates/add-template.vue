@@ -60,7 +60,7 @@ export default {
     methods: {
         fetchData: function() {
             this.loading = true;
-            this.$apiService.get(`http://localhost:9009/template-detail/${this.$route.params.id}`).then((response) => {
+            this.$apiService.get(`/template-detail/${this.$route.params.id}`).then((response) => {
                 let data = response && response.data || {};
                 if (data.type == "object") {
                     this.prop1 = data.prop1;
@@ -115,7 +115,7 @@ export default {
             postData.type = this.type;
             postData.prevData = this.prevData || {};
 
-            this.$apiService.post(`http://localhost:9009/template/update/${this.$route.params.id}`, postData).then((res) => {
+            this.$apiService.post(`/template/update/${this.$route.params.id}`, postData).then((res) => {
                 let message = res && res.message;
                 NotificationStore.addNotification({
                     text: message,

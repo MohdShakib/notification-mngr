@@ -1,6 +1,13 @@
 "use strict";
 
-axios.interceptors.request.use(function (config) {
+
+
+var axiosInstance = axios.create({
+  baseURL: 'http://localhost:9009',
+  /* other custom settings */
+});
+
+axiosInstance.interceptors.request.use(function (config) {
     // Do something before request is sent
     return config;
   }, function (error) {
@@ -11,7 +18,7 @@ axios.interceptors.request.use(function (config) {
 
 
 //response interceptor
-axios.interceptors.response.use(function (response) {
+axiosInstance.interceptors.response.use(function (response) {
     return response && response.data;
 }, function (error) {
 
@@ -27,4 +34,4 @@ axios.interceptors.response.use(function (response) {
 });
 
 
-export default axios;
+export default axiosInstance;

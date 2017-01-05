@@ -55,7 +55,7 @@ export default {
     methods: {
         fetchData: function(){
             this.loading = true;
-            this.$apiService.get('http://localhost:9009/notification-listings').then((response)=>{
+            this.$apiService.get('/notification-listings').then((response)=>{
                 console.log(response);
                 this.loading = false;
                 let data  = response && response.data || {};

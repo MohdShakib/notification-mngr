@@ -22,12 +22,14 @@ module.exports.setup = function(app, router){
 
     app.get('/template-detail/:id?', require('api-handlers/templateDetail'));
     app.get('/template-listings/:mediumId?', require('api-handlers/templateListings'));
+
     app.get('/notification-types', require('api-handlers/notificationDetail').notificationTypesList);
     app.get('/notification-mediums', require('api-handlers/notificationDetail').notificationMediumsList);
     app.get('/notification-detail/:id', require('api-handlers/notificationDetail').notificationDetailsById);
     app.get('/notification-listings', require('api-handlers/notificationListings'));
 
 
+    app.post('/template/create', require('api-handlers/createNewTemplate'));
     app.post('/template/update/:id', require('api-handlers/updateTemplateDetail'));
 
     app.use(function(err, req, res, next) {

@@ -28,8 +28,8 @@ function getAllTemplates(mediumId) {
     });
 }
 
-function checkExistingTemplate(typeId, mediumId) {
-    var obj = [typeId, mediumId];
+function checkExistingTemplate(notificationTypeId, mediumId) {
+    var obj = [notificationTypeId, mediumId];
     var query = `SELECT * FROM ${tables.NOTIFICATION_TYPE_NOTIFICATION_MEDIUM_MAPPING}
     WHERE notification_type_id =? AND notification_medium_id=?`;
 
@@ -69,6 +69,16 @@ function updateNotificationTemplate(content, id) {
     });
 }
 
+function addNewTemplate({ notificationTypeId, mediumId, template }){
+    var query = `INSERT INTO ${tables.NOTIFICATION_TYPE_NOTIFICATION_MEDIUM_MAPPING}
+    (notification_type_id, notification_medium_id, send_template)
+    VALUES (?,?,?)`;
+
+    var obj = [notificationTypeId, mediumId, template];
+    return mysqlService.execQueryParams(query,obj).then(function(rows) {
+        return rows;
+    });
+}
 //
 // function addGenericNotificationTemplate(content) {
 //     var query = 'INSERT INTO notification_type_notification_medium_mapping SET ?';
@@ -162,6 +172,7 @@ function updateNotificationTemplate(content, id) {
 module.exports = {
     getTemplate,
     getAllTemplates,
+    addNewTemplate,
     checkExistingTemplate,
     updateNotificationTemplate,
     getNotificationTypesByMedium

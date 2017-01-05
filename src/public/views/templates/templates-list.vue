@@ -36,7 +36,7 @@
         <tbody>
             <tableRowMessage v-if="!filteredTemplates.length" cols="5">
                 <div v-if="notificationTypeId && mediumId">
-                    <router-link :to="{name: 'add-template', params: {notificationTypeId: 1, mediumId: 1}}" class="btn btn-primary" tag="button">
+                    <router-link :to="{name: 'add-template', params: {notificationTypeId: notificationTypeId, mediumId: mediumId}}" class="btn btn-primary" tag="button">
                         add new template
                     </router-link>
                 </div>

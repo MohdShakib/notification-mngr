@@ -28,7 +28,7 @@
                 <div v-if="prop2"><code>{{prop2}}</code></div>
                 <textarea rows="15" cols="150" class="form-control" v-model="template" placeholder="body"></textarea>
             </div>
-            <button type="submit" @click="updateTemplate" class="btn btn-primary">Update</button>
+            <button type="submit" @click="updateTemplate" :disabled="isDisabled" class="btn btn-primary">Update</button>
         </div>
     </div>
 </div>
@@ -52,11 +52,17 @@ export default {
             notificationName: '',
             type: '',
             isTemplateObject: false,
+            isDisabled: true,
             loading: true
         }
     },
     mounted() {
         this.fetchData();
+    },
+    computed: {
+        isDisabled(){
+            return !(this.template && (!this.isTemplateObject || this.subject));
+        }
     },
     methods: {
         fetchData: function() {
@@ -97,14 +103,7 @@ export default {
         },
         updateTemplate: function() {
 
-            if(this.prop1 && !(this.template && this.subject)){
-                NotificationStore.addNotification({
-                    text: 'shown field(s) are mandatory.',
-                    type: "danger",
-                    timeout: true
-                });
-                return;
-            }else if(!this.prop1 && !this.template){
+            if(!this.template || (this.prop1 && !this.subject)){
                 NotificationStore.addNotification({
                     text: 'shown field(s) are mandatory.',
                     type: "danger",
@@ -112,6 +111,7 @@ export default {
                 });
                 return;
             }
+
 
             var postData = {};
             if (this.prop1 && this.isTemplateObject) {

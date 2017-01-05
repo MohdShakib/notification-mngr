@@ -32,6 +32,11 @@ let config = {
                 url: mediumId ? `/template-listings/${mediumId}` : '/template-listings'
             }
         },
+        createTemplate(){
+            return {
+                url: `/template/create`
+            }
+        },
         updateTemplate({
             id
         }){

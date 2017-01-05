@@ -10,13 +10,13 @@ var tables = {
 
 function getAllTemplates(mediumId) {
 
-    if (mediumId == 0)
+    if (!mediumId)
         mediumId = `notification_medium_id`;
     else
         mediumId = parseInt(mediumId);
 
     var query = `SELECT
-    t1.id AS id, t1.notification_type_id AS typeId, t1.notification_medium_id AS mediumId,
+    t1.id AS id, t1.notification_type_id AS notificationTypeId, t1.notification_medium_id AS mediumId,
     t2.name AS mediumname, t3.name AS notificationname, t1.send_template AS template
     FROM ${tables.NOTIFICATION_TYPE_NOTIFICATION_MEDIUM_MAPPING} t1, ${tables.NOTIFICATION_MEDIUM} t2, ${tables.NOTIFICATION_TYPE} t3
     WHERE t2.id=t1.notification_medium_id AND t3.id=t1.notification_type_id

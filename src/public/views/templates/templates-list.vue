@@ -9,10 +9,10 @@
             <tr>
                 <th class="col-lg-1 text-center">#Id</th>
                 <th class="col-lg-2">Notification Medium
-                    <!-- <select class="form-control input-sm">
-                        <option value="0" selected>All</option>
+                    <select class="form-control input-sm" @change="changeMedium" v-model="mediumId">
+                        <option value="">All</option>
                         <option v-for="item in notificationMediums" :value="item.id">{{item.name}}</option>
-                    </select> -->
+                    </select>
                 </th>
                 <th class="col-lg-3">
                     Notification Type
@@ -24,13 +24,17 @@
                         <option value="Opera">Opera</option>
                         <option value="Safari">Safari</option>
                     </datalist> -->
+                    <select class="form-control input-sm" v-model="notificationTypeId">
+                        <option value="">All</option>
+                        <option v-for="item in notificationTypes" :value="item.id">{{item.name}}</option>
+                    </select>
                 </th>
                 <th class="col-lg-4">Template</th>
                 <th class="col-lg-2"></th>
             </tr>
         </thead>
         <tbody>
-            <templatesItem v-for="(item,index) in templatesList" :item="item" :key="item.id" ></templatesItem>
+            <templatesItem v-for="(item,index) in filteredTemplates" :item="item" :key="item.id" ></templatesItem>
         </tbody>
     </table>
 </div>
@@ -50,17 +54,41 @@ export default {
             templatesList: [],
             notificationMediums: [],
             notificationTypes: [],
+            mediumId: '',
+            notificationTypeId: '',
             loading: true
         }
     },
     mounted(){
         this.fetchData();
     },
+    created(){
+        this.mediumId = this.$route.params.mediumId || '';
+    },
+    computed : {
+        filteredTemplates: function(){
+            if(!this.notificationTypeId){
+                return this.templatesList;
+            }
+            return this.templatesList.filter((item) => {
+                return item.notificationTypeId == this.notificationTypeId;
+            });
+        }
+    },
     methods: {
+        changeMedium: function(){
+            let params = {};
+                params = this.mediumId ? {mediumId: this.mediumId} : params;
+            this.$router.push({name:'templates-list', params: params });
+            this.fetchData();
+        },
         fetchData: function(){
             this.loading = true;
-            this.$apiService.get('http://localhost:9009/template-listings').then((response)=>{
-                console.log(response);
+            let templateListingApi = 'http://localhost:9009/template-listings',
+                mediumId = this.mediumId;
+                templateListingApi += `${mediumId ? '/'+mediumId : ''}`;
+
+            this.$apiService.get(templateListingApi).then((response)=>{
                 this.loading = false;
                 let data  = response && response.data || {};
                 this.templatesList = data.allTemplates || [];
@@ -68,7 +96,6 @@ export default {
                 this.notificationTypes = data.notificationTypes || [];
             }, (error)=>{
                 this.loading = false;
-                console.log('error-callback............');
             });
         }
     }

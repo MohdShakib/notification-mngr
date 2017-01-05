@@ -16,6 +16,8 @@
 <div id="app" class="vue-app-content">
     <!-- <header> -->
 
+    <notifications></notifications>
+
     <myHeader></myHeader>
     <!-- <modal2 :show="showModal"></modal2> -->
 
@@ -35,12 +37,14 @@
 
 import modal2 from './components/modal2.vue'
 import myHeader from './components/header.vue'
+import notifications from './components/notifications.vue'
 
 export default {
     name: 'app',
     components: {
         modal2,
-        myHeader
+        myHeader,
+        notifications
     },
     data() {
         return {

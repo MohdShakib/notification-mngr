@@ -4,7 +4,7 @@
 
 <div>
     <spinner :show="loading"></spinner>
-    <div class="col-lg-12" ng-if="!loading">
+    <div class="col-lg-12" v-if="!loading">
         <div class="col-lg-4">
             <div class="panel panel-primary">
                 <div class="panel-body">
@@ -37,6 +37,8 @@
 
 <script>
 
+import NotificationStore from '../../store/notificationStore'
+
 export default {
     name: 'template-update',
     data() {
@@ -59,9 +61,7 @@ export default {
         fetchData: function() {
             this.loading = true;
             this.$apiService.get(`http://localhost:9009/template-detail/${this.$route.params.id}`).then((response) => {
-                console.log(response);
                 let data = response && response.data || {};
-
                 if (data.type == "object") {
                     this.prop1 = data.prop1;
                     this.prop2 = data.prop2;
@@ -82,14 +82,26 @@ export default {
                     notificationTypeId: data.notificationTypeId
                 }
 
-
                 this.loading = false;
             }, (error) => {
-                this.loading = false;
-                console.log('error-callback............');
+                NotificationStore.addNotification({
+                    text: 'some errors occurred, please check after sometime.',
+                    type: "danger",
+                    timeout: false
+                });
             });
         },
         updateTemplate: function() {
+
+            if(!(this.subject && this.template)){
+                NotificationStore.addNotification({
+                    text: 'shown field(s) are mandatory.',
+                    type: "danger",
+                    timeout: true
+                });
+                return;
+            }
+
             var postData = {};
             if (this.prop1 && this.isTemplateObject) {
                 postData.prop1 = this.prop1;
@@ -102,12 +114,20 @@ export default {
             }
             postData.type = this.type;
             postData.prevData = this.prevData || {};
-            console.log('peviousData..........', postData);
 
-            this.$apiService.post(`http://localhost:9009/template/update/${this.$route.params.id}`, postData).then(() => {
-                console.log('updated........');
+            this.$apiService.post(`http://localhost:9009/template/update/${this.$route.params.id}`, postData).then((res) => {
+                let message = res && res.message;
+                NotificationStore.addNotification({
+                    text: message,
+                    type: "success",
+                    timeout: false
+                });
             }, (err) => {
-                console.log('erorr callback....',err);
+                NotificationStore.addNotification({
+                    text: err.message,
+                    type: "danger",
+                    timeout: true
+                });
             });
 
         }

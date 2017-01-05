@@ -23,9 +23,7 @@ const   notificationTemplateQuery = require('../services/queries/notificationTem
         }
 
         module.exports = function(req, res) {
-            var mediumId = req.query.medium;
-            if (!req.query.medium)
-                mediumId = 0;
+            var mediumId = req.params.mediumId;
 
             var allTemplates = notificationTemplateQuery.getAllTemplates(mediumId),
                 notificationMediums = notificationMediumsQuery.getNotificationMediums(),

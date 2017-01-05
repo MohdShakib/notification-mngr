@@ -12,11 +12,18 @@ axios.interceptors.request.use(function (config) {
 
 //response interceptor
 axios.interceptors.response.use(function (response) {
-    console.log('////////////',response);
     return response && response.data;
 }, function (error) {
+
+    let errorData;
+    if(error.response){
+        errorData = error.response && error.response.data;
+    }else {
+        errorData = error || {};
+    }
+
     // Do something with response error
-    return Promise.reject(error);
+    return Promise.reject(errorData);
 });
 
 

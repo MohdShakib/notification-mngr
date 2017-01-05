@@ -8,6 +8,7 @@ import templatesUpdate from  '../views/templates/template-update.vue'
 import notificationsList from  '../views/notifications/notifications-list.vue'
 import notificationDetail from  '../views/notifications/notification-detail.vue'
 import campaignsList from  '../views/campaigns-list.vue'
+import notFound from '../views/404-template.vue'
 
 export default new Router({
   mode: 'history',
@@ -16,9 +17,10 @@ export default new Router({
     { path: '/notification/:id', name: 'notification-detail', component: notificationDetail },
     { path: '/notifications-status', name: 'notifications-status', component: notificationsList },
     { path: '/notifications-sent', name: 'notifications-sent', component: templatesList },
-    { path: '/templates-list', component: templatesList },
+    { path: '/templates-list/:mediumId?', name: 'templates-list', component: templatesList },
     { path: '/template/:id', name: 'template-update', component: templatesUpdate },
     { path: '/campaigns', component: campaignsList },
-    { path: '/', redirect: '/templates-list' }
+    { path: '/', redirect: '/templates-list' },
+    { path: '*', component: notFound}
   ]
 })

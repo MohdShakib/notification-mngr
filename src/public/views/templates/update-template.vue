@@ -38,9 +38,10 @@
 <script>
 
 import NotificationStore from '../../store/notificationStore'
+import apiConfig from '../../config/apiConfig'
 
 export default {
-    name: 'template-update',
+    name: 'update-template',
     data() {
         return {
             prop1: '',
@@ -60,7 +61,10 @@ export default {
     methods: {
         fetchData: function() {
             this.loading = true;
-            this.$apiService.get(`/template-detail/${this.$route.params.id}`).then((response) => {
+            let url = apiConfig.apiHandlers.getTemplateDetails({
+                id: this.$route.params.id
+            }).url;
+            this.$apiService.get(url).then((response) => {
                 let data = response && response.data || {};
                 if (data.type == "object") {
                     this.prop1 = data.prop1;
@@ -93,7 +97,14 @@ export default {
         },
         updateTemplate: function() {
 
-            if(!(this.subject && this.template)){
+            if(this.prop1 && !(this.template && this.subject)){
+                NotificationStore.addNotification({
+                    text: 'shown field(s) are mandatory.',
+                    type: "danger",
+                    timeout: true
+                });
+                return;
+            }else if(!this.prop1 && !this.template){
                 NotificationStore.addNotification({
                     text: 'shown field(s) are mandatory.',
                     type: "danger",
@@ -115,7 +126,11 @@ export default {
             postData.type = this.type;
             postData.prevData = this.prevData || {};
 
-            this.$apiService.post(`/template/update/${this.$route.params.id}`, postData).then((res) => {
+            let url = apiConfig.apiHandlers.updateTemplate({
+                id: this.$route.params.id
+            }).url;
+
+            this.$apiService.post(url, postData).then((res) => {
                 let message = res && res.message;
                 NotificationStore.addNotification({
                     text: message,

@@ -5,44 +5,62 @@
 <div>
     <spinner :show="loading"></spinner>
     <div class="col-lg-12" v-if="!loading">
-        <!-- <div class="col-lg-4">
-            <div class="panel panel-primary">
-                <div class="panel-body">
-                    <div class="form-group">
-                        <div>
-                            <label>Notification Medium: </label> {{mediumName}}</div>
-                    </div>
-                    <div class="form-group">
-                        <div>
-                            <label>Notification Name: </label> {{notificationName}}</div>
+        <div class="col-lg-8 col-lg-offset-2">
+            <div class="form-inline">
+                <div class="form-group">
+                    <label>Notification Medium: </label>
+                    <div>
+                        <select class="form-control input-md" @change="changeMedium" v-model="mediumId">
+                            <option value="">All</option>
+                            <option v-for="item in notificationMediums" :value="item.id">{{item.name}}</option>
+                        </select>
                     </div>
                 </div>
+                <div class="pull-right form-group">
+                    <label>Notification Name: </label>
+                    <div>
+                    <select class="form-control input-md" v-model="notificationTypeId">
+                        <option value="">All</option>
+                        <option v-for="item in notificationTypes" :value="item.id">{{item.name}}</option>
+                    </select>
+                </div>
+                </div>
             </div>
-        </div> -->
-        <div class="col-lg-8">
-            <div class="form-group" v-if="prop1">
-                <div ><code>{{prop1}}</code></div>
-                <input type="Subject" class="form-control" id="subject" v-model="subject" placeholder="Subject">
+            <br/>
+            <div>
+                <div class="form-group" v-if="prop1">
+                    <div><code>{{prop1}}</code></div>
+                    <input type="Subject" class="form-control" id="subject" v-model="subject" placeholder="Subject">
+                </div>
+                <div class="form-group">
+                    <div v-if="prop2"><code>{{prop2}}</code></div>
+                    <textarea rows="15" cols="150" class="form-control" v-model="template" placeholder="body"></textarea>
+                </div>
+                <button type="submit" @click="updateTemplate" class="btn btn-primary btn-md">Add</button>
             </div>
-            <div class="form-group">
-                <div v-if="prop2"><code>{{prop2}}</code></div>
-                <textarea rows="15" cols="150" class="form-control" v-model="template" placeholder="body"></textarea>
-            </div>
-            <button type="submit" @click="updateTemplate" class="btn btn-primary">Add</button>
         </div>
     </div>
-</div>
 
 </template>
 
 <script>
 
 import NotificationStore from '../../store/notificationStore'
+import {
+    getNotificationTypes, getNotificationMediums
+} from '../../services/notificationService'
+import apiConfig from '../../config/apiConfig'
 
 export default {
-    name: 'template-update',
+    name: 'add-template',
     data() {
         return {
+
+            notificationTypes: [],
+            notificationMediums: [],
+            notificationTypeId: '',
+            mediumId: '',
+
             prop1: '',
             prop2: '',
             subject: '',
@@ -55,12 +73,30 @@ export default {
         }
     },
     mounted() {
+
+        this.mediumId = this.$route.params.mediumId;
+        this.notificcationTypeId = this.$route.params.notificationTypeId;
+
         this.fetchData();
+
+        getNotificationTypes().then((notificationTypes) => {
+            this.notificationTypes = notificationTypes.data || [];
+        });
+
+        getNotificationMediums().then((notificationMediums) => {
+            this.notificationMediums = notificationMediums.data || [];
+        });
     },
     methods: {
         fetchData: function() {
             this.loading = true;
-            this.$apiService.get(`/template-detail/${this.$route.params.id}`).then((response) => {
+            let url = apiConfig.apiHandlers.getTemplateDetails({
+                query: {
+                    notificcationTypeId: this.notificcationTypeId,
+                    mediumId: this.mediumId
+                }
+            }).url;
+            this.$apiService.get(url).then((response) => {
                 let data = response && response.data || {};
                 if (data.type == "object") {
                     this.prop1 = data.prop1;
@@ -93,42 +129,42 @@ export default {
         },
         updateTemplate: function() {
 
-            if(!(this.subject && this.template)){
-                NotificationStore.addNotification({
-                    text: 'shown field(s) are mandatory.',
-                    type: "danger",
-                    timeout: true
-                });
-                return;
-            }
-
-            var postData = {};
-            if (this.prop1 && this.isTemplateObject) {
-                postData.prop1 = this.prop1;
-                postData.prop2 = this.prop2;
-                postData['template'] = {};
-                postData['template'][this.prop1] = this.subject;
-                postData['template'][this.prop2] = this.template;
-            } else {
-                postData.template = this.template;
-            }
-            postData.type = this.type;
-            postData.prevData = this.prevData || {};
-
-            this.$apiService.post(`/template/update/${this.$route.params.id}`, postData).then((res) => {
-                let message = res && res.message;
-                NotificationStore.addNotification({
-                    text: message,
-                    type: "success",
-                    timeout: false
-                });
-            }, (err) => {
-                NotificationStore.addNotification({
-                    text: err.message,
-                    type: "danger",
-                    timeout: true
-                });
-            });
+            // if(!(this.subject && this.template)){
+            //     NotificationStore.addNotification({
+            //         text: 'shown field(s) are mandatory.',
+            //         type: "danger",
+            //         timeout: true
+            //     });
+            //     return;
+            // }
+            //
+            // var postData = {};
+            // if (this.prop1 && this.isTemplateObject) {
+            //     postData.prop1 = this.prop1;
+            //     postData.prop2 = this.prop2;
+            //     postData['template'] = {};
+            //     postData['template'][this.prop1] = this.subject;
+            //     postData['template'][this.prop2] = this.template;
+            // } else {
+            //     postData.template = this.template;
+            // }
+            // postData.type = this.type;
+            // postData.prevData = this.prevData || {};
+            //
+            // this.$apiService.post(`/template/update/${this.$route.params.id}`, postData).then((res) => {
+            //     let message = res && res.message;
+            //     NotificationStore.addNotification({
+            //         text: message,
+            //         type: "success",
+            //         timeout: false
+            //     });
+            // }, (err) => {
+            //     NotificationStore.addNotification({
+            //         text: err.message,
+            //         type: "danger",
+            //         timeout: true
+            //     });
+            // });
 
         }
     }

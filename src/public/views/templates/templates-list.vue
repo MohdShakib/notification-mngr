@@ -56,6 +56,7 @@
 import templatesItem from './template-item.vue'
 import modal from '../../components/modal.vue'
 import { getNotificationTypes, getNotificationMediums } from '../../services/notificationService'
+import apiConfig from '../../config/apiConfig'
 
 export default {
     name: 'templates-list',
@@ -102,11 +103,10 @@ export default {
         },
         fetchData: function(){
             this.loading = true;
-            let templateListingApi = '/template-listings',
-                mediumId = this.mediumId;
-                templateListingApi += `${mediumId ? '/'+mediumId : ''}`;
-
-            this.$apiService.get(templateListingApi).then((response)=>{
+            let url = apiConfig.apiHandlers.getTemplateListings({
+                mediumId: this.mediumId
+            }).url;
+            this.$apiService.get(url).then((response)=>{
                 this.loading = false;
                 this.templatesList = response && response.data || [];
             }, (error)=>{

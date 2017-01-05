@@ -37,7 +37,7 @@ module.exports.execQueryParams = function(q, obj) {
                 reject(err);
                 throw err;
             }
-            console.log("---QUERY: ", q)
+            console.log("---QUERY: ", q, obj)
             console.timeEnd("Query time");
             resolve(rows);
         });

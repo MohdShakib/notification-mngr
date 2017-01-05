@@ -48,6 +48,8 @@
 
 <script>
 
+import apiConfig from '../../config/apiConfig'
+
 export default {
     name: 'notification-detail',
     data() {
@@ -82,7 +84,10 @@ export default {
     methods: {
         fetchData: function() {
             this.loading = true;
-            this.$apiService.get(`/notification-detail/${this.$route.params.id}`).then((response) => {
+            let url = apiConfig.apiHandlers.getNotificationDetail({
+                id: this.$route.params.id
+            }).url;
+            this.$apiService.get(url).then((response) => {
                 let data = response && response.data || {};
 
                 this.loading = false;

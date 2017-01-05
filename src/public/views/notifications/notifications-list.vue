@@ -37,6 +37,7 @@
 <script>
 
 import notificationsItem from './notification-item.vue'
+import apiConfig from '../../config/apiConfig'
 
 export default {
     name: 'notifications-list',
@@ -55,7 +56,8 @@ export default {
     methods: {
         fetchData: function(){
             this.loading = true;
-            this.$apiService.get('/notification-listings').then((response)=>{
+            let url = apiConfig.apiHandlers.getNotificationListings().url;
+            this.$apiService.get(url).then((response)=>{
                 console.log(response);
                 this.loading = false;
                 let data  = response && response.data || {};

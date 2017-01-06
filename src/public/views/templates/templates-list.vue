@@ -4,6 +4,10 @@
 
 <div>
     <spinner :show="loading"></spinner>
+    <modal :show="preview" :large="true" @cancel="hidePreview">
+        <div slot="title">Preview</div>
+        <renderTemplate :item="selectedItem"></renderTemplate>
+    </modal>
     <table class="table table-bordered table-striped" v-if="!loading">
         <thead>
             <tr>
@@ -44,7 +48,7 @@
                     No Template Found
                 <div>
             </tableRowMessage>
-            <templatesItem v-for="(item,index) in filteredTemplates" :item="item"  :index="index" :key="item.id" ></templatesItem>
+            <templatesItem v-for="(item,index) in filteredTemplates" @showPreview="showPreview" :item="item"  :index="index" :key="item.id" ></templatesItem>
         </tbody>
     </table>
 </div>
@@ -54,13 +58,13 @@
 <script>
 
 import templatesItem from './template-item.vue'
-import modal from '../../components/modal.vue'
+import renderTemplate from './render-template.vue'
 import { getNotificationTypes, getNotificationMediums } from '../../services/notificationService'
 import apiConfig from '../../config/apiConfig'
 
 export default {
     name: 'templates-list',
-    components: { templatesItem, modal },
+    components: { templatesItem, renderTemplate },
     data() {
         return {
             templatesList: [],
@@ -68,7 +72,10 @@ export default {
             notificationTypes: [],
             mediumId: '',
             notificationTypeId: '',
-            loading: true
+            loading: true,
+            previewContent: '',
+            preview: false,
+            selectedItem: {}
         }
     },
     mounted(){
@@ -95,6 +102,14 @@ export default {
         }
     },
     methods: {
+        showPreview: function(index){
+            this.selectedItem = this.templatesList[index] || {};
+            this.preview = true;
+        },
+        hidePreview: function(){
+            this.selectedItem = {};
+            this.preview = false;
+        },
         changeMedium: function(){
             let params = {};
                 params = this.mediumId ? {mediumId: this.mediumId} : params;

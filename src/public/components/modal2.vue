@@ -128,8 +128,7 @@ export default {
     },
     data() {
         return {
-            duration: null,
-            showModal: this.show
+            duration: null
         };
     },
     computed: {
@@ -150,7 +149,8 @@ export default {
         document.body.className = document.body.className.replace(/\s?modal-open/, '');
     },
     watch: {
-        showModal(value) {
+        show(value) {
+            this.showModal = value;
             if (value) {
                 document.body.className += ' modal-open';
             }else {

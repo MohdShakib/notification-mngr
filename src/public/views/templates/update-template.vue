@@ -4,31 +4,38 @@
 
 <div>
     <spinner :show="loading"></spinner>
+    <modal :show="preview" :large="true" @cancel="preview=false;">
+        <div slot="title">Preview</div>
+        <renderTemplate :item="previewData"></renderTemplate>
+    </modal>
     <div class="col-lg-12" v-if="!loading">
         <div class="col-lg-4">
             <div class="panel panel-primary">
                 <div class="panel-body">
                     <div class="form-group">
-                        <div>
-                            <label>Notification Medium: </label> {{mediumName}}</div>
+                        <label>Notification Medium</label>
+                        <input v-model="mediumName" class="form-control" readonly/>
                     </div>
                     <div class="form-group">
-                        <div>
-                            <label>Notification Name: </label> {{notificationName}}</div>
+                        <label>Notification Type</label>
+                        <input v-model="notificationName" class="form-control" readonly/>
                     </div>
                 </div>
             </div>
         </div>
         <div class="col-lg-8">
             <div class="form-group" v-if="prop1">
-                <div ><code>{{prop1}}</code></div>
+                <div><code>{{prop1}}</code></div>
                 <input type="Subject" class="form-control" id="subject" v-model="subject" placeholder="Subject">
             </div>
             <div class="form-group">
                 <div v-if="prop2"><code>{{prop2}}</code></div>
                 <textarea rows="15" cols="150" class="form-control" v-model="template" placeholder="body"></textarea>
             </div>
-            <button type="submit" @click="updateTemplate" :disabled="isDisabled" class="btn btn-primary">Update</button>
+            <div class="form-group">
+                <button type="submit" @click="showPreview" @close="preview=false;" class="btn btn-primary">Preview</button>
+                <button type="submit" @click="updateTemplate" :disabled="isDisabled" class="btn btn-primary">Update</button>
+            </div>
         </div>
     </div>
 </div>
@@ -38,10 +45,12 @@
 <script>
 
 import NotificationStore from '../../store/notificationStore'
+import renderTemplate from './render-template.vue'
 import apiConfig from '../../config/apiConfig'
 
 export default {
     name: 'update-template',
+    components: { renderTemplate },
     data() {
         return {
             prop1: '',
@@ -53,6 +62,8 @@ export default {
             type: '',
             isTemplateObject: false,
             isDisabled: true,
+            preview: false,
+            previewData: {},
             loading: true
         }
     },
@@ -60,11 +71,29 @@ export default {
         this.fetchData();
     },
     computed: {
-        isDisabled(){
+        isDisabled() {
             return !(this.template && (!this.isTemplateObject || this.subject));
         }
     },
     methods: {
+        showPreview(){
+            let tmpData = {};
+            if(this.isTemplateObject){
+                tmpData.prop1 = this.prop1;
+                tmpData.prop2 = this.prop2;
+                tmpData['type'] = 'object';
+                tmpData['template'] = {};
+                tmpData['template'][this.prop1] = this.subject;
+                tmpData['template'][this.prop2] = this.template;
+            }else {
+                tmpData['template'] = this.template;
+            }
+            for(let key in tmpData){
+                if(tmpData.hasOwnProperty(key))
+                    this.$set(this.previewData, key, tmpData[key]);
+            }
+            this.preview = true;
+        },
         fetchData: function() {
             this.loading = true;
             let url = apiConfig.apiHandlers.getTemplateDetails({
@@ -103,7 +132,7 @@ export default {
         },
         updateTemplate: function() {
 
-            if(!this.template || (this.prop1 && !this.subject)){
+            if (!this.template || (this.prop1 && !this.subject)) {
                 NotificationStore.addNotification({
                     text: 'shown field(s) are mandatory.',
                     type: "danger",

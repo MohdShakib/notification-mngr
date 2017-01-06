@@ -34,15 +34,15 @@ pre {
                 <span class="glyphicon glyphicon-pencil"></span>
             </router-link>
             &nbsp;
-            <button type="button" class="btn btn-primary">
+            <button type="button" @click="$emit('showPreview', index)" class="btn btn-primary">
                 <span class="glyphicon glyphicon-eye-open"></span>
             </button>&nbsp;
             <button type="button" class="btn btn-primary">
                 <span class="glyphicon glyphicon-trash"></span>
             </button>&nbsp;
-            <button type="button" class="btn btn-primary">
+            <router-link  type="button" class="btn btn-primary" :to="{name:'schedule-template', params: {id: item.id}}" tag="button">
                 <span class="glyphicon glyphicon-send"></span>
-            </button>
+            </router-link>
         </form>
     </td>
 </tr>

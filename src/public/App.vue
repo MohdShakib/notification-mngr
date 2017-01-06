@@ -9,6 +9,9 @@
     animation: glyphicon-spin-r 3s infinite linear;
 }
 
+.margin-b20{
+    margin-bottom: 20px;
+}
 </style>
 
 <template>
@@ -19,7 +22,6 @@
     <notifications></notifications>
 
     <myHeader></myHeader>
-    <!-- <modal2 :show="showModal"></modal2> -->
 
     <!-- </header> -->
     <div class="container-fluid">
@@ -35,20 +37,17 @@
 
 <script>
 
-import modal2 from './components/modal2.vue'
 import myHeader from './components/header.vue'
 import notifications from './components/notifications.vue'
 
 export default {
     name: 'app',
     components: {
-        modal2,
         myHeader,
         notifications
     },
     data() {
         return {
-            showModal: true
         }
     }
 }

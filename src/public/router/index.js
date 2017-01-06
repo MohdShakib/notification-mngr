@@ -8,6 +8,7 @@ import updateTemplate from  '../views/templates/update-template.vue'
 import addTemplate from  '../views/templates/add-template.vue'
 import notificationsList from  '../views/notifications/notifications-list.vue'
 import notificationDetail from  '../views/notifications/notification-detail.vue'
+import scheduleTemplate from '../views/templates/schedule-template.vue'
 import campaignsList from  '../views/campaigns-list.vue'
 import notFound from '../views/404-template.vue'
 
@@ -18,6 +19,7 @@ export default new Router({
     { path: '/notification/:id', name: 'notification-detail', component: notificationDetail },
     { path: '/notifications-status', name: 'notifications-status', component: notificationsList },
     { path: '/notifications-sent', name: 'notifications-sent', component: templatesList },
+    { path: '/schedule-template/:id', name: 'schedule-template', component: scheduleTemplate },
     { path: '/update-template/:id', name: 'update-template', component: updateTemplate },
     { path: '/add-template/:notificationTypeId/:mediumId', name: 'add-template', component: addTemplate },
     { path: '/templates-list/:mediumId?', name: 'templates-list', component: templatesList },

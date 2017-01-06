@@ -25,9 +25,6 @@
                     </li>
                 </ul>
             </div>
-            <div class="col-lg-1 navbar-right">
-                <button class="btn btn-primary">Login</button>
-            </div>
         </div>
     </div>
 </nav>

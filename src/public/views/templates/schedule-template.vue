@@ -2,68 +2,62 @@
 
 <template>
 
-<div>
-    <spinner :show="loading"></spinner>
-    <modal :show="preview" :large="true" @cancel="preview=false;">
-        <div slot="title">Preview</div>
+<div v-loading.body="loading">
+
+    <el-dialog title="Preview" top="5%" v-model="preview" size="medium">
         <renderTemplate :item="previewData"></renderTemplate>
-    </modal>
-    <div class="col-sm-12" v-if="!loading">
-        <div class="col-lg-5">
-            <div class="panel panel-primary ">
-                <div class="panel-body">
-                    <div class="form-group">
-                        <label class="text-capitalize small">notification type</label>
-                        <input v-model="notificationName" class="form-control input-sm" readonly/>
-                    </div>
-                    <div class="form-group">
-                        <label class="text-capitalize small">notification medium</label>
-                        <input v-model="mediumName" class="form-control input-sm" readonly/>
-                    </div>
-                    <div class="form-group">
-                        <button class="btn btn-default btn-sm" @click="preview=true">Preview</button>
-                    </div>
-                </div>
-            </div>
-            <div class="panel panel-primary">
-                <div class="panel-title text-center">
-                    <h4 class="text-capitalize">template variables</h4>
-                </div>
-                <div class="panel-body">
-                    <div class="notification-details">
-                        <div class="form-group" v-for="(value, key) in extractData">
-                            <label class="small">{{key}}</label>
-                            <input v-model="extractData[key]" class="form-control input-sm" />
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class=" col-lg-5 col-lg-offset-2">
-            <div class="panel panel-primary ">
-                <div class="panel-body">
-                    <div class="form-group">
-                        <label class="text-capitalize small">data type</label>
-                        <select class="form-control" v-model="dataType">
-                            <option :value="1">user ids</option>
-                            <option :value="2">user emails</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label class="small">enter commma separated values</label>
-                        <textarea cols="15" rows="5" class="form-control input-sm" v-model="userData"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label class="small">schedule at</label>
-                        <input type="time" class="form-control"/>
-                    </div>
-                    <div class="form-group">
-                        <button  :disabled="isDisabled" class="btn btn-primary btn-sm">schedule</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+        <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="preview = false">Ok</el-button>
+      </span>
+    </el-dialog>
+
+    <el-row :gutter="20" >
+        <el-col :span="10">
+            <el-card class="box-card">
+                <el-row>
+                    Notification Medium
+                    <el-input size="small" v-model="mediumName" :disabled="true"></el-input>
+                </el-row>
+                <el-row>
+                    Notification Type
+                    <el-input size="small" v-model="notificationName" :disabled="true"></el-input>
+                </el-row>
+                <el-row>
+                    <el-button size="small" @click="preview=true">Preview</el-button>
+                </el-row>
+            </el-card>
+
+            <el-card class="box-card">
+                <el-row v-for="(value, key) in extractData">
+                    <span v-text="key"></span>
+                    <el-input v-model="extractData[key]"></el-input>
+                </el-row>
+            </el-card>
+        </el-col>
+        <el-col :span="12" :offset="2">
+            <el-card class="box-card">
+                <el-row>
+                    <el-col :span="12">
+                    <el-select v-model="dataType">
+                        <el-option label="user ids" :value="1"></el-option>
+                        <el-option label="user emails" :value="2"></el-option>
+                    </el-select>
+                </el-col>
+                    <el-col :span="12">
+                        <el-date-picker v-model="schedule_time" type="datetime" placeholder="Select date and time">
+                        </el-date-picker>
+                    </el-col>
+                </el-row>
+                <el-row>
+                    <span>enter commma separated values</span>
+                    <el-input type="textarea" :cols="15" :rows="5" v-model="userData"></el-input>
+                </el-row>
+                <el-row>
+                    <el-button :disabled="isDisabled" type="primary">schedule</el-button>
+                </el-row>
+            </el-card>
+        </el-col>
+    </el-row>
 
 </div>
 
@@ -99,10 +93,10 @@ export default {
         this.fetchData();
     },
     computed: {
-        isDisabled(){
+        isDisabled() {
             let flag = this.dataType && this.userData;
-            for(let key in this.extractData){
-                if(this.extractData.hasOwnProperty(key)){
+            for (let key in this.extractData) {
+                if (this.extractData.hasOwnProperty(key)) {
                     flag = flag && this.extractData[key];
                 }
             }

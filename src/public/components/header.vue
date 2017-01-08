@@ -1,38 +1,35 @@
-
-
 <template>
 
-<nav class="navbar navbar-default navbar-fixed-top">
-    <div class="container-fluid">
-        <div class="collapse navbar-collapse">
-
-            <div class="col-lg-3">
-                <h3>Notification Manager</h3>
-            </div>
-            <div class="col-lg-8">
-                <ul class="nav navbar-nav pull-right">
-                    <li>
-                        <router-link to="/notifications-status">Notification Status</router-link>
-                    </li>
-                    <li>
-                        <router-link to="/templates-list">Templates</router-link>
-                    </li>
-                    <li>
-                        <router-link to="/campaigns">Campaigns</router-link>
-                    </li>
-                    <li>
-                        <router-link to="/notifications-sent">Sent Notification</router-link>
-                    </li>
-                </ul>
-            </div>
+<div class="headerWrapper">
+    <header class="header" style="background-color: rgb(32, 160, 255);">
+        <div class="header-container">
+            <h1>
+                notification manager
+            </h1>
+            <el-menu class="nav" mode="horizontal">
+                <el-menu-item index="1">
+                    <router-link class="header-link" to="/notifications-status">Notifications</router-link>
+                </el-menu-item>
+                <el-menu-item index="2">
+                    <router-link class="header-link" to="/templates-list">Templates</router-link>
+                </el-menu-item>
+                <el-menu-item index="3">
+                    <router-link class="header-link" to="/campaigns">Campaigns</router-link>
+                </el-menu-item>
+                <el-menu-item index="4">
+                    <router-link  class="header-link" to="/notifications-sent">Sent Notification</router-link>
+                </el-menu-item>
+            </el-menu>
         </div>
-    </div>
-</nav>
+    </header>
+</div>
 
 </template>
 
 <script>
-    export default {
-        name: 'my-header'
-    }
+
+export default {
+    name: 'my-header'
+}
+
 </script>

@@ -1,20 +1,18 @@
 import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
+import ElementUI from 'element-ui'
 import VueResource from 'vue-resource'
-import spinner from './components/Spinner.vue'
-import modal from './components/modal2.vue'
-import tableRowMessage from './components/table-row-message.vue'
+
 import apiService from './services/apiService'
+import 'element-ui/lib/theme-default/index.css'
+import './styles/main.css'
 
 Vue.use(VueResource);
+Vue.use(ElementUI);
 // Vue.http.options.emulateJSON = true;
 
 Vue.prototype.$apiService = apiService;
-
-Vue.component('spinner', spinner);
-Vue.component('modal', modal);
-Vue.component('tableRowMessage', tableRowMessage);
 
 const app = new Vue({
     router,

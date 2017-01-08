@@ -2,46 +2,40 @@
 
 <template>
 
-<div>
-    <spinner :show="loading"></spinner>
-    <table class="table table-bordered table-striped" v-if="!loading">
-        <thead>
-            <tr>
-                <th class="col-lg-1 text-center">#Id</th>
-                <th class="col-lg-2">Notification Medium
-                    <!-- <select class="form-control input-sm">
-                        <option value="0" selected>All</option>
-                        <option v-for="item in notificationMediums" :value="item.id">{{item.name}}</option>
-                    </select> -->
-                </th>
-                <th class="col-lg-2">
-                    Notification Type
-                </th>
-                <th class="col-lg-2">created date</th>
-                <th class="col-lg-2">scheduled date</th>
-                <th class="col-lg-2">status</th>
-                <th class="col-lg-1">open status</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tableRowMessage v-if="!notificationsList.length" cols="7">
-                No notification available
-            </tableRowMessage>
-            <notificationsItem v-for="(item,index) in notificationsList" :item="item" :index="index"></notificationsItem>
-        </tbody>
-    </table>
+<div v-loading.body="loading">
+    <el-table :data="notificationsList" empty-text="no notifications found" border stripe style="width: 100%" >
+        <el-table-column  width="100">
+            <template scope="scope">
+                <router-link :to="{name:'notification-detail', params: {'id': scope.row.id}}">{{scope.row.id}}</router-link>
+            </template>
+        </el-table-column>
+        <el-table-column prop="mediumname" label="Notifification Medium" width="180">
+        </el-table-column>
+        <el-table-column prop="notificationname" label="Notification Type" width="280">
+        </el-table-column>
+        <el-table-column prop="createdAt" label="Created At">
+        </el-table-column>
+        <el-table-column prop="scheduleDate" label="Scheduled At">
+        </el-table-column>
+        <el-table-column prop="status" label="Status" width="150">
+        </el-table-column>
+        <el-table-column label="Open Status" width="150">
+            <template scope="scope">
+                {{scope.row.is_open ? 'opened' : 'not opened'}}
+            </template>
+        </el-table-column>
+    </el-table>
+
 </div>
 
 </template>
 
 <script>
 
-import notificationsItem from './notification-item.vue'
 import apiConfig from '../../config/apiConfig'
 
 export default {
     name: 'notifications-list',
-    components: { notificationsItem },
     data() {
         return {
             notificationsList: [],
@@ -65,9 +59,12 @@ export default {
                 this.notificationMediums = data.medium || [];
                 this.notificationTypes = data.notification || [];
 
-            }, (error)=>{
+            }, (err)=>{
                 this.loading = false;
-                console.log('error-callback............');
+                this.$notify.error({
+                    title: 'Error',
+                    message: err.message || 'something went wrong.'
+                });
             });
         }
     }

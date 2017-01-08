@@ -1,70 +1,96 @@
-
-
 <template>
 
-<div>
-    <spinner :show="loading"></spinner>
-    <modal :show="preview" :large="true" @cancel="hidePreview">
-        <div slot="title">Preview</div>
+<div v-loading.body="loading">
+
+    <el-dialog title="Preview" top="5%" v-model="preview" @close="hidePreview" size="medium">
         <renderTemplate :item="selectedItem"></renderTemplate>
-    </modal>
-    <table class="table table-bordered table-striped" v-if="!loading">
-        <thead>
-            <tr>
-                <th class="col-lg-1 text-center">#Id</th>
-                <th class="col-lg-2">Notification Medium
-                    <select class="form-control input-sm" @change="changeMedium" v-model="mediumId">
-                        <option value="">All</option>
-                        <option v-for="item in notificationMediums" :value="item.id">{{item.name}}</option>
-                    </select>
-                </th>
-                <th class="col-lg-3">
-                    Notification Type
-                    <!-- <input type="text" class="form-control input-sm" placeholder="Notification Type" list="notification-types"></input>
-                    <datalist id="notification-types">
-                        <option value="Internet Explorer">Internet Explorer</option>
-                        <option value="Firefox">Firefox</option>
-                        <option value="Chrome">Chrome</option>
-                        <option value="Opera">Opera</option>
-                        <option value="Safari">Safari</option>
-                    </datalist> -->
-                    <select class="form-control input-sm" v-model="notificationTypeId">
-                        <option value="">All</option>
-                        <option v-for="item in notificationTypes" :value="item.id">{{item.name}}</option>
-                    </select>
-                </th>
-                <th class="col-lg-4">Template</th>
-                <th class="col-lg-2"></th>
-            </tr>
-        </thead>
-        <tbody>
-            <tableRowMessage v-if="!filteredTemplates.length" cols="5">
-                <div v-if="notificationTypeId && mediumId">
-                    <router-link :to="{name: 'add-template', params: {notificationTypeId: notificationTypeId, mediumId: mediumId}}" class="btn btn-primary" tag="button">
-                        add new template
-                    </router-link>
-                </div>
-                <div v-else>
-                    No Template Found
+        <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="preview = false">Ok</el-button>
+      </span>
+    </el-dialog>
+
+    <template  >
+        <el-form :inline="true" class="demo-form-inline">
+            <el-form-item>
+                Notification Medium
                 <div>
-            </tableRowMessage>
-            <templatesItem v-for="(item,index) in filteredTemplates" @showPreview="showPreview" :item="item"  :index="index" :key="item.id" ></templatesItem>
-        </tbody>
-    </table>
+                    <el-select v-model="mediumId" @change="changeMedium" placeholder="Notification Medium">
+                        <el-option v-for="item in notificationMediums" :label="item.name" :value="item.id"></el-option>
+                    </el-select>
+                </div>
+            </el-form-item>
+            <el-form-item offset="2">
+                Notification Type
+                <div>
+                    <el-select v-model="notificationTypeId" placeholder="Notification Type">
+                        <el-option v-for="item in notificationTypes" :label="item.name" :value="item.id"></el-option>
+                    </el-select>
+                </div>
+            </el-form-item>
+        </el-form>
+        <el-table  :data="filteredTemplates" border stripe style="width: 100%">
+            <div slot="empty">
+                <template v-if="notificationTypeId && mediumId">
+                    <el-button @click="redirectTo('add-template',{notificationTypeId: notificationTypeId, mediumId: mediumId})" type="primary">Create</el-button>
+                </template>
+                <template v-else>
+                    No Templates Found
+                </template>
+            </div>
+            <el-table-column type="index" width="100">
+            </el-table-column>
+            <el-table-column prop="mediumname" label="Notifification Medium" width="180">
+            </el-table-column>
+            <el-table-column prop="notificationname" label="Notification Type" width="200">
+            </el-table-column>
+            <el-table-column label="Template">
+                <template scope="scope">
+                    <template v-if="scope.row.type == 'object' ">
+                        <div class="">
+                            <code>{{scope.row.prop1}}</code>
+                            <pre>{{scope.row.template[scope.row.prop1]}}</pre>
+                            <code>{{scope.row.prop2}}</codeg>
+                            <pre>{{scope.row.template[scope.row.prop2]}}</pre>
+                        </div>
+                    </template>
+                    <template v-else>
+                        <pre>{{scope.row.template}}</pre>
+                    </template>
+                </template>
+            </el-table-column>
+            <el-table-column width="180">
+                <template scope="scope">
+                    <div>
+                        <el-button type="primary" @click="redirectTo('update-template', {id:scope.row.id})" icon="edit"></el-button>
+                        <el-button type="primary" icon="delete"></el-button>
+                    </div>
+                    <br/>
+                    <div>
+                        <el-button type="primary" @click="showPreview(scope.$index)" icon="view"></el-button>
+                        <el-button type="primary" @click="redirectTo('schedule-template', {id:scope.row.id})" icon="message"></el-button>
+                    </div>
+                </template>
+            </el-table-column>
+        </el-table>
+    </template>
 </div>
 
 </template>
 
 <script>
 
-import templatesItem from './template-item.vue'
 import renderTemplate from './render-template.vue'
-import { getNotificationTypes, getNotificationMediums } from '../../services/notificationService'
+import {
+    getNotificationTypes, getNotificationMediums
+}
+from '../../services/notificationService'
 import apiConfig from '../../config/apiConfig'
 
 export default {
     name: 'templates-list',
-    components: { templatesItem, renderTemplate },
+    components: {
+        renderTemplate
+    },
     data() {
         return {
             templatesList: [],
@@ -78,7 +104,7 @@ export default {
             selectedItem: {}
         }
     },
-    mounted(){
+    mounted() {
         this.fetchData();
         getNotificationTypes().then((notificationTypes) => {
             this.notificationTypes = notificationTypes.data || [];
@@ -88,12 +114,12 @@ export default {
             this.notificationMediums = notificationMediums.data || [];
         });
     },
-    created(){
+    created() {
         this.mediumId = this.$route.params.mediumId || '';
     },
-    computed : {
-        filteredTemplates: function(){
-            if(!this.notificationTypeId){
+    computed: {
+        filteredTemplates: function() {
+            if (!this.notificationTypeId) {
                 return this.templatesList;
             }
             return this.templatesList.filter((item) => {
@@ -102,29 +128,40 @@ export default {
         }
     },
     methods: {
-        showPreview: function(index){
+        redirectTo: function(name, params) {
+            this.$router.push({
+                name: name,
+                params: params || {}
+            });
+        },
+        showPreview: function(index) {
             this.selectedItem = this.templatesList[index] || {};
             this.preview = true;
         },
-        hidePreview: function(){
+        hidePreview: function() {
             this.selectedItem = {};
             this.preview = false;
         },
-        changeMedium: function(){
+        changeMedium: function() {
             let params = {};
-                params = this.mediumId ? {mediumId: this.mediumId} : params;
-            this.$router.push({name:'templates-list', params: params });
+            params = this.mediumId ? {
+                mediumId: this.mediumId
+            } : params;
+            this.$router.push({
+                name: 'templates-list',
+                params: params
+            });
             this.fetchData();
         },
-        fetchData: function(){
+        fetchData: function() {
             this.loading = true;
             let url = apiConfig.apiHandlers.getTemplateListings({
                 mediumId: this.mediumId
             }).url;
-            this.$apiService.get(url).then((response)=>{
+            this.$apiService.get(url).then((response) => {
                 this.loading = false;
                 this.templatesList = response && response.data || [];
-            }, (error)=>{
+            }, (error) => {
                 this.loading = false;
             });
         }

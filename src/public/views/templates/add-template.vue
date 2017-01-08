@@ -2,54 +2,56 @@
 
 <template>
 
-<div>
-    <spinner :show="loading"></spinner>
-    <div class="col-lg-12" v-if="!loading">
-        <div class="col-lg-8 col-lg-offset-2">
-            <div class="form-inline">
-                <div class="form-group">
-                    <label>Notification Medium: </label>
-                    <div>
-                        <select class="form-control input-md" @change="checkTemplateExistence" v-model="mediumId">
-                            <option v-for="item in notificationMediums" :value="item.id">{{item.name}}</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="pull-right form-group">
-                    <label>Notification Name: </label>
-                    <div>
-                    <select class="form-control input-md" @change="checkTemplateExistence" v-model="notificationTypeId">
-                        <option v-for="item in notificationTypes" :value="item.id">{{item.name}}</option>
-                    </select>
-                </div>
-                </div>
-            </div>
-            <br/>
-            <div v-if="canCreate">
-                <div class="form-group" v-if="isEmail">
-                    <div><code>subject</code></div>
-                    <input type="Subject" class="form-control" id="subject" v-model="subject" placeholder="Subject">
-                </div>
-                <div class="form-group">
-                    <div v-if="isEmail"><code>body</code></div>
-                    <textarea rows="15" cols="150" class="form-control" v-model="template" placeholder="body"></textarea>
-                </div>
-                <button  type="submit" @click="crateTemplate" :disabled="isDisabled" class="btn btn-primary btn-md">Add</button>
-            </div>
-            <div class="text-center" v-else>
-                Template already exist <br> OR <br> Something went wrong.
-            </div>
-        </div>
-    </div>
+<div v-loading.body="loading">
+    <el-row >
+        <el-col :span="18" :offset="3">
+            <el-card class="box-card">
+                <el-row>
+                    <el-col :span="12">
+                        <el-select @change="checkTemplateExistence" v-model="mediumId">
+                            <el-option v-for="item in notificationMediums" :label="item.name" :value="item.id"></el-option>
+                        </el-select>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-select @change="checkTemplateExistence" v-model="notificationTypeId">
+                            <el-option v-for="item in notificationTypes" :label="item.name" :value="item.id"></el-option>
+                        </el-select>
+                    </el-col>
+                </el-row>
+                <el-row>
+                    <template v-if="canCreate">
+                        <el-row v-if="isEmail">
+                            <code>subject</code>
+                            <el-input v-model="subject" placeholder="subject"></el-input>
+                        </el-row>
+                        <el-row>
+                            <div v-if="isEmail"><code>body</code></div>
+                            <el-input type="textarea" :rows="12" :cols="150" v-model="template" placeholder="content"></el-input>
+                        </el-row>
+                        <el-row>
+                            <el-button @click="crateTemplate" :disabled="isDisabled" type="primary">Add</el-button>
+                        </el-row>
+                    </template>
+                    <template v-else>
+                        <div class="text-center">
+                            Template already exist
+                            OR
+                            Something went wrong.
+                        </div>
+                    </template>
+                </el-row>
+            </el-card>
+        </el-col>
+    </el-row>
 
 </template>
 
 <script>
 
-import NotificationStore from '../../store/notificationStore'
 import {
     getNotificationTypes, getNotificationMediums
-} from '../../services/notificationService'
+}
+from '../../services/notificationService'
 import apiConfig from '../../config/apiConfig'
 
 export default {
@@ -70,8 +72,8 @@ export default {
     },
     mounted() {
 
-        this.mediumId = this.$route.params.mediumId;
-        this.notificationTypeId = this.$route.params.notificationTypeId;
+        this.mediumId = parseInt(this.$route.params.mediumId);
+        this.notificationTypeId = parseInt(this.$route.params.notificationTypeId);
 
         this.checkTemplateExistence();
 
@@ -83,13 +85,13 @@ export default {
             this.notificationMediums = notificationMediums.data || [];
         });
     },
-    computed:{
-        isEmail(){
-            return (this.mediumId == 1);
-        },
-        isDisabled(){
-            return !(this.template && this.notificationTypeId && this.mediumId && (!this.isEmail || this.subject));
-        }
+    computed: {
+        isEmail() {
+                return (this.mediumId == 1);
+            },
+            isDisabled() {
+                return !(this.template && this.notificationTypeId && this.mediumId && (!this.isEmail || this.subject));
+            }
     },
     methods: {
         checkTemplateExistence: function() {
@@ -102,28 +104,26 @@ export default {
             }).url;
             this.$apiService.get(url).then((response) => {
                 let data = response && response.data;
-                if(!data){
+                if (!data) {
                     this.canCreate = true;
-                }else {
+                } else {
                     this.canCreate = false;
                 }
                 this.loading = false;
             }, (error) => {
                 this.loading = false;
-                NotificationStore.addNotification({
-                    text: 'some errors occurred, please check after sometime.',
-                    type: "danger",
-                    timeout: false
+                this.$notify.error({
+                    title: 'Error',
+                    message: 'some errors occurred, please check after sometime.'
                 });
             });
         },
         crateTemplate: function() {
 
-            if(!this.template || (this.isEmail && !this.subject)){
-                NotificationStore.addNotification({
-                    text: 'shown field(s) are mandatory.',
-                    type: "danger",
-                    timeout: true
+            if (!this.template || (this.isEmail && !this.subject)) {
+                this.$notify.warning({
+                    title: 'Warning',
+                    message: 'shown field(s) are mandatory.'
                 });
                 return;
             }
@@ -134,7 +134,7 @@ export default {
                 notificationTypeId: this.notificationTypeId,
             }
 
-            if(this.isEmail){
+            if (this.isEmail) {
                 postData.subject = this.subject;
             }
 
@@ -142,16 +142,14 @@ export default {
             let url = apiConfig.apiHandlers.createTemplate().url;
             this.$apiService.post(url, postData).then((res) => {
                 let message = res && res.message;
-                NotificationStore.addNotification({
-                    text: message,
-                    type: "success",
-                    timeout: false
+                this.$notify.success({
+                    title: 'Success',
+                    message: message
                 });
             }, (err) => {
-                NotificationStore.addNotification({
-                    text: err.message,
-                    type: "danger",
-                    timeout: true
+                this.$notify.error({
+                    title: 'Error',
+                    message: err.message
                 });
             });
 

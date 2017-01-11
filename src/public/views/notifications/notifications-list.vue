@@ -3,8 +3,9 @@
 <template>
 
 <div v-loading.body="loading">
-    <el-table :data="notificationsList" empty-text="no notifications found" border stripe style="width: 100%" >
-        <el-table-column  width="100">
+    <notificationFilters @filterChange="updateQueryParam"></notificationFilters>
+    <el-table :data="notificationsList" empty-text="no notifications found" border stripe style="width: 100%">
+        <el-table-column width="100">
             <template scope="scope">
                 <router-link :to="{name:'notification-detail', params: {'id': scope.row.id}}">{{scope.row.id}}</router-link>
             </template>
@@ -13,9 +14,15 @@
         </el-table-column>
         <el-table-column prop="notificationname" label="Notification Type" width="280">
         </el-table-column>
-        <el-table-column prop="createdAt" label="Created At">
+        <el-table-column label="Created At">
+            <template scope="scope">
+                {{ scope.row.createdAt | date('%Y-%m-%d %I:%M %p') }}
+            </template>
         </el-table-column>
         <el-table-column prop="scheduleDate" label="Scheduled At">
+            <template scope="scope">
+                {{ scope.row.scheduleDate | date('%Y-%m-%d %I:%M %p') }}
+            </template>
         </el-table-column>
         <el-table-column prop="status" label="Status" width="150">
         </el-table-column>
@@ -25,46 +32,98 @@
             </template>
         </el-table-column>
     </el-table>
-
+    <div class="block" v-show="totalCount">
+        <el-pagination :current-page="currentPage" @current-change="handlePaginationChange" :page-size="perPageCount" layout="prev, pager, next" :total="totalCount">
+        </el-pagination>
+    </div>
 </div>
 
 </template>
 
 <script>
 
+import notificationFilters from './notification-filters.vue'
 import apiConfig from '../../config/apiConfig'
+
+let CancelToken, source, apiPromise;
 
 export default {
     name: 'notifications-list',
+    components: { notificationFilters },
     data() {
         return {
             notificationsList: [],
-            notificationMediums: [],
-            notificationTypes: [],
+            perPageCount: 40,
+            currentPage: 1,
+            totalCount: 0,
             loading: true
         }
     },
-    mounted(){
+    mounted() {
         this.fetchData();
     },
+    watch: {
+        $route: function(current, prev) {
+            this.fetchData();
+        }
+    },
     methods: {
-        fetchData: function(){
-            this.loading = true;
-            let url = apiConfig.apiHandlers.getNotificationListings().url;
-            this.$apiService.get(url).then((response)=>{
-                console.log(response);
-                this.loading = false;
-                let data  = response && response.data || {};
-                this.notificationsList = data.content || [];
-                this.notificationMediums = data.medium || [];
-                this.notificationTypes = data.notification || [];
+        handlePaginationChange(pageNo) {
+            pageNo = pageNo > 1 ? pageNo : undefined;
+            this.updateQueryParam('page', pageNo);
+        },
+        updateQueryParam: function(name, value) {
+            let query = {};
+            if(name !== 'reset'){
+                query = Object.assign({}, this.$route.query, {
+                    [name]: value
+                });
+            }else {
+                this.currentPage = 1;
+            }
 
-            }, (err)=>{
+            this.updateQuery(query);
+        },
+        fetchData() {
+            this.loading = true;
+            let url = apiConfig.apiHandlers.getNotificationListings({
+                query: this.$route.query
+            }).url;
+
+            if (!CancelToken) {
+                CancelToken = CancelToken || axios.CancelToken;
+                source = CancelToken.source();
+            }
+
+            if (apiPromise) {
+                source.cancel();
+                return;
+            }
+
+
+            apiPromise = true;
+            this.$apiService.get(url, {
+                cancelToken: source.token
+            }).then((response) => {
                 this.loading = false;
+                apiPromise = false;
+                let data = response && response.data || {};
+                this.totalCount = data.totalCount || 0;
+                this.notificationsList = data.content || [];
+            }, (err) => {
+                this.loading = false;
+                apiPromise = false;
                 this.$notify.error({
                     title: 'Error',
                     message: err.message || 'something went wrong.'
                 });
+            });
+        },
+        updateQuery(query) {
+            query = query || {};
+            this.$router.push({
+                name: 'notifications-status',
+                query: query
             });
         }
     }

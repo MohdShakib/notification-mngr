@@ -1,6 +1,6 @@
 <template>
 
-<div v-loading.body="loading">
+<div  v-loading.body="loading">
 
     <el-dialog title="Preview" top="5%" v-model="preview" @close="hidePreview" size="medium">
         <renderTemplate :item="selectedItem"></renderTemplate>
@@ -14,7 +14,7 @@
             <el-form-item>
                 Notification Medium
                 <div>
-                    <el-select v-model="mediumId" @change="changeMedium" placeholder="Notification Medium">
+                    <el-select v-model="mediumId" @change="changeMedium" filterable clearable placeholder="Notification Medium">
                         <el-option v-for="item in notificationMediums" :label="item.name" :value="item.id"></el-option>
                     </el-select>
                 </div>
@@ -22,7 +22,7 @@
             <el-form-item offset="2">
                 Notification Type
                 <div>
-                    <el-select v-model="notificationTypeId" placeholder="Notification Type">
+                    <el-select v-model="notificationTypeId" filterable clearable placeholder="Notification Type">
                         <el-option v-for="item in notificationTypes" :label="item.name" :value="item.id"></el-option>
                     </el-select>
                 </div>
@@ -115,7 +115,8 @@ export default {
         });
     },
     created() {
-        this.mediumId = this.$route.params.mediumId || '';
+        let params = this.$route.params;
+        this.mediumId = params.mediumId ? parseInt(params.mediumId) : '';
     },
     computed: {
         filteredTemplates: function() {

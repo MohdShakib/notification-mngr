@@ -11,7 +11,9 @@ function getURL(urlObj, query) {
     } else {
         queryStr = '';
         for (let key in query) {
-            queryStr = queryStr + '&' + key + '=' + query[key];
+            if(query[key]){
+                queryStr = queryStr + '&' + key + '=' + query[key];
+            }
         }
         queryStr = queryStr.slice(1);
     }

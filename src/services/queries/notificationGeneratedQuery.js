@@ -10,7 +10,7 @@ var tables = {
     NOTIFICATION_TYPE_NOTIFICATION_MEDIUM_MAPPING: 'notification.notification_type_notification_medium_mapping',
 }
 
-function getNotificationGenerated({notificationTypeId, mediumId, status, openStatus, page, from, to, lastHour, orderBy}, showCount, checkNextPage) {
+function getNotificationGenerated({notificationTypeId, mediumId, status, openStatus, page, fromDate, toDate, lastHour, orderBy}, showCount, checkNextPage) {
 
     var openQuery = '',
         openQuerySelector = '',
@@ -34,10 +34,9 @@ function getNotificationGenerated({notificationTypeId, mediumId, status, openSta
         offset = (page - 1) * perPageCount;
     }
 
-
     var dateFrom = 'DATE_SUB(DATE_ADD(NOW(),INTERVAL 19800 SECOND), INTERVAL 90 DAY)';
-    if (from) {
-        dateFrom = '"' + from + '"';
+    if (fromDate) {
+        dateFrom = '"' + fromDate + '"';
     }
 
     if (lastHour != undefined) {
@@ -45,8 +44,8 @@ function getNotificationGenerated({notificationTypeId, mediumId, status, openSta
     }
 
     var dateTo = 'DATE_ADD(NOW(),INTERVAL 19800 SECOND)';
-    if (to) {
-        dateTo = `"${to}"`;
+    if (toDate) {
+        dateTo = `"${toDate}"`;
     }
 
     if (lastHour == 'true'){
@@ -82,12 +81,13 @@ function getNotificationGenerated({notificationTypeId, mediumId, status, openSta
 
     if (showCount) {
         subQuerySelector = 'count(*) AS count ';
+        //subQuerySelector = `t2.id AS id, t2.notification_type_id AS notification_type_id, t2.notification_medium_id AS notification_medium_id`;
     }
 
     var subQuery = `SELECT ${subQuerySelector}
         FROM ${tables.NOTIFICATION_GENERATED} as t2
         ${openQuery}
-        WHERE t2.created_at BETWEEN ${dateFrom} AND ${dateTo}
+        WHERE DATE(t2.created_at) BETWEEN ${dateFrom} AND ${dateTo}
         AND t2.notification_medium_id = ${mediumId}
         AND t2.notification_type_id = ${notificationTypeId}
         AND t2.status = ${status}`;
@@ -96,13 +96,17 @@ function getNotificationGenerated({notificationTypeId, mediumId, status, openSta
         subQuery += `${orderPrefix} ${orderSuffix} ${limit}`;
     }
 
-     //t1.data AS data,
-    var query = `SELECT t1.id AS id, t1.notification_type_id AS typeId,
+    let selectorFields = `t1.id AS id, t1.notification_type_id AS typeId,
             t1.notification_medium_id AS mediumId, t2.name AS mediumname,
             t3.name AS notificationname, t1.notification_message_id AS messageId,
             t1.user_id AS userId, t1.status AS status,
             t1.schedule_date AS scheduleDate, t1.created_at AS createdAt,
-            t1.updated_at AS updatedAt ${openQuerySelector} FROM
+            t1.updated_at AS updatedAt ${openQuerySelector}`;
+
+        //selectorFields = showCount ? `count(*) as count` : selectorFields;
+
+     //t1.data AS data,
+    var query = `SELECT ${selectorFields} FROM
             ( ${subQuery} ) t1
             JOIN ${tables.NOTIFICATION_MEDIUM} t2 ON t2.id=t1.notification_medium_id
             JOIN ${tables.NOTIFICATION_TYPE} t3 ON t3.id=t1.notification_type_id ${orderPrefix} t1.${orderSuffix}`;
@@ -114,6 +118,8 @@ function getNotificationGenerated({notificationTypeId, mediumId, status, openSta
     } else {
         return mysqlService.execQuery(query).then(function(rows) {
             return rows;
+        }, (err)=> {
+            console.log('error........',err);
         });
     }
 }

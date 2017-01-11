@@ -15,8 +15,8 @@
                     <key-value label="notification type" :value="typeName"></key-value>
                     <key-value label="notification status" :value="status"></key-value>
                     <key-value label="open status" :value="openStatus"></key-value>
-                    <key-value label="created at" :value="created_at"></key-value>
-                    <key-value label="schedule at" :value="schedule_at"></key-value>
+                    <key-value v-if="created_at" label="created at" :value="created_at  | date('%Y-%M-%d %I:%M %p')" ></key-value>
+                    <key-value v-if="schedule_at" label="schedule at" :value="schedule_at  | date('%Y-%M-%d %I:%M %p')"></key-value>
                 </div>
             </el-card>
         </el-col>

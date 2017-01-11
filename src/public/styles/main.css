@@ -14,6 +14,7 @@ a:link, a:visited {
 
 .main-content {
     margin : 20px auto;
+    padding-top: 60px;
     padding-right: 15px;
     padding-left: 15px;
     margin-right: auto;
@@ -24,6 +25,10 @@ a:link, a:visited {
 
 .headerWrapper {
     height: 60px;
+    position: fixed;
+    top: 0;
+    z-index: 99;
+    width: 100%;
 }
 
 .header {

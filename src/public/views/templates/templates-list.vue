@@ -1,6 +1,8 @@
+
+
 <template>
 
-<div  v-loading.body="loading">
+<div v-loading.body="loading">
 
     <el-dialog title="Preview" top="5%" v-model="preview" @close="hidePreview" size="medium">
         <renderTemplate :item="selectedItem"></renderTemplate>
@@ -9,7 +11,15 @@
       </span>
     </el-dialog>
 
-    <template  >
+    <el-dialog title="Permanent Delete ?" @close="confirmDelete.show = false" v-model="confirmDelete.show" size="tiny">
+        <span>Are you sure you want to delete this template?</span>
+        <span slot="footer" class="dialog-footer">
+        <el-button @click="confirmDelete.show = false">Cancel</el-button>
+        <el-button type="primary" @click="deleteConfirmation">Confirm</el-button>
+      </span>
+    </el-dialog>
+
+    <template>
         <el-form :inline="true" class="demo-form-inline">
             <el-form-item>
                 Notification Medium
@@ -28,7 +38,7 @@
                 </div>
             </el-form-item>
         </el-form>
-        <el-table  :data="filteredTemplates" border stripe style="width: 100%">
+        <el-table :data="filteredTemplates" border stripe style="width: 100%">
             <div slot="empty">
                 <template v-if="notificationTypeId && mediumId">
                     <el-button @click="redirectTo('add-template',{notificationTypeId: notificationTypeId, mediumId: mediumId})" type="primary">Create</el-button>
@@ -62,7 +72,7 @@
                 <template scope="scope">
                     <div>
                         <el-button type="primary" @click="redirectTo('update-template', {id:scope.row.id})" icon="edit"></el-button>
-                        <el-button type="primary" icon="delete"></el-button>
+                        <el-button type="primary" @click="deleteTemplate(scope.row.id, scope.$index)" icon="delete"></el-button>
                     </div>
                     <br/>
                     <div>
@@ -101,6 +111,11 @@ export default {
             loading: true,
             previewContent: '',
             preview: false,
+            confirmDelete: {
+                show: false,
+                id: null,
+                index: null
+            },
             selectedItem: {}
         }
     },
@@ -140,8 +155,8 @@ export default {
             this.preview = true;
         },
         hidePreview: function() {
-            this.selectedItem = {};
             this.preview = false;
+            this.selectedItem = {};
         },
         changeMedium: function() {
             let params = {};
@@ -154,6 +169,28 @@ export default {
             });
             this.fetchData();
         },
+        deleteTemplate(templateId, index) {
+            this.confirmDelete.show = true;
+            this.confirmDelete.id = templateId;
+            this.confirmDelete.index = index;
+        },
+        deleteConfirmation(){
+            this.confirmDelete.show = false;
+            let url = apiConfig.apiHandlers.deleteTemplate({
+                id: this.confirmDelete.id
+            }).url;
+            this.$apiService.delete(url).then((res) => {
+                let message = res && res.message;
+                this.$message.success({
+                    message: message
+                });
+                this.templatesList.splice(this.confirmDelete.index, 1);
+            }, (error) => {
+                this.$message.error({
+                    message: error.message
+                });
+            });
+        },
         fetchData: function() {
             this.loading = true;
             let url = apiConfig.apiHandlers.getTemplateListings({
@@ -164,6 +201,9 @@ export default {
                 this.templatesList = response && response.data || [];
             }, (error) => {
                 this.loading = false;
+                this.$message.error({
+                    message: error.message
+                });
             });
         }
     }

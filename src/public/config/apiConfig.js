@@ -39,11 +39,14 @@ let config = {
                 url: `/template/create`
             }
         },
-        updateTemplate({
-            id
-        }){
+        updateTemplate({ id }){
             return {
                 url: `/template/update/${id}`
+            }
+        },
+        deleteTemplate({id}){
+            return {
+                url: `/template/delete/${id}`
             }
         },
         getNotificationListings(){

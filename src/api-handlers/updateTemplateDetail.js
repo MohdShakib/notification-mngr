@@ -20,7 +20,7 @@ var successRes = {
     message: 'template updated successfully.'
 };
 
-module.exports = function(req, res, next){
+function updateTemplate(req, res, next){
 
     let templateId = req.params.id,
         data = req.body || {},
@@ -121,4 +121,40 @@ module.exports = function(req, res, next){
             return next(err);
         }
     }
+}
+
+
+
+function deleteTemplate(req, res, next){
+
+    notificationTemplateQuery.getTemplate(req.params.id).then((templateData) => {
+        let templateDetail = templateData && templateData[0];
+        templateLoggingQuery.generateTemplateLog({
+            templateId: templateDetail.id,
+            notificationTypeId: templateDetail.notification_type_id,
+            mediumId: templateDetail.notification_medium_id,
+            content: templateDetail['send_template'],
+            userId: 6807740
+        });
+
+        notificationTemplateQuery.deleteTemplate(templateDetail.id).then(() => {
+            return res.send({
+                data: null,
+                message: 'template deleted successfully, refresh to see changes.'
+            });
+        }, ()=>{
+            let e = new Error('delete template query failed.');
+            return next(e);
+        });
+
+    }, () => {
+        let e = new Error('error whilte checking template existence.');
+        return next(e);
+    });
+
+}
+
+module.exports = {
+    updateTemplate,
+    deleteTemplate
 }

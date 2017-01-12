@@ -131,8 +131,7 @@ export default {
 
                     this.loading = false;
                 }, (error) => {
-                    this.$notify.error({
-                        title: 'Error',
+                    this.$message.error({
                         message: 'some errors occurred, please check after sometime.'
                     });
                 });
@@ -140,8 +139,7 @@ export default {
             updateTemplate: function() {
 
                 if (!this.template || (this.prop1 && !this.subject)) {
-                    this.$notify.warning({
-                        title: 'Warning',
+                    this.$message.warning({
                         message: 'shown field(s) are mandatory.'
                     });
                     return;
@@ -167,13 +165,11 @@ export default {
 
                 this.$apiService.post(url, postData).then((res) => {
                     let message = res && res.message;
-                    this.$notify.success({
-                        title: 'Success',
+                    this.$message.success({
                         message: message
                     });
                 }, (err) => {
-                    this.$notify.error({
-                        title: 'Error',
+                    this.$message.error({
                         message: err.message
                     });
                 });

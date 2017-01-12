@@ -10,20 +10,33 @@ var tables = {
     NOTIFICATION_TYPE_NOTIFICATION_MEDIUM_MAPPING: 'notification.notification_type_notification_medium_mapping',
 }
 
+// function date6MonthAgo(){
+//     var date = new Date();
+//     var last = new Date(date.getTime() - ((6*30) * 24 * 60 * 60 * 1000));
+//     var day =last.getDate();
+//     var month=last.getMonth()+1;
+//     var year=last.getFullYear();
+//     return `${year}-${month}-${day}`;
+// }
+
 function getNotificationGenerated({notificationTypeId, mediumId, status, openStatus, page, fromDate, toDate, lastHour, orderBy}, showCount, checkNextPage) {
 
-    var openQuery = '',
-        openQuerySelector = '',
+    var openQuerySelector = '',
         openSubQuerySelector = '',
         offset, perPageCount = 40;
 
     page = page || 1;
     status = status ? `"${status}"` : `status`;
-    mediumId = mediumId ? parseInt(mediumId) : `t2.notification_medium_id`;
-    notificationTypeId = notificationTypeId ? parseInt(notificationTypeId) : `t2.notification_type_id`;
+    mediumId = mediumId ? parseInt(mediumId) : `notification_medium_id`;
+    notificationTypeId = notificationTypeId ? parseInt(notificationTypeId) : `notification_type_id`;
 
+    let openQuery = function(){
+        return '';
+    }
     if (openStatus == 'opened') {
-        openQuery = ` inner join ${tables.NOTIFICATION_OPENED} t1 on t2.id=t1.notification_generated_id `;
+        openQuery = function(ref){
+            return ` inner join ${tables.NOTIFICATION_OPENED} t1 on ${ref}.id=t1.notification_generated_id `;
+        }
         openQuerySelector = ', t1.is_open as is_open ';
         openSubQuerySelector = ', t1.id as is_open ';
     }
@@ -86,14 +99,19 @@ function getNotificationGenerated({notificationTypeId, mediumId, status, openSta
 
     var subQuery = `SELECT ${subQuerySelector}
         FROM ${tables.NOTIFICATION_GENERATED} as t2
-        ${openQuery}
-        WHERE DATE(t2.created_at) BETWEEN ${dateFrom} AND ${dateTo}
-        AND t2.notification_medium_id = ${mediumId}
-        AND t2.notification_type_id = ${notificationTypeId}
-        AND t2.status = ${status}`;
+        ${openQuery('t2')}
+        INNER JOIN ( SELECT t2_0.id as id
+            FROM ${tables.NOTIFICATION_GENERATED} as t2_0
+            ${openQuery('t2_0')}
+            WHERE DATE(t2_0.created_at) BETWEEN ${dateFrom} AND ${dateTo}
+            AND t2_0.notification_medium_id = ${mediumId}
+            AND t2_0.notification_type_id = ${notificationTypeId}
+            AND t2_0.status = ${status} ${!showCount ? limit : ''}
+        ) as t2_0_set ON t2_0_set.id = t2.id`;
+
 
     if (!showCount) {
-        subQuery += `${orderPrefix} ${orderSuffix} ${limit}`;
+        subQuery += `${orderPrefix} ${orderSuffix}`;
     }
 
     let selectorFields = `t1.id AS id, t1.notification_type_id AS typeId,
@@ -105,7 +123,6 @@ function getNotificationGenerated({notificationTypeId, mediumId, status, openSta
 
         //selectorFields = showCount ? `count(*) as count` : selectorFields;
 
-     //t1.data AS data,
     var query = `SELECT ${selectorFields} FROM
             ( ${subQuery} ) t1
             JOIN ${tables.NOTIFICATION_MEDIUM} t2 ON t2.id=t1.notification_medium_id

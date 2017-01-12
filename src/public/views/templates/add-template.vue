@@ -112,8 +112,7 @@ export default {
                 this.loading = false;
             }, (error) => {
                 this.loading = false;
-                this.$notify.error({
-                    title: 'Error',
+                this.$message.error({
                     message: 'some errors occurred, please check after sometime.'
                 });
             });
@@ -121,8 +120,7 @@ export default {
         crateTemplate: function() {
 
             if (!this.template || (this.isEmail && !this.subject)) {
-                this.$notify.warning({
-                    title: 'Warning',
+                this.$message.warning({
                     message: 'shown field(s) are mandatory.'
                 });
                 return;
@@ -142,13 +140,18 @@ export default {
             let url = apiConfig.apiHandlers.createTemplate().url;
             this.$apiService.post(url, postData).then((res) => {
                 let message = res && res.message;
-                this.$notify.success({
-                    title: 'Success',
+
+                this.subject = '';
+                this.template = '';
+                this.loading = false;
+
+                this.$message.success({
                     message: message
                 });
+
             }, (err) => {
-                this.$notify.error({
-                    title: 'Error',
+                this.loading = false;
+                this.$message.error({
                     message: err.message
                 });
             });

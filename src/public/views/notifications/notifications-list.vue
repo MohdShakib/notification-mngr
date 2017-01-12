@@ -3,7 +3,7 @@
 <template>
 
 <div v-loading.body="loading">
-    <notificationFilters @filterChange="updateQueryParam"></notificationFilters>
+    <notificationFilters @filterChange="filterChanged"></notificationFilters>
     <el-table :data="notificationsList" empty-text="no notifications found" border stripe style="width: 100%">
         <el-table-column width="100">
             <template scope="scope">
@@ -62,6 +62,10 @@ export default {
     mounted() {
         this.fetchData();
     },
+    created(){
+        let query = this.$route.query;
+        this.currentPage = query.page ? parseInt(query.page) : 1;
+    },
     watch: {
         $route: function(current, prev) {
             this.fetchData();
@@ -70,16 +74,22 @@ export default {
     methods: {
         handlePaginationChange(pageNo) {
             pageNo = pageNo > 1 ? pageNo : undefined;
-            this.updateQueryParam('page', pageNo);
+            this.updateQueryParam('page', pageNo, true);
         },
-        updateQueryParam: function(name, value) {
+        filterChanged(name, value){
+            this.updateQueryParam(name, value);
+        },
+        updateQueryParam: function(name, value, isPagination) {
             let query = {};
             if(name !== 'reset'){
                 query = Object.assign({}, this.$route.query, {
                     [name]: value
                 });
-            }else {
+            }
+
+            if(!isPagination){
                 this.currentPage = 1;
+                query.page = undefined;
             }
 
             this.updateQuery(query);
@@ -113,8 +123,8 @@ export default {
             }, (err) => {
                 this.loading = false;
                 apiPromise = false;
-                this.$notify.error({
-                    title: 'Error',
+                this.$message.error({
+                    showClose: true,
                     message: err.message || 'something went wrong.'
                 });
             });

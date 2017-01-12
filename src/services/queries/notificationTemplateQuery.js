@@ -79,6 +79,16 @@ function addNewTemplate({ notificationTypeId, mediumId, template }){
         return rows;
     });
 }
+
+function deleteTemplate(id) {
+    var query = `DELETE FROM ${tables.NOTIFICATION_TYPE_NOTIFICATION_MEDIUM_MAPPING} WHERE id = ?`;
+    var obj = id;
+
+    return mysqlService.execQueryParams(query, obj).then(function(rows) {
+        return rows;
+    });
+}
+
 //
 // function addGenericNotificationTemplate(content) {
 //     var query = 'INSERT INTO notification_type_notification_medium_mapping SET ?';
@@ -140,16 +150,6 @@ function addNewTemplate({ notificationTypeId, mediumId, template }){
 //     });
 // }
 //
-// function deleteTemplate(id) {
-//     var query = 'DELETE FROM notification_type_notification_medium_mapping WHERE id = ?';
-//     var obj = id;
-//
-//     return mysqlService.execQueryParams(query, obj).then(function(rows) {
-//
-//         return rows;
-//     });
-//
-// }
 //
 
 //
@@ -173,6 +173,7 @@ module.exports = {
     getTemplate,
     getAllTemplates,
     addNewTemplate,
+    deleteTemplate,
     checkExistingTemplate,
     updateNotificationTemplate,
     getNotificationTypesByMedium

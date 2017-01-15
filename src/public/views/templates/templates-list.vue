@@ -19,6 +19,18 @@
       </span>
     </el-dialog>
 
+    <el-dialog title="Create Notification Type" v-model="createNewType">
+        <el-form >
+            <el-form-item label="Notification Type" label-width="120px">
+                <el-input v-model="newNotificationTypeName" @change="formatNewNotifcationType"></el-input>
+            </el-form-item>
+        </el-form>
+        <span slot="footer" class="dialog-footer">
+            <el-button @click="createNewType = false">Cancel</el-button>
+            <el-button type="primary" @click="createNotificationType" :disabled="disableCreateNewNotificationType">Create</el-button>
+        </span>
+    </el-dialog>
+
     <template>
         <el-form :inline="true" class="demo-form-inline">
             <el-form-item>
@@ -32,7 +44,10 @@
             <el-form-item offset="2">
                 Notification Type
                 <div>
-                    <el-select v-model="notificationTypeId" filterable clearable placeholder="Notification Type">
+                    <el-select v-model="notificationTypeId" @change="changeType" filterable clearable placeholder="Notification Type">
+                        <el-option :value="'add_new_template_type'">
+                            <span style="color:blue;">add new</span>
+                        </el-option>
                         <el-option v-for="item in notificationTypes" :label="item.name" :value="item.id"></el-option>
                     </el-select>
                 </div>
@@ -111,6 +126,8 @@ export default {
             loading: true,
             previewContent: '',
             preview: false,
+            newNotificationTypeName: '',
+            createNewType: false,
             confirmDelete: {
                 show: false,
                 id: null,
@@ -141,6 +158,9 @@ export default {
             return this.templatesList.filter((item) => {
                 return item.notificationTypeId == this.notificationTypeId;
             });
+        },
+        disableCreateNewNotificationType: function(){
+                return !((this.newNotificationTypeName && this.newNotificationTypeName.length > 2)?true:false);
         }
     },
     methods: {
@@ -169,12 +189,56 @@ export default {
             });
             this.fetchData();
         },
+        changeType: function() {
+            if (this.notificationTypeId === 'add_new_template_type') {
+                this.notificationTypeId = '';
+                this.newNotificationTypeName = '';
+                this.createNewType = true;
+            }
+        },
+        formatNewNotifcationType: function(){
+            if(this.newNotificationTypeName){
+                let newNotificationTypeName = this.newNotificationTypeName.trim().toLowerCase();
+                newNotificationTypeName = newNotificationTypeName.replace(/ /g,'_');
+                this.newNotificationTypeName = newNotificationTypeName;
+            }
+        },
+        createNotificationType: function(){
+            let newNotificationTypeName = this.newNotificationTypeName;
+
+            for(var i=0; i<this.notificationTypes.length; i++){
+                if(this.notificationTypes[i].name == newNotificationTypeName){
+                    return this.$notify.error({
+                        message: 'this notification type already exists.'
+                    });
+                }
+            }
+
+            this.loading = true;
+            let url = apiConfig.apiHandlers.createNotificationType({
+                notificationTypeName: this.newNotificationTypeName
+            }).url;
+            this.$apiService.post(url).then((res) => {
+                this.loading = false;
+                this.createNewType = false;
+                this.newNotificationTypeName = '';
+                let message = res && res.message;
+                this.$message.success({
+                    message: message
+                });
+            }, (error) => {
+                this.loading = false;
+                this.$message.error({
+                    message: error.message
+                });
+            });
+        },
         deleteTemplate(templateId, index) {
             this.confirmDelete.show = true;
             this.confirmDelete.id = templateId;
             this.confirmDelete.index = index;
         },
-        deleteConfirmation(){
+        deleteConfirmation() {
             this.confirmDelete.show = false;
             let url = apiConfig.apiHandlers.deleteTemplate({
                 id: this.confirmDelete.id

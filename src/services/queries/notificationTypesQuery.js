@@ -18,11 +18,25 @@ function getTypeNameById(id) {
 
     return mysqlService.execQueryParams(query, obj).then(function(rows) {
         return rows;
+    }, (error) => {
+        return error;
+    });
+}
+
+function createNotificationType(data){
+    var query = 'INSERT INTO notification_type SET ?';
+    var obj = data;
+    return mysqlService.execQueryParams(query, obj).then(function(rows) {
+        return rows;
+    }, (error) => {
+        return error;
+    }).catch(function(error){
+        return error;
     });
 }
 
 module.exports = {
     getTypeNameById,
-    getNotificationTypes
-
+    getNotificationTypes,
+    createNotificationType
 }

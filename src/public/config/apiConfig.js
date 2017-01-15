@@ -49,6 +49,11 @@ let config = {
                 url: `/template/delete/${id}`
             }
         },
+        createNotificationType({notificationTypeName}){
+            return {
+                url: `/notification-types/create/${notificationTypeName}`
+            }
+        },
         getNotificationListings(){
             return {
                 url: '/notification-listings'

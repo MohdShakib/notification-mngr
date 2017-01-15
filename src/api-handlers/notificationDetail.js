@@ -16,14 +16,7 @@ var     templateColumn = "send_template",
                     return notificationGeneratedQuery.getNotificationDataByGeneratedId(req.params.id).then((response) => {
                         callback(null, response);
                     });
-                },
-                // userDetail: ['notificationData', function(results, callback) {
-                //     return apiService.get(config.getUserDetails, "userId=" + results.notificationData.user_id).then(function(response) {
-                //         callback(null, response);
-                //     }).catch(function(error) {
-                //         callback(error, null);
-                //     });
-                // }],
+                }
             }, function(err, results) {
 
                     let data = {}, content;
@@ -61,26 +54,29 @@ var     templateColumn = "send_template",
 
                     Object.assign(data, notificationData);
 
-                    res.send({
+                    return res.send({
                         data
                     });
 
-                    //
-                    // res.send({
-                    //     sentTemplate: result,
-                    //     content: results.notificationData,
-                    //     mediumName: results.notificationData.mediumName,
-                    //     typeName: results.notificationData.typeName,
-                    //     loggedIn: loggedIn,
-                    //     id: req.params.id,
-                    //     //userData: results.userDetail && results.userDetail.data ? results.userDetail.data[0] : {},
-                    // });
-                    return;
+            });
+        }
+
+        function createNotificationType(req, res, next){
+            let notificationName = req.params.notificationTypeName;
+            let data = {name: notificationName};
+            notificationTypesQuery.createNotificationType(data).then((rows) => {
+                return res.send({
+                    data: null,
+                    message: 'notification type created successfully.'
+                });
+            }, (error) => {
+                next(error);
+            }).catch(function(error){
+                next(error);
             });
         }
 
         function notificationTypesList(req, res){
-
             notificationTypesQuery.getNotificationTypes().then((rows) => {
                 res.send({
                     data: rows
@@ -89,7 +85,6 @@ var     templateColumn = "send_template",
         }
 
         function notificationMediumsList(req, res){
-
             notificationMediumsQuery.getNotificationMediums().then((rows) => {
                 res.send({
                     data: rows
@@ -99,6 +94,7 @@ var     templateColumn = "send_template",
 
 
         module.exports = {
+            createNotificationType,
             notificationTypesList,
             notificationMediumsList,
             notificationDetailsById

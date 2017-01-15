@@ -2,7 +2,7 @@
 
 <template>
 
-<div>
+<div class="text-center">
     Here you will see campaigns list
 </div>
 

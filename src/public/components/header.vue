@@ -16,9 +16,6 @@
                 <el-menu-item index="3">
                     <router-link class="header-link" to="/campaigns">Campaigns</router-link>
                 </el-menu-item>
-                <el-menu-item index="4">
-                    <router-link  class="header-link" to="/notifications-sent">Sent Notification</router-link>
-                </el-menu-item>
             </el-menu>
         </div>
     </header>

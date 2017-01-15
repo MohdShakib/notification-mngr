@@ -18,7 +18,6 @@ export default new Router({
   routes: [
     { path: '/notification/:id', name: 'notification-detail', component: notificationDetail },
     { path: '/notifications-status', name: 'notifications-status', component: notificationsList },
-    { path: '/notifications-sent', name: 'notifications-sent', component: templatesList },
     { path: '/schedule-template/:id', name: 'schedule-template', component: scheduleTemplate },
     { path: '/update-template/:id', name: 'update-template', component: updateTemplate },
     { path: '/add-template/:notificationTypeId/:mediumId', name: 'add-template', component: addTemplate },

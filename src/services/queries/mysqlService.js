@@ -1,8 +1,9 @@
+
 "use strict";
 
 var mysql = require("mysql");
 
-var connection = mysql.createPool({
+var connectionPool = mysql.createPool({
     connectionLimit: 50,
     host: process.env.MYSQL_HOST,
     user: process.env.MYSQL_USER,
@@ -10,36 +11,62 @@ var connection = mysql.createPool({
     database: process.env.MYSQL_DATABASE,
 });
 
+connectionPool.on('connection', function (connection) {
+  //console.log('__________________________connection craeted_______________');
+});
+
+connectionPool.on('enqueue', function () {
+  //console.log('__________________________connection enqueued_______________');
+});
+
 module.exports.execQuery = function(q) {
 
-    console.time("Query time");
     return new Promise(function(resolve, reject) {
 
-        connection.query(q, function(err, rows) {
-            if (err) {
-                reject(err);
-                throw err;
+        connectionPool.getConnection(function(err, connection) {
+            if(err){
+                let error = new Error('Could not create pool connection');
+                return reject(error);
             }
-            console.log("---QUERY: ", q)
-            console.timeEnd("Query time");
 
-            resolve(rows);
+            connection.query(q, function(err, rows) {
+                if (err) {
+                    connection.release();
+                    reject(err);
+                    throw err;
+                }
 
+                console.log("---QUERY: ", q)
+
+                connection.release();
+                return resolve(rows);
+
+            });
         });
+
     });
 }
 
 module.exports.execQueryParams = function(q, obj) {
-    console.time("Query time");
+
     return new Promise(function(resolve, reject) {
-        connection.query(q, obj, function(err, rows) {
-            if (err) {
-                reject(err);
-                throw err;
+        connectionPool.getConnection(function(err, connection) {
+            if(err){
+                let error = new Error('Could not create pool connection');
+                return reject(error);
             }
-            console.log("---QUERY: ", q, obj)
-            console.timeEnd("Query time");
-            resolve(rows);
+
+            connection.query(q, obj, function(err, rows) {
+                if (err) {
+                    connection.release();
+                    reject(err);
+                    throw err;
+                }
+                console.log("---QUERY: ", q, obj)
+
+                connection.release();
+                return resolve(rows);
+            });
         });
     });
 }

@@ -9,7 +9,7 @@ import addTemplate from  '../views/templates/add-template.vue'
 import notificationsList from  '../views/notifications/notifications-list.vue'
 import notificationDetail from  '../views/notifications/notification-detail.vue'
 import scheduleTemplate from '../views/templates/schedule-template.vue'
-import campaignsList from  '../views/campaigns-list.vue'
+import createCampaign from  '../views/campaigns/create-campaign.vue'
 import notFound from '../views/404-template.vue'
 
 export default new Router({
@@ -22,7 +22,7 @@ export default new Router({
     { path: '/update-template/:id', name: 'update-template', component: updateTemplate },
     { path: '/add-template/:notificationTypeId/:mediumId', name: 'add-template', component: addTemplate },
     { path: '/templates-list/:mediumId?', name: 'templates-list', component: templatesList },
-    { path: '/campaigns', component: campaignsList },
+    { path: '/campaigns', component: createCampaign },
     { path: '/', redirect: '/templates-list' },
     { path: '*', component: notFound}
   ]

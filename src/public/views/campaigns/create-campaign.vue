@@ -1,0 +1,258 @@
+<style>
+
+.campaign-height {
+    min-height: 400px;
+}
+
+</style>
+
+<template>
+
+<el-row>
+
+    <el-dialog title="Preview" top="5%" v-model="preview" size="medium">
+        <renderTemplate :item="previewData"></renderTemplate>
+        <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="preview = false">Ok</el-button>
+      </span>
+    </el-dialog>
+
+    <el-col :span="18" :offset="3">
+    <el-card class="box-card campaign-height">
+        <div slot="header" class="clearfix">
+            Create Campaign
+        </div>
+        <el-form :model="ruleForm" label-position="top" :rules="rules" ref="ruleForm" class="demo-form-stacked">
+            <el-row>
+                <el-col :span="12">
+                    <el-form-item label="Campaign" prop="name">
+                        <el-input v-model="ruleForm.name" placeholder="campagin name"></el-input>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+            <el-row>
+                <el-col :span="8">
+                    <el-form-item label="Segment" prop="segment">
+                        <el-select v-model="ruleForm.segment" placeholder="select segment">
+                            <el-option label="Segment 1" value="1"></el-option>
+                            <el-option label="Segment 2" value="2"></el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="8">
+                    <el-form-item label="Start Date" prop="startDate">
+                        <el-date-picker v-model="ruleForm.startDate" format="yyyy-MM-dd" type="date" placeholder="Start Date"></el-date-picker>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+            <el-row>
+                <el-col :span="8">
+                    <el-form-item label="Send At" prop="sendAt">
+                        <el-time-picker v-model="ruleForm.sendAt" placeholder="Sending Time"></el-time-picker>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="8" >
+                    <el-form-item label="Status">
+                        <el-checkbox v-model="ruleForm.enabled">Enabled</el-checkbox>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+
+            <el-row>
+                <el-col :span="8">
+                    <el-form-item label="Notification Medium">
+                        <el-select v-model="ruleForm.mediumId" filterable clearable placeholder="Notification Medium">
+                            <el-option v-for="item in notificationMediums" :label="item.name" :value="item.id"></el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="8">
+                    <el-form-item label="Notification Type">
+                        <el-select v-model="ruleForm.notificationTypeId" filterable clearable placeholder="Notification Type">
+                            <el-option v-for="item in notificationTypes" :label="item.name" :value="item.id"></el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="1">
+                    <el-form-item label="Add">
+                        <el-button size="small" type="primary" icon="plus" @click="addTemplate"></el-button>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+
+            <el-form-item v-for="(value, key) in templates">
+                <el-row>
+                    <el-col :span="9">
+                        <code>{{value.mediumName}} [ {{value.notificationName}} ]</code>
+                    </el-col>
+                    <el-button size="mini" type="primary" @click="previewTemplate(key)" icon="view"></el-button>
+                    <el-button size="mini" type="primary" @click="removeTemplate(key)" icon="close"></el-button>
+                </el-row>
+                <div>
+                    <el-col :span="6">
+                        Frequency
+                        <div>
+                            <el-input-number v-model="value.frequency" :min="1" :max="10"></el-input-number>
+                        </div>
+                    </el-col>
+                    <el-col :span="6">
+                        Interval (in days)
+                        <div>
+                            <el-input-number v-model="value.interval" :min="1" :max="10"></el-input-number>
+                        </div>
+                    </el-col>
+                </div>
+            </el-form-item>
+
+        </el-form>
+    </el-card>
+</el-col>
+</el-row>
+
+</template>
+
+<script>
+
+import {
+    getNotificationTypes, getNotificationMediums
+}
+from '../../services/notificationService'
+import renderTemplate from '../templates/render-template.vue'
+import apiConfig from '../../config/apiConfig'
+
+export default {
+    data() {
+            return {
+                ruleForm: {
+                    name: '',
+                    segment: '',
+                    startDate: '',
+                    sendAt: '',
+                    enabled: false,
+                    notificationTypeId: '',
+                    mediumId: ''
+                },
+                notificationTypes: [],
+                notificationMediums: [],
+                addTemplateDisabled: false,
+                preview: false,
+                previewData: {},
+                templates: {},
+                rules: {
+                    name: [{
+                        required: true,
+                        message: 'Please input campaign name',
+                        trigger: 'blur'
+                    }, {
+                        min: 4,
+                        message: 'Length should be greater than 3',
+                        trigger: 'blur'
+                    }],
+                    segment: [{
+                        required: true,
+                        message: 'Please select Segment',
+                        trigger: 'change'
+                    }],
+                    startDate: [{
+                        type: 'date',
+                        required: true,
+                        message: 'Please pick a date',
+                        trigger: 'change'
+                    }],
+                    sendAt: [{
+                        required: true,
+                        message: 'Please pick a time'
+                    }],
+
+                    // resource: [{
+                    //     required: true,
+                    //     message: 'Please select activity resource',
+                    //     trigger: 'change'
+                    // }],
+                    // desc: [{
+                    //     required: true,
+                    //     message: 'Please input activity form',
+                    //     trigger: 'blur'
+                    // }]
+                }
+            };
+        },
+        components: {
+            renderTemplate
+        },
+        mounted() {
+            getNotificationTypes().then((notificationTypes) => {
+                this.notificationTypes = notificationTypes.data || [];
+            });
+
+            getNotificationMediums().then((notificationMediums) => {
+                this.notificationMediums = notificationMediums.data || [];
+            });
+        },
+        computed: {
+            addTemplateDisabled() {
+                let status = (this.ruleForm.mediumId && this.ruleForm.notificationTypeId) ? true : false;
+                return false;
+            }
+        },
+        methods: {
+            addTemplate() {
+                    let mediumId = this.ruleForm.mediumId,
+                        notificationTypeId = this.ruleForm.notificationTypeId;
+                    if (mediumId && notificationTypeId) {
+                        let url = apiConfig.apiHandlers.getTemplateDetails({
+                            query: {
+                                mediumId,
+                                notificationTypeId
+                            }
+                        }).url;
+                        let key = `${mediumId}-${notificationTypeId}`;
+
+                        !this.templates[key] && this.$apiService.get(url).then((response) => {
+                            let data = response && response.data;
+                            if (!data) {
+                                this.$message.warning({
+                                    message: 'no template exists for this combination.'
+                                });
+                                return;
+                            }
+
+                            let value = {
+                                data: data,
+                                mediumName: data.mediumName,
+                                notificationName: data.notificationName,
+                                frequency: 1,
+                                interval: 1
+                            };
+                            this.$set(this.templates, key, value);
+                        });
+                    }
+                },
+                removeTemplate(key) {
+                    this.templates[key] && this.$delete(this.templates, key);
+                },
+                previewTemplate(key) {
+                    let tmpData = this.templates[key] && this.templates[key].data;
+                    for (let key in tmpData) {
+                        if (tmpData.hasOwnProperty(key))
+                            this.$set(this.previewData, key, tmpData[key]);
+                    }
+                    this.preview = true;
+                },
+                // submitForm(formName) {
+                //     this.$refs[formName].validate((valid) => {
+                //         if (valid) {
+                //             alert('submit!');
+                //         } else {
+                //             console.log('error submit!!');
+                //             return false;
+                //         }
+                //     });
+                // },
+                // resetForm(formName) {
+                //     this.$refs[formName].resetFields();
+                // }
+        }
+}
+
+</script>

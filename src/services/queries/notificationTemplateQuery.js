@@ -30,8 +30,11 @@ function getAllTemplates(mediumId) {
 
 function checkExistingTemplate(notificationTypeId, mediumId) {
     var obj = [notificationTypeId, mediumId];
-    var query = `SELECT * FROM ${tables.NOTIFICATION_TYPE_NOTIFICATION_MEDIUM_MAPPING}
-    WHERE notification_type_id =? AND notification_medium_id=?`;
+    var query = `SELECT t1.id as id, t1.notification_type_id as notification_type_id, t1.notification_medium_id as notification_medium_id,
+    t1.send_template as send_template, t3.name as notificationname, t2.name as mediumname
+    FROM ${tables.NOTIFICATION_TYPE_NOTIFICATION_MEDIUM_MAPPING} t1, ${tables.NOTIFICATION_MEDIUM} t2, ${tables.NOTIFICATION_TYPE} t3
+    WHERE t2.id = t1.notification_medium_id AND t3.id = t1.notification_type_id
+    AND t1.notification_type_id =? AND t1.notification_medium_id=?`;
 
     return mysqlService.execQueryParams(query, obj).then(function(rows) {
         return rows;

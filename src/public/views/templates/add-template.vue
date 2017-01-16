@@ -87,11 +87,11 @@ export default {
     },
     computed: {
         isEmail() {
-                return (this.mediumId == 1);
-            },
-            isDisabled() {
-                return !(this.template && this.notificationTypeId && this.mediumId && (!this.isEmail || this.subject));
-            }
+            return (this.mediumId == 1);
+        },
+        isDisabled() {
+            return !(this.template && this.notificationTypeId && this.mediumId && (!this.isEmail || this.subject));
+        }
     },
     methods: {
         checkTemplateExistence: function() {

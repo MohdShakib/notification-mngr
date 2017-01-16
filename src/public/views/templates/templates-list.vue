@@ -199,7 +199,7 @@ export default {
         formatNewNotifcationType: function(){
             if(this.newNotificationTypeName){
                 let newNotificationTypeName = this.newNotificationTypeName.trim().toLowerCase();
-                newNotificationTypeName = newNotificationTypeName.replace(/ /g,'_');
+                newNotificationTypeName = newNotificationTypeName.replace(/\s+/g,'_');
                 this.newNotificationTypeName = newNotificationTypeName;
             }
         },

@@ -30,9 +30,11 @@ module.exports.setup = function(app, router){
 
 
     app.post('/template/create', require('api-handlers/createNewTemplate'));
-    app.post('/notification-types/create/:notificationTypeName', require('api-handlers/notificationDetail').createNotificationType);
     app.post('/template/update/:id', require('api-handlers/updateTemplateDetail').updateTemplate);
     app.delete('/template/delete/:id', require('api-handlers/updateTemplateDetail').deleteTemplate);
+
+    app.post('/notification-types/create/:notificationTypeName', require('api-handlers/notificationDetail').createNotificationType);
+    app.post('/notification-types/schedule', require('api-handlers/scheduleNotification').scheduleNotification);
 
 
     app.use(function(err, req, res, next) {

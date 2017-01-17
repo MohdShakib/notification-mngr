@@ -3,6 +3,7 @@
 var request = require('request');
 var fs = require('fs');
 var path = require('path');
+var logger = require('./loggerService');
 
 var apiUrls = [{
     regex: new RegExp(/^\/?pixie/),
@@ -88,9 +89,9 @@ var _getHeaders = function(config, req) {
     if (headers['applicationType']) {
         reqHeaders['applicationType'] = headers['applicationType'];
     }
-    if (!config.noClientIP) {
-        reqHeaders['Client-IP'] = _getIP(req);
-    }
+    // if (!config.noClientIP) {
+    //     reqHeaders['Client-IP'] = _getIP(req);
+    // }
     reqHeaders['Accept-Encoding'] = 0;
 
     return reqHeaders;
@@ -135,23 +136,38 @@ module.exports.post = function(config, bodyData, req, res) {
         } else {
             var options = _initOptions('POST', config, req);
 
-            if (bodyData && bodyData['option']) {
-                options[bodyData['option']] = (bodyData['data']);
+            if (bodyData) {
+                options['body'] = bodyData;
             }
 
             console.log("---API OPTIONS: ", JSON.stringify(options));
             request(options, function(error, response, body) {
+
                 if (error) {
                     console.log("---API ERROR: ", error)
-                    reject(error);
-                    throw error;
-                } else {
-                    console.log("---API RESPONSE: ", JSON.stringify(body));
-                    if (res) {
-                        _setResponseHeaders(res, response);
+                    if (error.code === 'ETIMEDOUT') {
+                        error.status = 408;
+                    } else {
+                        error.status = response && response.statusCode;
                     }
-                    resolve(body);
+                    return reject(error);
                 }
+
+                if (response.statusCode !== 200 || (body && typeof body.statusCode !== "undefined" && !(body.statusCode === '2XX' || body.statusCode === 200) )) {
+
+                    let errorMessage = 'ERROR IN API';
+                    if (body && body.error) {
+                        errorMessage = body.error.msg;
+                        logger.error(body.error.msg);
+                    }
+                    let err = new Error(errorMessage);
+                    err.status = (response.statusCode === 200 || response.statusCode === 404) ? 500 : response.statusCode;
+                    err.body = body;
+                    return reject(err);
+                }
+
+                resolve(body);
+
             });
         }
     });

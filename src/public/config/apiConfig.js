@@ -65,6 +65,11 @@ let config = {
             return {
                 url: `/notification-detail/${id}`
             }
+        },
+        scheduleNotification(){
+            return {
+                url: `/notification-types/schedule`
+            }
         }
     }
 }

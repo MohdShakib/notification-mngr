@@ -1,6 +1,8 @@
 module.exports = {
+    sendNotification: {
+        uri: 'madelyne/data/v3/entity/notification/sender'
+    },
     flushApi: {
-        mockResponse: false,
         uri: 'madelyne/data/v1/notification/removeFromCache?',
         mockUri: '/flushApiResponse.js'
     }

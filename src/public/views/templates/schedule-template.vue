@@ -38,27 +38,26 @@
             <el-card class="box-card">
                 <el-row>
                     <el-col :span="12">
-                    <el-select v-model="dataType">
-                        <el-option label="user ids" :value="1"></el-option>
-                        <el-option label="user emails" :value="2"></el-option>
+                    <el-select v-model="userDataType">
+                        <el-option label="user ids" value="ids"></el-option>
+                        <el-option label="user emails" value="emails"></el-option>
                     </el-select>
                 </el-col>
                     <el-col :span="12">
-                        <el-date-picker v-model="schedule_time" type="datetime" placeholder="Select date and time">
+                        <el-date-picker :editable="false" v-model="schedule_time" type="datetime" placeholder="Select date and time">
                         </el-date-picker>
                     </el-col>
                 </el-row>
                 <el-row>
                     <span>enter commma separated values</span>
-                    <el-input type="textarea" :cols="15" :rows="5" v-model="userData"></el-input>
+                    <el-input type="textarea" :cols="15" :rows="5" v-model="usersData" @change="formatUsersData"></el-input>
                 </el-row>
                 <el-row>
-                    <el-button :disabled="isDisabled" type="primary">schedule</el-button>
+                    <el-button :disabled="isDisabled" type="primary" @click="scheduleNotification">schedule</el-button>
                 </el-row>
             </el-card>
         </el-col>
     </el-row>
-
 </div>
 
 </template>
@@ -67,6 +66,41 @@
 
 import apiConfig from '../../config/apiConfig'
 import renderTemplate from './render-template.vue'
+import utilService from '../../services/utilService'
+
+function _prepareUsersArray(userDataType, usersData){
+    let users = [], rejectedUsers = [], key, value;
+    key = (userDataType == 'ids') ? 'id' : 'email';
+
+    usersData = usersData.split(',');
+
+    for(var i=0; i<usersData.length; i++){
+        value = usersData[i];
+        if(key == 'email'){
+            if(utilService.isEmailValid(value)){
+                value = value;
+            }else {
+                value = '';
+            }
+        }else {
+            value = Number(value);
+            value = isNaN(value) ? '': value;
+        }
+
+        if(value){
+            users.push({
+                [key] : value
+            })
+        }else {
+            rejectedUsers.push(usersData[i]);
+        }
+
+    }
+    return {
+        users,
+        rejectedUsers
+    };
+}
 
 export default {
     name: 'schedule-notification',
@@ -77,14 +111,14 @@ export default {
         return {
             id: '',
             mediumName: '',
-            notificationType: '',
+            notificationName: '',
+            schedule_time: '',
+            usersData: '',
+            userDataType: 'ids',
             preview: false,
             isDisabled: true,
-            dataType: 2,
-            userData: '',
             previewData: {},
             extractData: {
-
             },
             loading: true,
         }
@@ -94,16 +128,25 @@ export default {
     },
     computed: {
         isDisabled() {
-            let flag = this.dataType && this.userData;
-            for (let key in this.extractData) {
-                if (this.extractData.hasOwnProperty(key)) {
-                    flag = flag && this.extractData[key];
+            let flag = this.userDataType && this.usersData && this.schedule_time;
+            if(flag){
+                for (let key in this.extractData) {
+                    if (this.extractData.hasOwnProperty(key)) {
+                        flag = flag && this.extractData[key];
+                    }
                 }
             }
             return !flag;
         }
     },
     methods: {
+        formatUsersData: function(){
+            let usersData = this.usersData;
+            if(usersData){
+                usersData = usersData.replace(/ /g,'');
+                this.usersData  = usersData;
+            }
+        },
         fetchData: function() {
             this.loading = true;
             let url = apiConfig.apiHandlers.getTemplateDetails({
@@ -119,12 +162,50 @@ export default {
                 this.notificationName = data.notificationName;
 
                 this.extractData = data.extractData || {};
-
             }, (error) => {
                 this.loading = false;
                 console.log('error-callback............');
             });
+        },
+        scheduleNotification(){
+            this.loading = true;
+            this.isDisabled = true;
+            let mediumName = this.mediumName,
+                notificationTypeName = this.notificationName,
+                parsedUsers = _prepareUsersArray(this.userDataType, this.usersData),
+                postData = {
+                    mediumName,
+                    notificationTypeName,
+                    users: parsedUsers.users,
+                    scheduling: {
+                        holdingPeriodType: 'EXACT_TIME',
+                        periodValue: (new Date(this.schedule_time)).getTime()
+                    }
+                }
 
+                for(let key in this.extractData){
+                    if(this.extractData.hasOwnProperty(key)){
+                        postData.templateData = postData.templateData || {};
+                        postData.templateData[key] = this.extractData[key];
+                    }
+                }
+
+            let url = apiConfig.apiHandlers.scheduleNotification().url;
+            this.$apiService.post(url, postData).then((response) => {
+                this.loading = false;
+                let message = response && response.message;
+                this.usersData = '';
+                this.schedule_time = '';
+                this.$message.success({
+                    message: message
+                });
+            }, (error) => {
+                this.loading = false;
+                this.isDisabled = false;
+                this.$message.error({
+                    message: error && error.message
+                });
+            });
         }
     }
 }

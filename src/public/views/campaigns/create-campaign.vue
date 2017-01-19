@@ -33,9 +33,8 @@
                 <el-row>
                     <el-col :span="8">
                         <el-form-item label="Segment" prop="segment">
-                            <el-select v-model="ruleForm.segment" placeholder="select segment">
-                                <el-option label="Segment 1" value="1"></el-option>
-                                <el-option label="Segment 2" value="2"></el-option>
+                            <el-select v-model="ruleForm.segment"  filterable placeholder="select segment">
+                                <el-option v-for="item in segmentsList" :label="item.name" :value="item.id"></el-option>
                             </el-select>
                         </el-form-item>
                     </el-col>
@@ -133,6 +132,7 @@ export default {
                     notificationTypeId: '',
                     mediumId: ''
                 },
+                segmentsList: [],
                 notificationTypes: [],
                 notificationMediums: [],
                 addTemplateDisabled: false,
@@ -197,6 +197,16 @@ export default {
 
             getNotificationMediums().then((notificationMediums) => {
                 this.notificationMediums = notificationMediums.data || [];
+            });
+
+            let url = apiConfig.apiHandlers.getSegementsList().url;
+            this.$apiService.get(url).then((response) => {
+                let segments = response && response.data && response.data.segments;
+                this.segmentsList = segments;
+            }, (err) => {
+                this.$message.error({
+                    message: err && err.message || 'could not fetch segment, something went wrong.'
+                });
             });
         },
         computed: {

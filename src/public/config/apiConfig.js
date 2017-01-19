@@ -50,6 +50,11 @@ let config = {
             return {
                 url: `/notification-types/schedule`
             }
+        },
+        getSegementsList(){
+            return {
+                url: `/audience-manager/segments`
+            }
         }
     }
 }

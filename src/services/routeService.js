@@ -28,6 +28,7 @@ module.exports.setup = function(app, router){
     app.get('/notification-detail/:id', require('api-handlers/notificationDetail').notificationDetailsById);
     app.get('/notification-listings', require('api-handlers/notificationListings'));
 
+    app.get('/audience-manager/segments', require('api-handlers/segmentsList').getAllSegements);
 
     app.post('/template/create', require('api-handlers/createNewTemplate'));
     app.post('/template/update/:id', require('api-handlers/updateTemplateDetail').updateTemplate);
@@ -35,8 +36,6 @@ module.exports.setup = function(app, router){
 
     app.post('/notification-types/create/:notificationTypeName', require('api-handlers/notificationDetail').createNotificationType);
     app.post('/notification-types/schedule', require('api-handlers/scheduleNotification').scheduleNotification);
-
-    app.get('/audience-manager/segments', require('api-handlers/segmentsList').getAllSegements);
 
 
     app.use(function(err, req, res, next) {

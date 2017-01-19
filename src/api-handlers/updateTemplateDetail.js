@@ -92,8 +92,12 @@ function updateTemplate(req, res, next){
             notificationTemplateQuery.updateNotificationTemplate(currentTemplate, templateId).then((response) => {
                 // template updated successfully
 
-                let urlData = `notificationMediumId=${prevData.mediumId}&notificationTypeId=${prevData.notificationTypeId}`;
-                let flushApi = apiService.get(apiConfig.flushApi, urlData);
+                let flushApi = apiService.get(apiConfig.flushApi({
+                    query: {
+                        notificationMediumId: prevData.mediumId,
+                        notificationTypeId: prevData.notificationTypeId
+                    }
+                }));
                 flushApi.then((flushData) => {
                     if (flushData.statusCode == '2XX') {
                         templateLoggingQuery.generateTemplateLog({

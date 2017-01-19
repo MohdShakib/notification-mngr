@@ -42,7 +42,9 @@ function scheduleNotification(req, res, next){
     }
 
     async.map(mapArr, (sendData, callback) => {
-        apiService.post(apiConfig.sendNotification, sendData).then(function(res) {
+        apiService.post(apiConfig.sendNotification(), {
+            body: sendData
+        }).then(function(res) {
             callback(null, res);
         }, function(err) {
             callback(err, null);

@@ -1,26 +1,6 @@
 "use strict";
 
-function getURL(urlObj, query) {
-    if (!query) {
-        return urlObj;
-    }
-
-    let queryStr, seperator;
-    if (typeof query === 'string') {
-        queryStr = query;
-    } else {
-        queryStr = '';
-        for (let key in query) {
-            if(query[key]){
-                queryStr = queryStr + '&' + key + '=' + query[key];
-            }
-        }
-        queryStr = queryStr.slice(1);
-    }
-    seperator = urlObj.url.indexOf('?') > -1 ? '&' : '?';
-    urlObj.url += `${seperator}${queryStr}`;
-    return urlObj;
-}
+const getURL = require('../../services/utilService').getURL;
 
 let config = {
     apiHandlers: {

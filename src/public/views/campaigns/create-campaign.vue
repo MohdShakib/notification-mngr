@@ -18,95 +18,96 @@
     </el-dialog>
 
     <el-col :span="18" :offset="3">
-    <el-card class="box-card campaign-height">
-        <div slot="header" class="clearfix">
-            Create Campaign
-        </div>
-        <el-form :model="ruleForm" label-position="top" :rules="rules" ref="ruleForm" class="demo-form-stacked">
-            <el-row>
-                <el-col :span="12">
-                    <el-form-item label="Campaign" prop="name">
-                        <el-input v-model="ruleForm.name" placeholder="campagin name"></el-input>
-                    </el-form-item>
-                </el-col>
-            </el-row>
-            <el-row>
-                <el-col :span="8">
-                    <el-form-item label="Segment" prop="segment">
-                        <el-select v-model="ruleForm.segment" placeholder="select segment">
-                            <el-option label="Segment 1" value="1"></el-option>
-                            <el-option label="Segment 2" value="2"></el-option>
-                        </el-select>
-                    </el-form-item>
-                </el-col>
-                <el-col :span="8">
-                    <el-form-item label="Start Date" prop="startDate">
-                        <el-date-picker v-model="ruleForm.startDate" format="yyyy-MM-dd" type="date" placeholder="Start Date"></el-date-picker>
-                    </el-form-item>
-                </el-col>
-            </el-row>
-            <el-row>
-                <el-col :span="8">
-                    <el-form-item label="Send At" prop="sendAt">
-                        <el-time-picker v-model="ruleForm.sendAt" placeholder="Sending Time"></el-time-picker>
-                    </el-form-item>
-                </el-col>
-                <el-col :span="8" >
-                    <el-form-item label="Status">
-                        <el-checkbox v-model="ruleForm.enabled">Enabled</el-checkbox>
-                    </el-form-item>
-                </el-col>
-            </el-row>
-
-            <el-row>
-                <el-col :span="8">
-                    <el-form-item label="Notification Medium">
-                        <el-select v-model="ruleForm.mediumId" filterable clearable placeholder="Notification Medium">
-                            <el-option v-for="item in notificationMediums" :label="item.name" :value="item.id"></el-option>
-                        </el-select>
-                    </el-form-item>
-                </el-col>
-                <el-col :span="8">
-                    <el-form-item label="Notification Type">
-                        <el-select v-model="ruleForm.notificationTypeId" filterable clearable placeholder="Notification Type">
-                            <el-option v-for="item in notificationTypes" :label="item.name" :value="item.id"></el-option>
-                        </el-select>
-                    </el-form-item>
-                </el-col>
-                <el-col :span="1">
-                    <el-form-item label="Add">
-                        <el-button size="small" type="primary" icon="plus" @click="addTemplate"></el-button>
-                    </el-form-item>
-                </el-col>
-            </el-row>
-
-            <el-form-item v-for="(value, key) in templates">
+        <el-card class="box-card campaign-height">
+            <div slot="header" class="clearfix">
+                Create Campaign
+            </div>
+            <el-form :model="ruleForm" label-position="top" :rules="rules" ref="ruleForm" class="demo-form-stacked">
                 <el-row>
-                    <el-col :span="9">
-                        <code>{{value.mediumName}} [ {{value.notificationName}} ]</code>
+                    <el-col :span="12">
+                        <el-form-item label="Campaign" prop="name">
+                            <el-input v-model="ruleForm.name" placeholder="campagin name"></el-input>
+                        </el-form-item>
                     </el-col>
-                    <el-button size="mini" type="primary" @click="previewTemplate(key)" icon="view"></el-button>
-                    <el-button size="mini" type="primary" @click="removeTemplate(key)" icon="close"></el-button>
                 </el-row>
-                <div>
-                    <el-col :span="6">
-                        Frequency
-                        <div>
-                            <el-input-number v-model="value.frequency" :min="1" :max="10"></el-input-number>
-                        </div>
+                <el-row>
+                    <el-col :span="8">
+                        <el-form-item label="Segment" prop="segment">
+                            <el-select v-model="ruleForm.segment" placeholder="select segment">
+                                <el-option label="Segment 1" value="1"></el-option>
+                                <el-option label="Segment 2" value="2"></el-option>
+                            </el-select>
+                        </el-form-item>
                     </el-col>
-                    <el-col :span="6">
-                        Interval (in days)
-                        <div>
-                            <el-input-number v-model="value.interval" :min="1" :max="10"></el-input-number>
-                        </div>
+                    <el-col :span="8">
+                        <el-form-item label="Start Date" prop="startDate">
+                            <el-date-picker v-model="ruleForm.startDate" :picker-options="pickerOptions" format="yyyy-MM-dd" type="date" placeholder="Start Date"></el-date-picker>
+                        </el-form-item>
                     </el-col>
-                </div>
-            </el-form-item>
+                </el-row>
+                <el-row>
+                    <el-col :span="8">
+                        <el-form-item label="Send At" prop="sendAt">
+                            <el-time-select v-model="ruleForm.sendAt" :editable="false" :picker-options="{ start: '06:00', step: '00:15', end: '24:00', minTime: '05:45' }" placeholder="Sending Time">
+                            </el-time-select>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="8">
+                        <el-form-item label="Status">
+                            <el-checkbox v-model="ruleForm.enabled">Enabled</el-checkbox>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
 
-        </el-form>
-    </el-card>
-</el-col>
+                <el-row>
+                    <el-col :span="8">
+                        <el-form-item label="Notification Medium">
+                            <el-select v-model="ruleForm.mediumId" filterable clearable placeholder="Notification Medium">
+                                <el-option v-for="item in notificationMediums" :label="item.name" :value="item.id"></el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="8">
+                        <el-form-item label="Notification Type">
+                            <el-select v-model="ruleForm.notificationTypeId" filterable clearable placeholder="Notification Type">
+                                <el-option v-for="item in notificationTypes" :label="item.name" :value="item.id"></el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="1">
+                        <el-form-item label="Add">
+                            <el-button size="small" type="primary" icon="plus" @click="addTemplate"></el-button>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+
+                <el-form-item v-for="(value, key) in templates">
+                    <el-row>
+                        <el-col :span="9">
+                            <code>{{value.mediumName}} [ {{value.notificationName}} ]</code>
+                        </el-col>
+                        <el-button size="mini" type="primary" @click="previewTemplate(key)" icon="view"></el-button>
+                        <el-button size="mini" type="primary" @click="removeTemplate(key)" icon="close"></el-button>
+                    </el-row>
+                    <div>
+                        <el-col :span="6">
+                            Frequency
+                            <div>
+                                <el-input-number v-model="value.frequency" :min="1" :max="10"></el-input-number>
+                            </div>
+                        </el-col>
+                        <el-col :span="6">
+                            Gap Interval (in days)
+                            <div>
+                                <el-input-number v-model="value.interval" :min="1" :max="10"></el-input-number>
+                            </div>
+                        </el-col>
+                    </div>
+                </el-form-item>
+
+            </el-form>
+        </el-card>
+    </el-col>
 </el-row>
 
 </template>
@@ -138,6 +139,15 @@ export default {
                 preview: false,
                 previewData: {},
                 templates: {},
+                pickerOptions: {
+                    disabledDate(value) {
+                        var now = new Date();
+                        now.setHours(0, 0, 0, 0);
+                        if (value < now) {
+                            return true;
+                        }
+                    }
+                },
                 rules: {
                     name: [{
                         required: true,

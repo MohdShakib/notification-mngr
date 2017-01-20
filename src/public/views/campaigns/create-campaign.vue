@@ -33,7 +33,7 @@
                 <el-row>
                     <el-col :span="8">
                         <el-form-item label="Segment" prop="segment">
-                            <el-select v-model="ruleForm.segment"  filterable placeholder="select segment">
+                            <el-select v-model="ruleForm.segment" :remote="true" :loading="loadingSegments" filterable  clearable placeholder="select segment">
                                 <el-option v-for="item in segmentsList" :label="item.name" :value="item.id"></el-option>
                             </el-select>
                         </el-form-item>
@@ -132,6 +132,7 @@ export default {
                     notificationTypeId: '',
                     mediumId: ''
                 },
+                loadingSegments: false,
                 segmentsList: [],
                 notificationTypes: [],
                 notificationMediums: [],
@@ -160,8 +161,7 @@ export default {
                     }],
                     segment: [{
                         required: true,
-                        message: 'Please select Segment',
-                        trigger: 'change'
+                        message: 'Please select segment'
                     }],
                     startDate: [{
                         type: 'date',
@@ -199,11 +199,14 @@ export default {
                 this.notificationMediums = notificationMediums.data || [];
             });
 
+            this.loadingSegments = true;
             let url = apiConfig.apiHandlers.getSegementsList().url;
             this.$apiService.get(url).then((response) => {
+                this.loadingSegments = false;
                 let segments = response && response.data && response.data.segments;
                 this.segmentsList = segments;
             }, (err) => {
+                this.loadingSegments = false;
                 this.$message.error({
                     message: err && err.message || 'could not fetch segment, something went wrong.'
                 });

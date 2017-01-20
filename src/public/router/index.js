@@ -16,14 +16,14 @@ export default new Router({
   mode: 'history',
   scrollBehavior: () => ({ y: 0 }),
   routes: [
-    { path: '/notification/:id', name: 'notification-detail', component: notificationDetail },
-    { path: '/notifications-status', name: 'notifications-status', component: notificationsList },
-    { path: '/schedule-template/:id', name: 'schedule-template', component: scheduleTemplate },
-    { path: '/update-template/:id', name: 'update-template', component: updateTemplate },
-    { path: '/add-template/:notificationTypeId/:mediumId', name: 'add-template', component: addTemplate },
-    { path: '/templates-list/:mediumId?', name: 'templates-list', component: templatesList },
-    { path: '/campaigns', component: createCampaign },
-    { path: '/', redirect: '/templates-list' },
-    { path: '*', component: notFound}
+    { path: '/notification/:id', name: 'notification-detail', component: notificationDetail,  meta: { title: 'notification detail' }  },
+    { path: '/notifications-status', name: 'notifications-status', component: notificationsList, meta: { title: 'notifications list' }  },
+    { path: '/schedule-template/:id', name: 'schedule-template', component: scheduleTemplate,  meta: { title: 'schedule template' } },
+    { path: '/update-template/:id', name: 'update-template', component: updateTemplate,  meta: { title: 'edit template' } },
+    { path: '/add-template/:notificationTypeId/:mediumId', name: 'add-template', component: addTemplate, meta: { title: 'add template' }},
+    { path: '/templates-list/:mediumId?', name: 'templates-list', component: templatesList, meta: { title: 'templates list' }},
+    { path: '/campaigns', component: createCampaign, meta: { title: 'campaigns list' } },
+    { path: '/', redirect: '/templates-list'},
+    { path: '*', component: notFound,  meta: { title: '404 page' }}
   ]
 })

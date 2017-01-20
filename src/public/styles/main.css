@@ -57,6 +57,14 @@ a:link, a:visited {
     font-weight: 300;
 }
 
+.header-container .page-title{
+    padding-left: 15px;
+    font-size: 20px;
+    line-height: normal;
+    font-stretch: wider;
+    color: #e0e6ed;
+}
+
 .nav {
     float: right;
     margin-right: 100px !important;
@@ -131,6 +139,10 @@ pre {
 .glyphicon-right-spinner {
     -webkit-animation: glyphicon-spin-r 3s infinite linear;
     animation: glyphicon-spin-r 3s infinite linear;
+}
+
+.visibility0{
+    visibility: hidden;
 }
 
 .margin-b20 {

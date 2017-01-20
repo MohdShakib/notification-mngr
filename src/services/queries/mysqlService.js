@@ -9,6 +9,7 @@ var connectionPool = mysql.createPool({
     user: process.env.MYSQL_USER,
     password: process.env.MYSQL_PASSWORD,
     database: process.env.MYSQL_DATABASE,
+    connectionTimeout: 60000
 });
 
 connectionPool.on('connection', function (connection) {

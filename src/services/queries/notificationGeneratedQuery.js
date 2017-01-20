@@ -106,7 +106,7 @@ function getNotificationGenerated({notificationTypeId, mediumId, status, openSta
             WHERE DATE(t2_0.created_at) BETWEEN ${dateFrom} AND ${dateTo}
             AND t2_0.notification_medium_id = ${mediumId}
             AND t2_0.notification_type_id = ${notificationTypeId}
-            AND t2_0.status = ${status} ${!showCount ? limit : ''}
+            AND t2_0.status = ${status} ORDER BY t2_0.id DESC ${!showCount ? limit : ''}
         ) as t2_0_set ON t2_0_set.id = t2.id`;
 
 

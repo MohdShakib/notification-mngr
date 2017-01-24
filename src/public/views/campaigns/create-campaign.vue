@@ -27,22 +27,22 @@
                         </el-form-item>
                     </el-col>
                     <el-col :span="11" :offset="2">
-                        <el-form-item label="Description" prop="desc">
+                        <el-form-item label="Description" prop="description">
                             <el-input v-model="ruleForm.description" placeholder="campagin description"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
                 <el-row>
                     <el-col :span="8">
-                        <el-form-item label="Segment" prop="segment">
-                            <el-select v-model="ruleForm.segment" :remote="true" :loading="loadingSegments" filterable placeholder="select segment">
+                        <el-form-item label="Segment" prop="segmentId">
+                            <el-select v-model="ruleForm.segmentId" :remote="true" :loading="loadingSegments" filterable placeholder="select segment">
                                 <el-option v-for="item in segmentsList" :label="item.name" :value="item.id"></el-option>
                             </el-select>
                         </el-form-item>
                     </el-col>
                     <el-col :span="8">
                         <el-form-item label="Start Date" prop="startDate">
-                            <el-date-picker v-model="ruleForm.startDate" :picker-options="pickerOptions" format="yyyy-MM-dd" type="date" placeholder="Start Date"></el-date-picker>
+                            <el-date-picker v-model="ruleForm.startDate" :editable="false" :picker-options="pickerOptions" format="yyyy-MM-dd" type="date" placeholder="Start Date"></el-date-picker>
                         </el-form-item>
                     </el-col>
                     <el-col :span="6">
@@ -102,6 +102,12 @@
                     </el-row>
                 </el-form-item>
 
+                <el-form-item>
+                    <el-button type="primary" @click="submitForm('ruleForm')" :disabled="disabledSubmit">Submit</el-button>
+                </el-form-item>
+
+
+
             </el-form>
         </el-card>
     </el-col>
@@ -124,13 +130,15 @@ export default {
                 ruleForm: {
                     name: '',
                     description: '',
-                    segment: '',
+                    segmentId: '',
                     startDate: '',
                     sendAt: '',
                     enabled: false,
                     notificationTypeId: '',
                     mediumId: 1
                 },
+                disabledSubmit: true,
+                submitting: false,
                 loadingSegments: false,
                 segmentsList: [],
                 notificationTypes: [],
@@ -158,7 +166,7 @@ export default {
                         message: 'Length should be greater than 3',
                         trigger: 'blur'
                     }],
-                    segment: [{
+                    segmentId: [{
                         required: true,
                         message: 'Please select segment'
                     }],
@@ -172,18 +180,11 @@ export default {
                         required: true,
                         message: 'Please pick a time'
                     }],
-                    desc: [{
+                    description: [{
                         required: true,
                         message: 'Please input campaign description',
                         trigger: 'blur'
                     }]
-
-                    // resource: [{
-                    //     required: true,
-                    //     message: 'Please select activity resource',
-                    //     trigger: 'change'
-                    // }],
-
                 }
             };
         },
@@ -215,6 +216,10 @@ export default {
         computed: {
             addTemplateDisabled() {
                 return !(this.ruleForm.notificationTypeId);
+            },
+            disabledSubmit() {
+                let status = (this.ruleForm.name && this.ruleForm.description && this.ruleForm.segmentId && this.ruleForm.startDate && this.ruleForm.sendAt && Object.keys(this.templates).length && !this.submitting);
+                return !status;
             }
         },
         methods: {
@@ -244,6 +249,7 @@ export default {
 
                             let value = {
                                 data: data,
+                                id: data.id,
                                 mediumName: data.mediumName,
                                 notificationName: data.notificationName,
                                 frequency: 1,
@@ -264,19 +270,58 @@ export default {
                     }
                     this.preview = true;
                 },
-                // submitForm(formName) {
-                //     this.$refs[formName].validate((valid) => {
-                //         if (valid) {
-                //             alert('submit!');
-                //         } else {
-                //             console.log('error submit!!');
-                //             return false;
-                //         }
-                //     });
-                // },
-                // resetForm(formName) {
-                //     this.$refs[formName].resetFields();
-                // }
+                submitForm(formName) {
+                    this.$refs[formName].validate((valid) => {
+                        if (valid) {
+                            this.createCampaign();
+                        } else {
+                            return false;
+                        }
+                    });
+                },
+                resetForm(formName) {
+                    this.$refs[formName].resetFields();
+                    this.templates = {};
+                },
+                createCampaign(){
+
+                    let postData = {
+                        name: this.ruleForm.name,
+                        description: this.ruleForm.description,
+                        segmentId: this.ruleForm.segmentId,
+                        startDate: this.$options.filters.date(this.ruleForm.startDate, '%Y-%m-%d'),
+                        sendAt: this.ruleForm.sendAt,
+                        status: this.ruleForm.enabled ? 1 : 0,
+                        templates: []
+                    };
+
+                    for(var key in this.templates){
+                        if(key && this.templates.hasOwnProperty(key)){
+                            let item = this.templates[key];
+                            postData.templates.push({
+                                id: item.id,
+                                frequency: item.frequency,
+                                interval: item.interval
+                            })
+                        }
+                    }
+
+                    this.submitting = true;
+                    let url = apiConfig.apiHandlers.createCampaign().url;
+                    this.$apiService.post(url, postData).then((response)=>{
+                        this.submitting = false;
+                        let message = response && response.message;
+                        this.resetForm('ruleForm');
+                        this.$message.success({
+                            message
+                        });
+                    }, (error)=>{
+                        this.submitting = false;
+                        this.$message.error({
+                            message: error.message || 'something went wrong.'
+                        });
+                    });
+                }
         }
 }
 

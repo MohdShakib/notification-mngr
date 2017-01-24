@@ -35,12 +35,11 @@ module.exports = function(req, res, next){
                 err = new Error('Template for medium type and notification type alredy exist !');
                 return next(err);
             }
-
-            notificationTemplateQuery.addNewTemplate({
+            notificationTemplateQuery.createTemplate({
                 template: template,
                 mediumId: mediumId,
                 notificationTypeId: notificationTypeId,
-            }).then(() => {
+            }).then((result) => {
                 return res.send({
                     data: null,
                     message: 'template created successfully.'

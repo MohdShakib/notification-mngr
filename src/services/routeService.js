@@ -37,6 +37,7 @@ module.exports.setup = function(app, router){
     app.post('/notification-types/create/:notificationTypeName', require('api-handlers/notificationDetail').createNotificationType);
     app.post('/notification-types/schedule', require('api-handlers/scheduleNotification').scheduleNotification);
 
+    app.post('/campaign/create', require('api-handlers/createCampaign'));
 
     app.use(function(err, req, res, next) {
         let statusCode = err.status || 500;

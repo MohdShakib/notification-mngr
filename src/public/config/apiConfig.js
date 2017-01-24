@@ -55,7 +55,13 @@ let config = {
             return {
                 url: `/audience-manager/segments`
             }
+        },
+        createCampaign(){
+            return {
+                url: `/campaign/create`
+            }
         }
+
     }
 }
 

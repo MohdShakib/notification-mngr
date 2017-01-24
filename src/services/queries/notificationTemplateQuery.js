@@ -72,7 +72,7 @@ function updateNotificationTemplate(content, id) {
     });
 }
 
-function addNewTemplate({ notificationTypeId, mediumId, template }){
+function createTemplate({ notificationTypeId, mediumId, template }){
     var query = `INSERT INTO ${tables.NOTIFICATION_TYPE_NOTIFICATION_MEDIUM_MAPPING}
     (notification_type_id, notification_medium_id, send_template)
     VALUES (?,?,?)`;
@@ -175,7 +175,7 @@ function deleteTemplate(id) {
 module.exports = {
     getTemplate,
     getAllTemplates,
-    addNewTemplate,
+    createTemplate,
     deleteTemplate,
     checkExistingTemplate,
     updateNotificationTemplate,

@@ -60,8 +60,12 @@ let config = {
             return {
                 url: `/campaign/create`
             }
+        },
+        campaignDetailById({id}){
+            return {
+                url: `/campaign-detail/${id}`
+            }
         }
-
     }
 }
 

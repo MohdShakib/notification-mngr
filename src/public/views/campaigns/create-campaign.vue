@@ -1,10 +1,3 @@
-<style>
-
-.campaign-height {
-    min-height: 400px;
-}
-
-</style>
 
 <template>
 
@@ -36,7 +29,10 @@
                     <el-col :span="8">
                         <el-form-item label="Segment" prop="segmentId">
                             <el-select v-model="ruleForm.segmentId" :remote="true" :loading="loadingSegments" filterable placeholder="select segment">
-                                <el-option v-for="item in segmentsList" :label="item.name" :value="item.id"></el-option>
+                                <el-option v-for="item in segmentsList" :label="item.name" :value="item.id">
+                                    <!-- <span style="float: left">{{ item.name }}</span>
+                                    <span style="float: right; color: #8492a6; font-size: 12px">{{ item.status && item.status.toLowerCase() }}</span> -->
+                                </el-option>
                             </el-select>
                         </el-form-item>
                     </el-col>

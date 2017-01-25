@@ -16,7 +16,18 @@ function createCampaign({ name, description, segment_id, start_date, schedule_ti
     (name, description, segment_id, start_date, schedule_time, status, created_at)
     VALUES (?,?,?,?,?,?,?)`;
 
-    var obj = [name, description, segment_id, start_date, schedule_time, status, "NOW()"];
+    var obj = [name, description, segment_id, start_date, schedule_time, status, new Date()];
+    return mysqlService.execQueryParams(query,obj).then(function(rows) {
+        return rows;
+    });
+}
+
+function updateCampaign(id, { name, description, segment_id, start_date, schedule_time, status }){
+
+    var query = `UPDATE ${tables.CAMPAIGNS} SET name=?, description=?, segment_id=?, start_date=?, schedule_time=?, status=?
+    WHERE id=?`;
+
+    var obj = [name, description, segment_id, start_date, schedule_time, status, id];
     return mysqlService.execQueryParams(query,obj).then(function(rows) {
         return rows;
     });
@@ -24,9 +35,10 @@ function createCampaign({ name, description, segment_id, start_date, schedule_ti
 
 function getCampaignDetailById(id){
 
-    var query = `SELECT CAMP.id as id, CAMP.name as name, CAMP.description as description, CAMP.segment_id as segment_id, DATE(CAMP.start_date) as start_date,
-    CAMP.schedule_time as schedule_time, CAMP.created_at as created_at, CAMP.status as status,
-    CMP_T_MAP.template_id as template_id, CMP_T_MAP.frequency as frequency, CMP_T_MAP.gap_interval as gap_interval, t2.name as typename, t3.name as mediumname
+    var query = `SELECT CAMP.id as id, CAMP.name as name, CAMP.description as description, CAMP.segment_id as segment_id, DATE_FORMAT(CAMP.start_date, '%Y-%m-%d') as start_date,
+    TIME_FORMAT(CAMP.schedule_time, '%H:%i') as schedule_time, CAMP.created_at as created_at, CAMP.status as status,
+    CMP_T_MAP.template_id as template_id, CMP_T_MAP.frequency as frequency, CMP_T_MAP.gap_interval as gap_interval,
+    t2.name as typename, t2.id as notification_type_id, t3.name as mediumname, t3.id as notification_medium_id
     FROM ${tables.CAMPAIGNS} as CAMP
     INNER JOIN campaign_templates_mapping AS CMP_T_MAP ON CAMP.id = CMP_T_MAP.campaign_id
     INNER JOIN ${tables.NOTIFICATION_TYPE_NOTIFICATION_MEDIUM_MAPPING} AS t1 ON t1.id = CMP_T_MAP.template_id
@@ -35,6 +47,17 @@ function getCampaignDetailById(id){
     WHERE CAMP.id = ?`;
 
     var obj = [id]
+    return mysqlService.execQueryParams(query, obj).then(function(rows) {
+        return rows;
+    });
+}
+
+function deleteCampaignTemplatesMapping(campaign_id){
+
+    var query = `DELETE FROM ${tables.CAMPAIGN_TEMPLATES_MAPPING}
+    WHERE campaign_id = ?`;
+
+    var obj = [campaign_id]
     return mysqlService.execQueryParams(query, obj).then(function(rows) {
         return rows;
     });
@@ -53,6 +76,8 @@ function insertCampaignTemplatesMapping(data){
 
 module.exports = {
     createCampaign,
+    updateCampaign,
     getCampaignDetailById,
-    insertCampaignTemplatesMapping
+    insertCampaignTemplatesMapping,
+    deleteCampaignTemplatesMapping
 }

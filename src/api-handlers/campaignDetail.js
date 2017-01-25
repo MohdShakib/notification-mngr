@@ -13,21 +13,23 @@ function getCampaignDetailsById(req, res, next){
 
             data.name = item.name;
             data.description = item.description;
-            data.segment_id = item.segment_id;
-            data.start_date = item.start_date;
-            data.schedule_time = item.schedule_time;
+            data.segmentId = item.segment_id;
+            data.startDate = item.start_date;
+            data.scheduleTime = item.schedule_time;
             data.status = item.status;
-            data.created_at = item.created_at;
+            data.createdAt = item.created_at;
 
             for(var i=0; i<response.length; i++){
                 item = response[i];
                 data.templates = data.templates || [];
                 data.templates.push({
                     id: item.template_id,
-                    typeName: item.typename,
-                    mediumName: item.mediumName,
                     frequency: item.frequency,
-                    gap_interval: item.gap_interval
+                    gapInterval: item.gap_interval,
+                    notificationName: item.typename,
+                    mediumName: item.mediumname,
+                    notificationTypeId: item.notification_type_id,
+                    mediumId: item.notification_medium_id
                 });
             }
         }

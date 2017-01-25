@@ -38,7 +38,7 @@
                     </el-col>
                     <el-col :span="8">
                         <el-form-item label="Start Date" prop="startDate">
-                            <el-date-picker v-model="ruleForm.startDate" :editable="false" :picker-options="pickerOptions" format="yyyy-MM-dd" type="date" placeholder="Start Date"></el-date-picker>
+                            <el-date-picker v-model="ruleForm.startDate" :disabled="true" :picker-options="pickerOptions" format="yyyy-MM-dd" type="date" placeholder="Start Date"></el-date-picker>
                         </el-form-item>
                     </el-col>
                     <el-col :span="6">
@@ -99,7 +99,7 @@
                 </el-form-item>
 
                 <el-form-item>
-                    <el-button type="primary" @click="submitForm('ruleForm')" :disabled="disabledSubmit">Submit</el-button>
+                    <el-button type="primary" @click="submitForm('ruleForm')" :disabled="disabledSubmit">Update</el-button>
                 </el-form-item>
 
 
@@ -188,6 +188,9 @@ export default {
             renderTemplate
         },
         mounted() {
+
+            this.fetchData();
+
             getNotificationTypes().then((notificationTypes) => {
                 this.notificationTypes = notificationTypes.data || [];
             });
@@ -219,9 +222,29 @@ export default {
             }
         },
         methods: {
-            addTemplate() {
+            fetchData() {
+                let url = apiConfig.apiHandlers.campaignDetailById({
+                    id: this.$route.params.id
+                }).url;
+                this.$apiService.get(url).then((response) => {
+                    let data = response && response.data;
+                    this.ruleForm.name = data.name;
+                    this.ruleForm.description = data.description;
+                    this.ruleForm.segmentId = data.segmentId;
+                    this.ruleForm.startDate = new Date(data.startDate);
+                    this.ruleForm.sendAt = data.scheduleTime;
+                    this.ruleForm.enabled = data.status ? true : false;
+
+                    let templates = data.templates || [];
+                    for(let i=0; i<templates.length; i++){
+                        this.addTemplate(templates[i]);
+                    }
+
+                });
+            },
+            addTemplate(templateObj = {}) {
                     let mediumId = this.ruleForm.mediumId,
-                        notificationTypeId = this.ruleForm.notificationTypeId;
+                        notificationTypeId = templateObj.notificationTypeId || this.ruleForm.notificationTypeId;
                     if (mediumId && notificationTypeId) {
                         this.addTemplateDisabled = true;
                         let url = apiConfig.apiHandlers.getTemplateDetails({
@@ -248,8 +271,8 @@ export default {
                                 id: data.id,
                                 mediumName: data.mediumName,
                                 notificationName: data.notificationName,
-                                frequency: 1,
-                                gapInterval: 1
+                                frequency: templateObj.frequency || 1,
+                                gapInterval: templateObj.gapInterval || 1
                             };
                             this.$set(this.templates, key, value);
                         });
@@ -269,7 +292,7 @@ export default {
                 submitForm(formName) {
                     this.$refs[formName].validate((valid) => {
                         if (valid) {
-                            this.createCampaign();
+                            this.updateCampaign();
                         } else {
                             return false;
                         }
@@ -279,7 +302,7 @@ export default {
                     this.$refs[formName].resetFields();
                     this.templates = {};
                 },
-                createCampaign(){
+                updateCampaign(){
 
                     let postData = {
                         name: this.ruleForm.name,
@@ -303,11 +326,13 @@ export default {
                     }
 
                     this.submitting = true;
-                    let url = apiConfig.apiHandlers.createCampaign().url;
+                    let url = apiConfig.apiHandlers.updateCampaign({
+                        id: this.$route.params.id
+                    }).url;
+
                     this.$apiService.post(url, postData).then((response)=>{
                         this.submitting = false;
                         let message = response && response.message;
-                        this.resetForm('ruleForm');
                         this.$message.success({
                             message
                         });

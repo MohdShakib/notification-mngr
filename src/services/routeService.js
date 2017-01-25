@@ -38,7 +38,8 @@ module.exports.setup = function(app, router){
     app.post('/notification-types/schedule', require('api-handlers/scheduleNotification').scheduleNotification);
 
     app.get('/campaign-detail/:id', require('api-handlers/campaignDetail').getCampaignDetailsById);
-    app.post('/campaign/create', require('api-handlers/createCampaign'));
+    app.post('/campaign/create', require('api-handlers/upsertCampaign'));
+    app.post('/campaign/update/:id', require('api-handlers/upsertCampaign'));
 
     app.use(function(err, req, res, next) {
         let statusCode = err.status || 500;

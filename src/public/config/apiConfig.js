@@ -61,6 +61,11 @@ let config = {
                 url: `/campaign/create`
             }
         },
+        updateCampaign({ id }){
+            return {
+                url: `/campaign/update/${id}`
+            }
+        },
         campaignDetailById({id}){
             return {
                 url: `/campaign-detail/${id}`

@@ -17,7 +17,7 @@ function getAllCampaigns(){
     GROUP_CONCAT(CMP_T_MAP.template_id) as template_ids, GROUP_CONCAT(CMP_T_MAP.frequency) as frequencies,
     GROUP_CONCAT(CMP_T_MAP.gap_interval) as gap_intervals
     FROM ${tables.CAMPAIGNS} as CAMP
-    LEFT JOIN ${tables.CAMPAIGN_TEMPLATES_MAPPING} CMP_T_MAP ON CMP_T_MAP.campaign_id = CAMP.id group by CAMP.id`;
+    LEFT JOIN ${tables.CAMPAIGN_TEMPLATES_MAPPING} CMP_T_MAP ON CMP_T_MAP.campaign_id = CAMP.id group by CAMP.id order by CAMP.id desc`;
 
     return mysqlService.execQuery(query).then(function(rows) {
         return rows;

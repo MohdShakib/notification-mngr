@@ -70,6 +70,11 @@ let config = {
             return {
                 url: `/campaign-detail/${id}`
             }
+        },
+        getCampaignsList(){
+            return {
+                url: `/campaign-listings`
+            }
         }
     }
 }

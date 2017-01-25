@@ -1,11 +1,13 @@
 "use strict";
 
+import apiConfig from '../config/apiConfig'
 import apiService from './apiService'
 
 let SINGLETON_PROMISE = {
     NOTIFICATION_TYPES: null,
     NOTIIFICATION_MEDIUMS: null,
-    NOTIFICATION_STATUS: null
+    NOTIFICATION_STATUS: null,
+    SEGMENTS_LIST: null
 }
 
 export function getNotificationTypes(){
@@ -56,4 +58,22 @@ export function getNotificationsStatus() {
         });
     });
     return SINGLETON_PROMISE.NOTIFICATION_STATUS;
+}
+
+
+export function getSegementsList(){
+
+    if(SINGLETON_PROMISE.SEGMENTS_LIST){
+        return SINGLETON_PROMISE.SEGMENTS_LIST;
+    }
+
+
+    let url = apiConfig.apiHandlers.getSegementsList().url;
+    SINGLETON_PROMISE.SEGMENTS_LIST = apiService.get(url).then((response) => {
+        let segments = response && response.data && response.data.segments;
+        return segments;
+    }, (err) => {
+        SINGLETON_PROMISE.SEGMENTS_LIST = null;
+    });
+    return SINGLETON_PROMISE.SEGMENTS_LIST;
 }

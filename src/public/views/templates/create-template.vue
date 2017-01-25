@@ -51,7 +51,7 @@
 import {
     getNotificationTypes, getNotificationMediums
 }
-from '../../services/notificationService'
+from '../../services/defaultService'
 import apiConfig from '../../config/apiConfig'
 
 export default {

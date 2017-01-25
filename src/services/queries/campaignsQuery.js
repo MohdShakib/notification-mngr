@@ -10,6 +10,20 @@ var tables = {
 }
 
 
+function getAllCampaigns(){
+
+    var query = `SELECT CAMP.id as id, CAMP.name as name, CAMP.description as description, CAMP.segment_id as segment_id, DATE_FORMAT(CAMP.start_date, '%Y-%m-%d') as start_date,
+    TIME_FORMAT(CAMP.schedule_time, '%H:%i') as schedule_time, CAMP.status as status, CAMP.created_at as created_at,
+    GROUP_CONCAT(CMP_T_MAP.template_id) as template_ids, GROUP_CONCAT(CMP_T_MAP.frequency) as frequencies,
+    GROUP_CONCAT(CMP_T_MAP.gap_interval) as gap_intervals
+    FROM ${tables.CAMPAIGNS} as CAMP
+    LEFT JOIN ${tables.CAMPAIGN_TEMPLATES_MAPPING} CMP_T_MAP ON CMP_T_MAP.campaign_id = CAMP.id group by CAMP.id`;
+
+    return mysqlService.execQuery(query).then(function(rows) {
+        return rows;
+    });
+}
+
 function createCampaign({ name, description, segment_id, start_date, schedule_time, status }){
 
     var query = `INSERT INTO ${tables.CAMPAIGNS}
@@ -77,6 +91,7 @@ function insertCampaignTemplatesMapping(data){
 module.exports = {
     createCampaign,
     updateCampaign,
+    getAllCampaigns,
     getCampaignDetailById,
     insertCampaignTemplatesMapping,
     deleteCampaignTemplatesMapping

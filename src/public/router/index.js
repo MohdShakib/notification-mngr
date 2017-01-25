@@ -5,10 +5,11 @@ Vue.use(Router);
 
 import templatesList from  '../views/templates/templates-list.vue'
 import updateTemplate from  '../views/templates/update-template.vue'
-import addTemplate from  '../views/templates/add-template.vue'
+import createTemplate from  '../views/templates/create-template.vue'
 import notificationsList from  '../views/notifications/notifications-list.vue'
 import notificationDetail from  '../views/notifications/notification-detail.vue'
 import scheduleTemplate from '../views/templates/schedule-template.vue'
+import campaignsList from '../views/campaigns/campaigns-list.vue'
 import createCampaign from  '../views/campaigns/create-campaign.vue'
 import updateCampaign from  '../views/campaigns/update-campaign.vue'
 import notFound from '../views/404-template.vue'
@@ -20,11 +21,14 @@ export default new Router({
     { path: '/notification/:id', name: 'notification-detail', component: notificationDetail,  meta: { title: 'notification detail' }  },
     { path: '/notifications-status', name: 'notifications-status', component: notificationsList, meta: { title: 'notifications list' }  },
     { path: '/schedule-template/:id', name: 'schedule-template', component: scheduleTemplate,  meta: { title: 'schedule template' } },
-    { path: '/update-template/:id', name: 'update-template', component: updateTemplate,  meta: { title: 'edit template' } },
-    { path: '/add-template/:notificationTypeId/:mediumId', name: 'add-template', component: addTemplate, meta: { title: 'add template' }},
+    { path: '/update-template/:id', name: 'update-template', component: updateTemplate,  meta: { title: 'update template' } },
+    { path: '/add-template/:notificationTypeId/:mediumId', name: 'add-template', component: createTemplate, meta: { title: 'create template' }},
     { path: '/templates-list/:mediumId?', name: 'templates-list', component: templatesList, meta: { title: 'templates list' }},
-    { path: '/campaigns/update/:id', component: updateCampaign, meta: { title: 'update campaign' } },
-    { path: '/campaigns/create', component: createCampaign, meta: { title: 'campaigns list' } },
+
+    { path: '/campaigns', name: 'campaigns-list', component: campaignsList, meta: { title: 'campaigns list' } },
+    { path: '/campaigns/create', name: 'create-campaign', component: createCampaign, meta: { title: 'create campaign' } },
+    { path: '/campaigns/update/:id', name: 'update-campaign', component: updateCampaign, meta: { title: 'update campaign' } },
+
     { path: '/', redirect: '/templates-list'},
     { path: '*', component: notFound,  meta: { title: '404 page' }}
   ]

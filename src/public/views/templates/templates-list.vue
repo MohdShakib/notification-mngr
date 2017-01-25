@@ -55,11 +55,9 @@
         </el-form>
         <el-table :data="filteredTemplates" border stripe style="width: 100%">
             <div slot="empty">
+                No Templates Found
                 <template v-if="notificationTypeId && mediumId">
-                    <el-button @click="redirectTo('add-template',{notificationTypeId: notificationTypeId, mediumId: mediumId})" type="primary">Create</el-button>
-                </template>
-                <template v-else>
-                    No Templates Found
+                    | <el-button @click="redirectTo('add-template',{notificationTypeId: notificationTypeId, mediumId: mediumId})" type="text">Create template</el-button>
                 </template>
             </div>
             <el-table-column type="index" width="100">
@@ -108,7 +106,7 @@ import renderTemplate from './render-template.vue'
 import {
     getNotificationTypes, getNotificationMediums
 }
-from '../../services/notificationService'
+from '../../services/defaultService'
 import apiConfig from '../../config/apiConfig'
 
 export default {

@@ -65,7 +65,7 @@
 import {
     getNotificationTypes, getNotificationMediums, getNotificationsStatus
 }
-from '../../services/notificationService'
+from '../../services/defaultService'
 
 export default {
     name: 'notification-filters',

@@ -114,9 +114,9 @@
 <script>
 
 import {
-    getNotificationTypes, getNotificationMediums
+    getNotificationTypes, getNotificationMediums, getSegementsList
 }
-from '../../services/notificationService'
+from '../../services/defaultService'
 import renderTemplate from '../templates/render-template.vue'
 import apiConfig from '../../config/apiConfig'
 
@@ -197,11 +197,9 @@ export default {
             });
 
             this.loadingSegments = true;
-            let url = apiConfig.apiHandlers.getSegementsList().url;
-            this.$apiService.get(url).then((response) => {
+            getSegementsList().then((segmentsList)=>{
                 this.loadingSegments = false;
-                let segments = response && response.data && response.data.segments;
-                this.segmentsList = segments;
+                this.segmentsList = segmentsList || [];
             }, (err) => {
                 this.loadingSegments = false;
                 this.$message.error({

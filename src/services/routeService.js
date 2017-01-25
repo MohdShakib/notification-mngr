@@ -38,6 +38,7 @@ module.exports.setup = function(app, router){
     app.post('/notification-types/schedule', require('api-handlers/scheduleNotification').scheduleNotification);
 
     app.get('/campaign-detail/:id', require('api-handlers/campaignDetail').getCampaignDetailsById);
+    app.get('/campaign-listings', require('api-handlers/campaignListings'));
     app.post('/campaign/create', require('api-handlers/upsertCampaign'));
     app.post('/campaign/update/:id', require('api-handlers/upsertCampaign'));
 

@@ -16,19 +16,19 @@
                 <el-row>
                     <el-col :span="11">
                         <el-form-item label="Campaign" prop="name">
-                            <el-input v-model="ruleForm.name" @change="formatCampaignName" placeholder="campagin name"></el-input>
+                            <el-input v-model="ruleForm.name" :disabled="onlyView" @change="formatCampaignName" placeholder="campagin name"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="11" :offset="2">
                         <el-form-item label="Description" prop="description">
-                            <el-input v-model="ruleForm.description" placeholder="campagin description"></el-input>
+                            <el-input v-model="ruleForm.description" :disabled="onlyView" placeholder="campagin description"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
                 <el-row>
                     <el-col :span="8">
                         <el-form-item label="Segment" prop="segmentId">
-                            <el-select v-model="ruleForm.segmentId" :remote="true" :loading="loadingSegments" filterable placeholder="select segment">
+                            <el-select v-model="ruleForm.segmentId" :remote="true" :disabled="onlyView" :loading="loadingSegments" filterable placeholder="select segment">
                                 <el-option v-for="item in segmentsList" :label="item.name" :value="item.id">
                                     <!-- <span style="float: left">{{ item.name }}</span>
                                     <span style="float: right; color: #8492a6; font-size: 12px">{{ item.status && item.status.toLowerCase() }}</span> -->
@@ -43,13 +43,13 @@
                     </el-col>
                     <el-col :span="6">
                         <el-form-item label="Email Time" prop="sendAt">
-                            <el-time-select v-model="ruleForm.sendAt" :editable="false" :picker-options="{ start: '06:00', step: '00:15', end: '24:00', minTime: '05:45' }" placeholder="Sending Time">
+                            <el-time-select v-model="ruleForm.sendAt" :disabled="onlyView" :editable="false" :picker-options="{ start: '06:00', step: '00:15', end: '24:00', minTime: '05:45' }" placeholder="Sending Time">
                             </el-time-select>
                         </el-form-item>
                     </el-col>
                     <el-col :span="2">
                         <el-form-item label="Status">
-                            <el-checkbox v-model="ruleForm.enabled">Enabled</el-checkbox>
+                            <el-checkbox v-model="ruleForm.enabled" :disabled="onlyView">Enabled</el-checkbox>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -64,12 +64,12 @@
                     </el-col>
                     <el-col :span="8">
                         <el-form-item label="Notification Type">
-                            <el-select v-model="ruleForm.notificationTypeId" filterable placeholder="Notification Type">
+                            <el-select v-model="ruleForm.notificationTypeId" filterable placeholder="Notification Type" :disabled="onlyView">
                                 <el-option v-for="item in notificationTypes" :label="item.name" :value="item.id"></el-option>
                             </el-select>
                         </el-form-item>
                     </el-col>
-                    <el-col :span="1">
+                    <el-col :span="1" v-if="!onlyView">
                         <el-form-item label="Add">
                             <el-button size="small" type="primary" icon="plus" @click="addTemplate" :disabled="addTemplateDisabled"></el-button>
                         </el-form-item>
@@ -84,25 +84,24 @@
                         </el-col>
                         <el-col :span="8">
                             <div>Frequency</div>
-                            <el-input-number v-model="value.frequency" :min="1" :max="10"></el-input-number>
+                            <el-input-number v-model="value.frequency" :min="1" :max="10" :disabled="onlyView"></el-input-number>
                         </el-col>
                         <el-col :span="6">
                             <div>Gap Interval (in days)</div>
-                            <el-input-number v-model="value.gapInterval" :min="1" :max="10"></el-input-number>
+                            <el-input-number v-model="value.gapInterval" :min="1" :max="10" :disabled="onlyView"></el-input-number>
                         </el-col>
                         <el-col :span="2">
                             <div class="visibility0">actions</div>
                             <el-button size="mini" type="primary" @click="previewTemplate(key)" icon="view"></el-button>
-                            <el-button size="mini" type="primary" @click="removeTemplate(key)" icon="close"></el-button>
+                            <el-button v-if="!onlyView" size="mini" type="primary" @click="removeTemplate(key)" icon="close"></el-button>
                         </el-col>
                     </el-row>
                 </el-form-item>
 
-                <el-form-item>
+                <el-form-item v-if="!onlyView">
                     <el-button type="primary" @click="submitForm('ruleForm')" :disabled="disabledSubmit">Update</el-button>
+                    <el-button type="danger" @click="$router.push({ name: 'campaigns-list'})" >Cancel</el-button>
                 </el-form-item>
-
-
 
             </el-form>
         </el-card>
@@ -133,6 +132,7 @@ export default {
                     notificationTypeId: '',
                     mediumId: 1
                 },
+                onlyView: false,
                 disabledSubmit: true,
                 submitting: false,
                 loadingSegments: false,
@@ -209,6 +209,8 @@ export default {
                     message: err && err.message || 'could not fetch segment, something went wrong.'
                 });
             });
+
+            this.onlyView = this.$route.meta.onlyView;
         },
         computed: {
             addTemplateDisabled() {

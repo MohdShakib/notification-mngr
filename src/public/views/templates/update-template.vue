@@ -39,6 +39,7 @@
                     <el-form-item>
                         <el-button @click="showPreview" @close="preview=false;" type="primary">Preview</el-button>
                         <el-button @click="updateTemplate" :disabled="isDisabled" type="primary">Update</el-button>
+                        <el-button type="danger" @click="$router.push({ name: 'templates-list'})" >Cancel</el-button>
                     </el-form-item>
                 </el-form>
             </el-card>

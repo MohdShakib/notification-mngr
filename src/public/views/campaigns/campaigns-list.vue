@@ -30,7 +30,7 @@
             <el-table-column>
                 <template scope="scope">
                     <div class="text-center">
-                        <el-button size="small" type="primary" :disabled="true" icon="view"></el-button>
+                        <el-button size="small" type="primary" @click="$router.push({ name: 'campaign-detail', params: { id: scope.row.id } })" icon="view"></el-button>
                         <el-button size="small" @click="$router.push({name: 'update-campaign', params: {id: scope.row.id}})" type="primary" icon="edit"></el-button>
                         <el-button size="small" type="primary" :disabled="true" icon="delete"></el-button>
                     </div>

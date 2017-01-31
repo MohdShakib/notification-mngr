@@ -14,8 +14,8 @@
     <el-dialog title="Permanent Delete ?" @close="confirmDelete.show = false" v-model="confirmDelete.show" size="tiny">
         <span>Are you sure you want to delete this template?</span>
         <span slot="footer" class="dialog-footer">
-        <el-button @click="confirmDelete.show = false">Cancel</el-button>
         <el-button type="primary" @click="deleteConfirmation">Confirm</el-button>
+        <el-button type="danger" @click="confirmDelete.show = false">Cancel</el-button>
       </span>
     </el-dialog>
 
@@ -26,8 +26,8 @@
             </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
-            <el-button @click="createNewType = false">Cancel</el-button>
             <el-button type="primary" @click="createNotificationType" :disabled="disableCreateNewNotificationType">Create</el-button>
+            <el-button type="danger" @click="createNewType = false">Cancel</el-button>
         </span>
     </el-dialog>
 

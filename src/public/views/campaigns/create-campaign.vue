@@ -100,6 +100,7 @@
 
                 <el-form-item>
                     <el-button type="primary" @click="submitForm('ruleForm')" :disabled="disabledSubmit">Submit</el-button>
+                    <el-button type="danger" @click="$router.push({ name: 'campaigns-list'})" >Cancel</el-button>
                 </el-form-item>
 
 

@@ -53,7 +53,8 @@
                     <el-input type="textarea" :cols="15" :rows="5" v-model="usersData" @change="formatUsersData"></el-input>
                 </el-row>
                 <el-row>
-                    <el-button :disabled="isDisabled" type="primary" @click="scheduleNotification">schedule</el-button>
+                    <el-button :disabled="isDisabled" type="primary" @click="scheduleNotification">Schedule</el-button>
+                    <el-button type="danger" @click="$router.push({ name: 'templates-list'})" >Cancel</el-button>
                 </el-row>
             </el-card>
         </el-col>

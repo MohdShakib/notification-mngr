@@ -26,6 +26,7 @@ export default new Router({
     { path: '/templates-list/:mediumId?', name: 'templates-list', component: templatesList, meta: { title: 'templates list' }},
 
     { path: '/campaigns', name: 'campaigns-list', component: campaignsList, meta: { title: 'campaigns list' } },
+    { path: '/campaign/:id', name: 'campaign-detail', component: updateCampaign, meta: { title: 'campaign view', onlyView: true } },
     { path: '/campaigns/create', name: 'create-campaign', component: createCampaign, meta: { title: 'create campaign' } },
     { path: '/campaigns/update/:id', name: 'update-campaign', component: updateCampaign, meta: { title: 'update campaign' } },
 

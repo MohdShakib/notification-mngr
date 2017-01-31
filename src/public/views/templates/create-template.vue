@@ -29,7 +29,8 @@
                             <el-input type="textarea" :rows="12" :cols="150" v-model="template" placeholder="content"></el-input>
                         </el-row>
                         <el-row>
-                            <el-button @click="crateTemplate" :disabled="isDisabled" type="primary">Add</el-button>
+                            <el-button @click="crateTemplate" :disabled="isDisabled" type="primary">Create</el-button>
+                            <el-button type="danger" @click="$router.push({ name: 'templates-list'})" >Cancel</el-button>
                         </el-row>
                     </template>
                     <template v-else>
@@ -37,6 +38,9 @@
                             Template already exist
                             OR
                             Something went wrong.
+                        <div>
+                            <el-button type="primary" @click="$router.push({ name: 'templates-list'})" >Back</el-button>
+                        </div>
                         </div>
                     </template>
                 </el-row>

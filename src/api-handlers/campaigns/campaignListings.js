@@ -1,6 +1,6 @@
 "use strict";
 
-const campaignsQuery = require('../services/queries/campaignsQuery');
+const campaignsQuery = require('../../services/queries/campaignsQuery');
 
 function parseCampaignsList(response){
     let arrLength = response.length,

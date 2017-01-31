@@ -37,10 +37,10 @@ module.exports.setup = function(app, router){
     app.post('/notification-types/create/:notificationTypeName', require('api-handlers/notificationDetail').createNotificationType);
     app.post('/notification-types/schedule', require('api-handlers/scheduleNotification').scheduleNotification);
 
-    app.get('/campaign-detail/:id', require('api-handlers/campaignDetail').getCampaignDetailsById);
-    app.get('/campaign-listings', require('api-handlers/campaignListings'));
-    app.post('/campaign/create', require('api-handlers/upsertCampaign'));
-    app.post('/campaign/update/:id', require('api-handlers/upsertCampaign'));
+    app.get('/campaign-detail/:id', require('api-handlers/campaigns/campaignDetail').getCampaignDetailsById);
+    app.get('/campaign-listings', require('api-handlers/campaigns/campaignListings'));
+    app.post('/campaign/create', require('api-handlers/campaigns/upsertCampaign'));
+    app.post('/campaign/update/:id', require('api-handlers/campaigns/upsertCampaign'));
 
     app.use(function(err, req, res, next) {
         let statusCode = err.status || 500;

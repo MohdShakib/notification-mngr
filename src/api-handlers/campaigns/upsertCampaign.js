@@ -1,6 +1,6 @@
 "use strict";
 
-const campaignQuery = require('../services/queries/campaignsQuery');
+const campaignQuery = require('../../services/queries/campaignsQuery');
 
 function prepareBodyData(req){
 

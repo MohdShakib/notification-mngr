@@ -1,6 +1,6 @@
 "use strict";
 
-const campaignsQuery = require('../services/queries/campaignsQuery');
+const campaignsQuery = require('../../services/queries/campaignsQuery');
 
 function getCampaignDetailsById(req, res, next){
     let campaignId = req.params.id;

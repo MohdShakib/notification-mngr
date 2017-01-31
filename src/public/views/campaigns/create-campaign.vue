@@ -16,7 +16,7 @@
                 <el-row>
                     <el-col :span="11">
                         <el-form-item label="Campaign" prop="name">
-                            <el-input v-model="ruleForm.name" placeholder="campagin name"></el-input>
+                            <el-input v-model="ruleForm.name" @change="formatCampaignName" placeholder="campagin name"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="11" :offset="2">
@@ -217,6 +217,13 @@ export default {
             }
         },
         methods: {
+            formatCampaignName: function(value){
+                if(value){
+                    let campaignName = value.trim().toLowerCase();
+                    campaignName = campaignName.replace(/\s+/g,'_');
+                    this.ruleForm.name = campaignName;
+                }
+            },
             addTemplate() {
                     let mediumId = this.ruleForm.mediumId,
                         notificationTypeId = this.ruleForm.notificationTypeId;

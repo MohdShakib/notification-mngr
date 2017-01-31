@@ -1,9 +1,9 @@
 "use strict";
 
-const   notificationTypesQuery = require('../services/queries/notificationTypesQuery'),
-        notificationMediumsQuery = require('../services/queries/notificationMediumsQuery'),
-        notificationGeneratedQuery = require('../services/queries/notificationGeneratedQuery'),
-        templateParser = require('../parsers/templateParser'),
+const   notificationTypesQuery = require('../../services/queries/notificationTypesQuery'),
+        notificationMediumsQuery = require('../../services/queries/notificationMediumsQuery'),
+        notificationGeneratedQuery = require('../../services/queries/notificationGeneratedQuery'),
+        templateParser = require('../../parsers/templateParser'),
         Engine = require('velocity').Engine,
         async = require('async');
 

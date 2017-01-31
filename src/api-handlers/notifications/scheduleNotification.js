@@ -1,7 +1,7 @@
 "use strict";
 
-const   apiConfig = require('../config/apiConfig'),
-        apiService = require('../services/apiService'),
+const   apiConfig = require('../../config/apiConfig'),
+        apiService = require('../../services/apiService'),
         async = require('async'),
         CHUNKS_SIZE = 100;
 

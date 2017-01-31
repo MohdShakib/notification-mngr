@@ -20,22 +20,21 @@ module.exports.setup = function(app, router){
     });
 
 
-    app.get('/template-detail/:id?', require('api-handlers/templateDetail'));
-    app.get('/template-listings/:mediumId?', require('api-handlers/templateListings'));
-
-    app.get('/notification-types', require('api-handlers/notificationDetail').notificationTypesList);
-    app.get('/notification-mediums', require('api-handlers/notificationDetail').notificationMediumsList);
-    app.get('/notification-detail/:id', require('api-handlers/notificationDetail').notificationDetailsById);
-    app.get('/notification-listings', require('api-handlers/notificationListings'));
 
     app.get('/audience-manager/segments', require('api-handlers/segmentsList').getAllSegements);
 
-    app.post('/template/create', require('api-handlers/createNewTemplate'));
-    app.post('/template/update/:id', require('api-handlers/updateTemplateDetail').updateTemplate);
-    app.delete('/template/delete/:id', require('api-handlers/updateTemplateDetail').deleteTemplate);
+    app.get('/template-detail/:id?', require('api-handlers/templates/templateDetail'));
+    app.get('/template-listings/:mediumId?', require('api-handlers/templates/templateListings'));
+    app.post('/template/create', require('api-handlers/templates/createTemplate'));
+    app.post('/template/update/:id', require('api-handlers/templates/updateTemplateDetail').updateTemplate);
+    app.delete('/template/delete/:id', require('api-handlers/templates/updateTemplateDetail').deleteTemplate);
 
-    app.post('/notification-types/create/:notificationTypeName', require('api-handlers/notificationDetail').createNotificationType);
-    app.post('/notification-types/schedule', require('api-handlers/scheduleNotification').scheduleNotification);
+    app.get('/notification-types', require('api-handlers/notifications/notificationDetail').notificationTypesList);
+    app.get('/notification-mediums', require('api-handlers/notifications/notificationDetail').notificationMediumsList);
+    app.get('/notification-detail/:id', require('api-handlers/notifications/notificationDetail').notificationDetailsById);
+    app.get('/notification-listings', require('api-handlers/notifications/notificationListings'));
+    app.post('/notification-types/create/:notificationTypeName', require('api-handlers/notifications/notificationDetail').createNotificationType);
+    app.post('/notification-types/schedule', require('api-handlers/notifications/scheduleNotification').scheduleNotification);
 
     app.get('/campaign-detail/:id', require('api-handlers/campaigns/campaignDetail').getCampaignDetailsById);
     app.get('/campaign-listings', require('api-handlers/campaigns/campaignListings'));

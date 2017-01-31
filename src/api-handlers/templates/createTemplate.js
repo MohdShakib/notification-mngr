@@ -1,6 +1,6 @@
 "use strict";
 
-const notificationTemplateQuery = require('../services/queries/notificationTemplateQuery'),
+const notificationTemplateQuery = require('../../services/queries/notificationTemplateQuery'),
       Engine = require('velocity').Engine;
 
 

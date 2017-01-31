@@ -1,7 +1,7 @@
 "use strict";
 
-const   notificationTemplateQuery = require('../services/queries/notificationTemplateQuery'),
-        templateParser = require('../parsers/templateParser');
+const   notificationTemplateQuery = require('../../services/queries/notificationTemplateQuery'),
+        templateParser = require('../../parsers/templateParser');
 
 
         function _parseTemplates(templatesData){

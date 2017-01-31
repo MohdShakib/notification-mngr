@@ -1,7 +1,7 @@
 "use strict";
 
-var notificationTemplateQuery = require('../services/queries/notificationTemplateQuery'),
-    templateParser = require('../parsers/templateParser'),
+var notificationTemplateQuery = require('../../services/queries/notificationTemplateQuery'),
+    templateParser = require('../../parsers/templateParser'),
     getData = require('velocity').Data
 
 var templateColumn = "send_template";

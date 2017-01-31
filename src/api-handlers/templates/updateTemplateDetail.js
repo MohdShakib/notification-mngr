@@ -1,11 +1,11 @@
 "use strict";
 
 
-const notificationTemplateQuery = require('../services/queries/notificationTemplateQuery'),
-    templateLoggingQuery = require('../services/queries/templateLoggingQuery'),
-    apiConfig = require('../config/apiConfig'),
-    apiService = require('../services/apiService'),
-    templateParser = require('../parsers/templateParser'),
+const notificationTemplateQuery = require('../../services/queries/notificationTemplateQuery'),
+    templateLoggingQuery = require('../../services/queries/templateLoggingQuery'),
+    apiConfig = require('../../config/apiConfig'),
+    apiService = require('../../services/apiService'),
+    templateParser = require('../../parsers/templateParser'),
     templateColumn = "send_template";
 
 var getData = require('velocity').Data,

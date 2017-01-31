@@ -1,6 +1,6 @@
 "use strict";
 
-var notificationGeneratedQuery = require('../services/queries/notificationGeneratedQuery');
+var notificationGeneratedQuery = require('../../services/queries/notificationGeneratedQuery');
 var typeId, mediumId;
 var async = require('async')
 

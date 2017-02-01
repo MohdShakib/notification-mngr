@@ -4,11 +4,20 @@ var buildPath = path.join(__dirname, 'dist');
 var webpack = require('webpack');
 
 module.exports = {
-  entry: path.join(clientSrcPath, 'public', 'client-start.js'),
+  entry: {
+    build: path.join(clientSrcPath, 'public', 'client-start.js'),
+    vendor: [
+        'vue',
+        'element-ui',
+        'vue-filter',
+        'axios',
+        'element-ui/lib/locale/lang/en',
+    ]
+  },
   output: {
     path: buildPath,
     publicPath: '/dist/',
-    filename: 'build.js'
+    filename: '[name].js'
   },
   module: {
     rules: [
@@ -60,7 +69,10 @@ module.exports = {
   performance: {
     hints: false
   },
-  devtool: '#eval-source-map'
+  devtool: '#eval-source-map',
+  plugins: [
+      new webpack.optimize.CommonsChunkPlugin({ name: 'vendor',  filename: 'vendor.js', minChunks: Infinity})
+  ]
 }
 
 if (process.env.NODE_ENV === 'production') {

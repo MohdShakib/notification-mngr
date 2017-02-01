@@ -3,19 +3,25 @@
 <template>
 
 <div v-loading.body="loading">
-    <el-row >
+    <el-row>
         <el-col :span="18" :offset="3">
             <el-card class="box-card">
                 <el-row>
                     <el-col :span="12">
-                        <el-select @change="checkTemplateExistence" v-model="mediumId">
-                            <el-option v-for="item in notificationMediums" :label="item.name" :value="item.id"></el-option>
-                        </el-select>
+                        Notification Medium
+                        <diV>
+                            <el-select @change="checkTemplateExistence" v-model="mediumId">
+                                <el-option v-for="item in notificationMediums" :label="item.name" :value="item.id"></el-option>
+                            </el-select>
+                        </div>
                     </el-col>
                     <el-col :span="12">
-                        <el-select @change="checkTemplateExistence" v-model="notificationTypeId">
-                            <el-option v-for="item in notificationTypes" :label="item.name" :value="item.id"></el-option>
-                        </el-select>
+                        Notification Type
+                        <div>
+                            <el-select @change="checkTemplateExistence" v-model="notificationTypeId">
+                                <el-option v-for="item in notificationTypes" :label="item.name" :value="item.id"></el-option>
+                            </el-select>
+                        </div>
                     </el-col>
                 </el-row>
                 <el-row>
@@ -30,17 +36,15 @@
                         </el-row>
                         <el-row>
                             <el-button @click="crateTemplate" :disabled="isDisabled" type="primary">Create</el-button>
-                            <el-button type="danger" @click="$router.push({ name: 'templates-list'})" >Cancel</el-button>
+                            <el-button type="danger" @click="$router.push({ name: 'templates-list'})">Cancel</el-button>
                         </el-row>
                     </template>
                     <template v-else>
                         <div class="text-center">
-                            Template already exist
-                            OR
-                            Something went wrong.
-                        <div>
-                            <el-button type="primary" @click="$router.push({ name: 'templates-list'})" >Back</el-button>
-                        </div>
+                            Template already exist OR Something went wrong.
+                            <div>
+                                <el-button type="primary" @click="$router.push({ name: 'templates-list'})">Back</el-button>
+                            </div>
                         </div>
                     </template>
                 </el-row>
@@ -91,11 +95,11 @@ export default {
     },
     computed: {
         isEmail() {
-            return (this.mediumId == 1);
-        },
-        isDisabled() {
-            return !(this.template && this.notificationTypeId && this.mediumId && (!this.isEmail || this.subject));
-        }
+                return (this.mediumId == 1);
+            },
+            isDisabled() {
+                return !(this.template && this.notificationTypeId && this.mediumId && (!this.isEmail || this.subject));
+            }
     },
     methods: {
         checkTemplateExistence: function() {

@@ -44,6 +44,7 @@
 
 import notificationFilters from './notification-filters.vue'
 import apiConfig from '../../config/apiConfig'
+import axios from 'axios'
 
 let CancelToken, source, apiPromise;
 

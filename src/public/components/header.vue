@@ -9,10 +9,10 @@
             <span v-if="title" class="page-title">| {{title}}</span>
             <el-menu class="nav" mode="horizontal">
                 <el-menu-item index="1">
-                    <router-link class="header-link" to="/notifications-status">Notifications</router-link>
+                    <router-link class="header-link" to="/notifications">Notifications</router-link>
                 </el-menu-item>
                 <el-menu-item index="2">
-                    <router-link class="header-link" to="/templates-list">Templates</router-link>
+                    <router-link class="header-link" to="/templates">Templates</router-link>
                 </el-menu-item>
                 <el-menu-item index="3">
                     <router-link class="header-link" to="/campaigns">Campaigns</router-link>

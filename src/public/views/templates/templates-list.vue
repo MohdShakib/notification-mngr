@@ -57,7 +57,7 @@
             <div slot="empty">
                 No Templates Found
                 <template v-if="notificationTypeId && mediumId">
-                    | <el-button @click="redirectTo('add-template',{notificationTypeId: notificationTypeId, mediumId: mediumId})" type="text">Create template</el-button>
+                    | <el-button @click="redirectTo('create-template',{notificationTypeId: notificationTypeId, mediumId: mediumId})" type="text">Create template</el-button>
                 </template>
             </div>
             <el-table-column type="index" width="100">

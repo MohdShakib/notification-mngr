@@ -24,7 +24,7 @@
             </el-table-column>
             <el-table-column prop="status" label="status" :width="100">
                 <template scope="scope">
-                    {{scope.row.status ? 'Active' : 'Inactive'}}
+                    {{scope.row.status ? 'Enabled' : 'Disabled'}}
                 </template>
             </el-table-column>
             <el-table-column>

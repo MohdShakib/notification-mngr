@@ -132,7 +132,7 @@ export default {
         updateQuery(query) {
             query = query || {};
             this.$router.push({
-                name: 'notifications-status',
+                name: 'notifications-list',
                 query: query
             });
         }

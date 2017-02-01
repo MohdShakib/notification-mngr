@@ -59,7 +59,7 @@ from '../../services/defaultService'
 import apiConfig from '../../config/apiConfig'
 
 export default {
-    name: 'add-template',
+    name: 'create-template',
     data() {
         return {
             canCreate: false,

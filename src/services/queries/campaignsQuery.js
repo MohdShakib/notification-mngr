@@ -88,11 +88,22 @@ function insertCampaignTemplatesMapping(data){
     });
 }
 
+function getCampaignsByTemplateId(templateId){
+
+    var query = `SELECT count(*) as count from  ${tables.CAMPAIGN_TEMPLATES_MAPPING}
+    WHERE template_id = ?`;
+    var obj = [templateId]
+    return mysqlService.execQueryParams(query, obj).then(function(rows) {
+        return rows;
+    });
+}
+
 module.exports = {
     createCampaign,
     updateCampaign,
     getAllCampaigns,
     getCampaignDetailById,
+    getCampaignsByTemplateId,
     insertCampaignTemplatesMapping,
     deleteCampaignTemplatesMapping
 }

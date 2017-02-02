@@ -135,8 +135,6 @@ function getNotificationGenerated({notificationTypeId, mediumId, status, openSta
     } else {
         return mysqlService.execQuery(query).then(function(rows) {
             return rows;
-        }, (err)=> {
-            console.log('error........',err);
         });
     }
 }

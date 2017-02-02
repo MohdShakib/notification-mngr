@@ -27,7 +27,7 @@
                 </el-row>
             </el-card>
 
-            <el-card class="box-card">
+            <el-card class="box-card" v-if="extractData && Object.keys(extractData).length">
                 <el-row v-for="(value, key) in extractData">
                     <span v-text="key"></span>
                     <el-input v-model="extractData[key]"></el-input>

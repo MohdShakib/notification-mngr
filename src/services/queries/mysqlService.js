@@ -12,6 +12,10 @@ var connectionPool = mysql.createPool({
     connectionTimeout: 60000
 });
 
+connectionPool.on('acquire', function (connection) {
+  //console.log('__________________________connection acquired_______________');
+});
+
 connectionPool.on('connection', function (connection) {
   //console.log('__________________________connection craeted_______________');
 });

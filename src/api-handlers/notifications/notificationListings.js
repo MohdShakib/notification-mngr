@@ -26,28 +26,11 @@ module.exports = function(req, res) {
     ], function(err) {
         if (err) return next(err); //If an error occured, we let express/connect handle it by calling the "next" function
         //Here locals will be populated with 'user' and 'posts'
-
             res.send({
                 data: {
                     totalCount: locals.totalCount,
                     content: locals.content
                 }
             });
-
-                // medium: locals.mediums,
-                // notification: locals.types,
-                // content: locals.content,
-                // totalCount: locals.totalCount,
-                // pageNo: pageNo,
-                // scheduleDate: sortScheduleDate,
-                // createDate: sortCreateDate,
-                // updateDate: sortUpdateDate,
-                // loggedIn: loggedIn,
-                // recordsCount: locals.content.length,
-                // nextPage: locals.checkNextPage.length,
-                // home: process.env['HOME_URL']
-
     });
-
-
 };

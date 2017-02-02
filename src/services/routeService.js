@@ -38,8 +38,9 @@ module.exports.setup = function(app, router){
 
     app.get('/campaign-detail/:id', require('api-handlers/campaigns/campaignDetail').getCampaignDetailsById);
     app.get('/campaign-listings', require('api-handlers/campaigns/campaignListings'));
-    app.post('/campaign/create', require('api-handlers/campaigns/upsertCampaign'));
-    app.post('/campaign/update/:id', require('api-handlers/campaigns/upsertCampaign'));
+    app.post('/campaign/create', require('api-handlers/campaigns/upsertCampaign').upsertCampaign);
+    app.post('/campaign/update/:id', require('api-handlers/campaigns/upsertCampaign').upsertCampaign);
+    app.delete('/campaign/delete/:id', require('api-handlers/campaigns/upsertCampaign').deleteCampaign);
 
     app.use(function(err, req, res, next) {
         let statusCode = err.status || 500;

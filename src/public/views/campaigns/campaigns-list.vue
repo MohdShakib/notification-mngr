@@ -1,5 +1,15 @@
 <template>
     <div v-loading.body="loading">
+
+        <el-dialog title="Permanent Delete ?" @close="confirmDelete.show = false" v-model="confirmDelete.show" size="tiny">
+            <span>Are you sure you want to delete this campaign?</span>
+            <span slot="footer" class="dialog-footer">
+            <el-button type="primary" @click="deleteConfirmation">Confirm</el-button>
+            <el-button type="danger" @click="confirmDelete.show = false">Cancel</el-button>
+          </span>
+        </el-dialog>
+
+
         <el-table :data="campaignsList" border stripe style="width: 100%">
             <div slot="empty">
                 <template>
@@ -32,7 +42,7 @@
                     <div class="text-center">
                         <el-button size="small" type="primary" @click="$router.push({ name: 'campaign-detail', params: { id: scope.row.id } })" icon="view"></el-button>
                         <el-button size="small" @click="$router.push({name: 'update-campaign', params: {id: scope.row.id}})" type="primary" icon="edit"></el-button>
-                        <el-button size="small" type="primary" :disabled="true" icon="delete"></el-button>
+                        <el-button size="small" type="primary" @click="deleteTemplate(scope.row.id, scope.$index)" icon="delete"></el-button>
                     </div>
                 </template>
             </el-table-column>
@@ -53,7 +63,12 @@ export default {
     data(){
         return {
             campaignsList: [],
-            segmentsMapping: {}
+            segmentsMapping: {},
+            confirmDelete: {
+                show: false,
+                id: null,
+                index: null
+            }
         }
     },
     mounted(){
@@ -82,7 +97,29 @@ export default {
                     message: error && error.message
                 });
             });
-        }
+        },
+        deleteTemplate(templateId, index) {
+            this.confirmDelete.show = true;
+            this.confirmDelete.id = templateId;
+            this.confirmDelete.index = index;
+        },
+        deleteConfirmation() {
+            this.confirmDelete.show = false;
+            let url = apiConfig.apiHandlers.deleteCampaign({
+                id: this.confirmDelete.id
+            }).url;
+            this.$apiService.delete(url).then((res) => {
+                let message = res && res.message;
+                this.$message.success({
+                    message: message
+                });
+                this.campaignsList.splice(this.confirmDelete.index, 1);
+            }, (error) => {
+                this.$message.error({
+                    message: error.message
+                });
+            });
+        },
     }
 }
 </script>

@@ -17,7 +17,10 @@ function getAllCampaigns(){
     GROUP_CONCAT(CMP_T_MAP.template_id) as template_ids, GROUP_CONCAT(CMP_T_MAP.frequency) as frequencies,
     GROUP_CONCAT(CMP_T_MAP.gap_interval) as gap_intervals
     FROM ${tables.CAMPAIGNS} as CAMP
-    LEFT JOIN ${tables.CAMPAIGN_TEMPLATES_MAPPING} CMP_T_MAP ON CMP_T_MAP.campaign_id = CAMP.id group by CAMP.id order by CAMP.id desc`;
+    LEFT JOIN ${tables.CAMPAIGN_TEMPLATES_MAPPING} CMP_T_MAP ON CMP_T_MAP.campaign_id = CAMP.id
+    WHERE CAMP.deleted != 1
+    GROUP BY CAMP.id
+    ORDER BY CAMP.id desc`;
 
     return mysqlService.execQuery(query).then(function(rows) {
         return rows;
@@ -46,6 +49,18 @@ function updateCampaign(id, { name, description, segment_id, start_date, schedul
         return rows;
     });
 }
+
+function deleteCampaign(campaignId){
+
+    var query = `UPDATE ${tables.CAMPAIGNS} SET deleted=1
+    WHERE id=?`;
+
+    var obj = [campaignId];
+    return mysqlService.execQueryParams(query,obj).then(function(rows) {
+        return rows;
+    });
+}
+
 
 function getCampaignDetailById(id){
 
@@ -101,6 +116,7 @@ function getCampaignsByTemplateId(templateId){
 module.exports = {
     createCampaign,
     updateCampaign,
+    deleteCampaign,
     getAllCampaigns,
     getCampaignDetailById,
     getCampaignsByTemplateId,

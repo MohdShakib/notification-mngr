@@ -32,7 +32,7 @@ function prepareBodyData(req){
     }
 }
 
-module.exports = function(req, res, next){
+module.exports.upsertCampaign = function(req, res, next){
 
     let campaignId = req.params.id,
         parsedData = prepareBodyData(req);
@@ -75,4 +75,17 @@ module.exports = function(req, res, next){
         });
     }
 
+}
+
+module.exports.deleteCampaign = function(req, res, next){
+    let campaignId = req.params.id;
+
+    campaignQuery.deleteCampaign(campaignId).then((rows) => {
+        return res.send({
+            data: null,
+            message: 'campaign deleted successfully.'
+        });
+    }, (err) => {
+        next(err);
+    });
 }

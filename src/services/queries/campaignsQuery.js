@@ -25,7 +25,7 @@ function getAllCampaigns(){
     return mysqlService.execQuery(query).then(function(rows) {
         return rows;
     }).catch(function(error){
-        next(error);
+        throw error;
     });
 }
 

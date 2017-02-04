@@ -32,7 +32,7 @@
             </template>
         </el-table-column>
     </el-table>
-    <div class="block" v-show="totalCount">
+    <div class="block text-center" v-show="totalCount">
         <el-pagination :current-page="currentPage" @current-change="handlePaginationChange" :page-size="perPageCount" layout="prev, pager, next" :total="totalCount">
         </el-pagination>
     </div>
@@ -54,7 +54,7 @@ export default {
     data() {
         return {
             notificationsList: [],
-            perPageCount: 40,
+            perPageCount: 50,
             currentPage: 1,
             totalCount: 0,
             loading: true

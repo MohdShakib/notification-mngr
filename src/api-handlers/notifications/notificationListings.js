@@ -17,12 +17,12 @@ module.exports = function(req, res) {
                 callback();
             });
         },
-        // function(callback) {
-        //     notificationGeneratedQuery.getNotificationGenerated(query, true).then(function(rows) {
-        //         locals.totalCount = rows && rows[0] && rows[0].count;
-        //         callback();
-        //     });
-        // }
+        function(callback) {
+            notificationGeneratedQuery.getNotificationGenerated(query, true).then(function(rows) {
+                locals.totalCount = rows && rows[0] && rows[0].count;
+                callback();
+            });
+        }
     ], function(err) {
         if (err) return next(err); //If an error occured, we let express/connect handle it by calling the "next" function
         //Here locals will be populated with 'user' and 'posts'

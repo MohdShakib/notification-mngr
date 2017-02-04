@@ -10,6 +10,7 @@
                     Notification Details
                 </div>
                 <div>
+                    <key-value label="user id" :value="user_id"></key-value>
                     <key-value label="notification id" :value="id"></key-value>
                     <key-value label="notification medium" :value="mediumName"></key-value>
                     <key-value label="notification type" :value="typeName"></key-value>
@@ -57,6 +58,7 @@ export default {
             created_at: '',
             schedule_date: '',
             openStatus: '',
+            user_id: '',
             template: '',
             prop1: '',
             prop2: '',
@@ -99,6 +101,7 @@ export default {
                 this.mediumName = data.mediumName;
                 this.created_at = data.created_at;
                 this.schedule_at = data.schedule_at;
+                this.user_id = data.user_id;
 
             }, (error) => {
                 this.loading = false;

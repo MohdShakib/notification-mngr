@@ -8,6 +8,8 @@ function getNotificationTypes() {
     var query = `SELECT * from ${NOTIFICATION_TYPE} ORDER BY TRIM(name)`;
     return mysqlService.execQuery(query).then(function(rows) {
         return rows || [];
+    }).catch(function(error){
+        throw error;
     });
 }
 
@@ -18,8 +20,8 @@ function getTypeNameById(id) {
 
     return mysqlService.execQueryParams(query, obj).then(function(rows) {
         return rows;
-    }, (error) => {
-        return error;
+    }).catch(function(error){
+        throw error;
     });
 }
 
@@ -28,10 +30,8 @@ function createNotificationType(data){
     var obj = data;
     return mysqlService.execQueryParams(query, obj).then(function(rows) {
         return rows;
-    }, (error) => {
-        return error;
     }).catch(function(error){
-        return error;
+        throw error;
     });
 }
 

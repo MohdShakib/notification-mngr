@@ -14,6 +14,8 @@ function getNotificationMediums() {
 
         };
         return data;
+    }).catch(function(error){
+        throw error;
     });
 }
 
@@ -23,6 +25,8 @@ function getMediumNameById(id){
 
     return mysqlService.execQueryParams(query, obj).then(function(rows) {
         return rows;
+    }).catch(function(error){
+        throw error;
     });
 }
 

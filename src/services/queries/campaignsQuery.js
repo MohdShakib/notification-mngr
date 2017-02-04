@@ -24,6 +24,8 @@ function getAllCampaigns(){
 
     return mysqlService.execQuery(query).then(function(rows) {
         return rows;
+    }).catch(function(error){
+        next(error);
     });
 }
 
@@ -36,6 +38,8 @@ function createCampaign({ name, description, segment_id, start_date, schedule_ti
     var obj = [name, description, segment_id, start_date, schedule_time, status, new Date()];
     return mysqlService.execQueryParams(query,obj).then(function(rows) {
         return rows;
+    }).catch(function(error){
+        throw error;
     });
 }
 
@@ -47,6 +51,8 @@ function updateCampaign(id, { name, description, segment_id, start_date, schedul
     var obj = [name, description, segment_id, start_date, schedule_time, status, id];
     return mysqlService.execQueryParams(query,obj).then(function(rows) {
         return rows;
+    }).catch(function(error){
+        throw error;
     });
 }
 
@@ -58,6 +64,8 @@ function deleteCampaign(campaignId){
     var obj = [campaignId];
     return mysqlService.execQueryParams(query,obj).then(function(rows) {
         return rows;
+    }).catch(function(error){
+        throw error;
     });
 }
 
@@ -78,6 +86,8 @@ function getCampaignDetailById(id){
     var obj = [id]
     return mysqlService.execQueryParams(query, obj).then(function(rows) {
         return rows;
+    }).catch(function(error){
+        throw error;
     });
 }
 
@@ -89,6 +99,8 @@ function deleteCampaignTemplatesMapping(campaign_id){
     var obj = [campaign_id]
     return mysqlService.execQueryParams(query, obj).then(function(rows) {
         return rows;
+    }).catch(function(error){
+        throw error;
     });
 }
 
@@ -100,6 +112,8 @@ function insertCampaignTemplatesMapping(data){
     var obj = [data]
     return mysqlService.execQueryParams(query, obj).then(function(rows) {
         return rows;
+    }).catch(function(error){
+        throw error;
     });
 }
 
@@ -110,6 +124,8 @@ function getCampaignsByTemplateId(templateId){
     var obj = [templateId]
     return mysqlService.execQueryParams(query, obj).then(function(rows) {
         return rows;
+    }).catch(function(error){
+        throw error;
     });
 }
 

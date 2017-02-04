@@ -2,10 +2,11 @@ var path = require('path');
 var clientSrcPath = path.join(__dirname, 'src');
 var buildPath = path.join(__dirname, 'dist');
 var webpack = require('webpack');
+//var HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
   entry: {
-    build: path.join(clientSrcPath, 'public', 'client-start.js'),
+    bundle: path.join(clientSrcPath, 'public', 'client-start.js'),
     vendor: [
         'vue',
         'element-ui',
@@ -71,7 +72,11 @@ module.exports = {
   },
   devtool: '#eval-source-map',
   plugins: [
-      new webpack.optimize.CommonsChunkPlugin({ name: 'vendor',  filename: 'vendor.js', minChunks: Infinity})
+      new webpack.optimize.CommonsChunkPlugin({ name: 'vendor',  filename: 'vendor.js', minChunks: Infinity}),
+      //new HtmlWebpackPlugin()
+    //   new webpack.optimize.CommonsChunkPlugin({
+    //       names: ['vendor', 'manifest']
+    //   })
   ]
 }
 
@@ -90,6 +95,7 @@ if (process.env.NODE_ENV === 'production') {
         warnings: false
       }
     }),
+    new webpack.optimize.OccurrenceOrderPlugin(),
     new webpack.LoaderOptionsPlugin({
       minimize: true
     })

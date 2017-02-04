@@ -38,14 +38,13 @@ module.exports.execQuery = function(q) {
                 if (err) {
                     connection.release();
                     reject(err);
-                    throw err;
+                    return;
                 }
 
                 console.log("---QUERY: ", q)
 
                 connection.release();
                 return resolve(rows);
-
             });
         });
 
@@ -65,7 +64,7 @@ module.exports.execQueryParams = function(q, obj) {
                 if (err) {
                     connection.release();
                     reject(err);
-                    throw err;
+                    return;
                 }
                 console.log("---QUERY: ", q, obj)
 

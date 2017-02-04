@@ -1,53 +1,23 @@
-const   templatesList   = (resolve => {
-            require.ensure([], () => {
-                resolve(require('../views/templates/templates-list.vue'));
-            })
-        }),
-        createTemplate   = (resolve => {
-            require.ensure([], () => {
-                resolve(require('../views/templates/create-template.vue'));
-            })
-        }),
-        updateTemplate   = (resolve => {
-            require.ensure([], () => {
-                resolve(require('../views/templates/update-template.vue'));
-            })
-        }),
-        scheduleTemplate   = (resolve => {
-            require.ensure([], () => {
-                resolve(require('../views/templates/schedule-template.vue'));
-            })
-        }),
-        notificationsList   = (resolve => {
-            require.ensure([], () => {
-                resolve(require('../views/notifications/notifications-list.vue'));
-            })
-        }),
-        notificationDetail   = (resolve => {
-            require.ensure([], () => {
-                resolve(require('../views/notifications/notification-detail.vue'));
-            })
-        }),
-        campaignsList   = (resolve => {
-            require.ensure([], () => {
-                resolve(require('../views/campaigns/campaigns-list.vue'));
-            })
-        }),
-        createCampaign  =  (resolve => {
-            require.ensure([], () => {
-                resolve(require('../views/campaigns/create-campaign.vue'));
-            })
-        }),
-        updateCampaign  =  (resolve => {
-            require.ensure([], () => {
-                resolve(require('../views/campaigns/update-campaign.vue'));
-            })
-        }),
-        notFound  =  (resolve => {
-            require.ensure([], () => {
-                resolve(require('../views/404-template.vue'));
-            })
-        });
+function resolvePath(path){
+    return (resolve => {
+        require.ensure([], () => {
+            resolve(require(`../views/${path}.vue`));
+        })
+    });
+}
+
+const   templatesList       = resolvePath('templates/templates-list'),
+        createTemplate      = resolvePath('templates/create-template'),
+        updateTemplate      = resolvePath('templates/update-template'),
+        scheduleTemplate    = resolvePath('templates/schedule-template'),
+
+        notificationsList   = resolvePath('notifications/notifications-list'),
+        notificationDetail  = resolvePath('notifications/notification-detail'),
+
+        campaignsList       = resolvePath('campaigns/campaigns-list'),
+        createCampaign      = resolvePath('campaigns/create-campaign'),
+        updateCampaign      = resolvePath('campaigns/update-campaign'),
+        notFound            = resolvePath('404-template');
 
 
 module.exports = {

@@ -131,10 +131,14 @@ function getNotificationGenerated({notificationTypeId, mediumId, status, openSta
     if (showCount) {
         return mysqlService.execQuery(subQuery).then(function(rows) {
             return rows;
+        }).catch(function(error){
+            throw error;
         });
     } else {
         return mysqlService.execQuery(query).then(function(rows) {
             return rows;
+        }).catch(function(error){
+            throw error;
         });
     }
 }
@@ -146,6 +150,8 @@ function getNotificationGenerated({notificationTypeId, mediumId, status, openSta
 
     return mysqlService.execQueryParams(query, obj).then(function(rows) {
         return rows;
+    }).catch(function(error){
+        throw error;
     });
 }
 
@@ -225,6 +231,8 @@ function getTypesCountByStatus(queryParams) {
     var obj = queryParams.status;
     return mysqlService.execQueryParams(query, obj).then(function(rows) {
         return rows;
+    }).catch(function(error){
+        throw error;
     });
 
 
@@ -242,6 +250,8 @@ function getMediumsCountByStatus(queryParams) {
     var obj = queryParams.status;
     return mysqlService.execQueryParams(query, obj).then(function(rows) {
         return rows;
+    }).catch(function(error){
+        throw error;
     });
 }
 
@@ -277,6 +287,8 @@ function getNotificationDataByGeneratedId(id) {
 
     return mysqlService.execQuery(query).then(function(rows) {
         return rows[0];
+    }).catch(function(error){
+        throw error;
     });
 
 }

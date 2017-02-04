@@ -25,6 +25,8 @@ function getAllTemplates(mediumId) {
 
     return mysqlService.execQuery(query).then(function(rows) {
         return rows;
+    }).catch(function(error){
+        throw error;
     });
 }
 
@@ -38,6 +40,8 @@ function checkExistingTemplate(notificationTypeId, mediumId) {
 
     return mysqlService.execQueryParams(query, obj).then(function(rows) {
         return rows;
+    }).catch(function(error){
+        throw error;
     });
 }
 
@@ -48,6 +52,8 @@ function getNotificationTypesByMedium(mediumId) {
     ORDER BY t2.name`;
     return mysqlService.execQuery(query).then(function(rows) {
         return rows;
+    }).catch(function(error){
+        throw error;
     });
 }
 
@@ -60,6 +66,8 @@ function getTemplate(templateId) {
     var obj = templateId;
     return mysqlService.execQueryParams(query, obj).then(function(rows) {
         return rows;
+    }).catch(function(error){
+        throw error;
     });
 }
 
@@ -69,6 +77,8 @@ function updateNotificationTemplate(content, id) {
     var obj = [content, id];
     return mysqlService.execQueryParams(query, obj).then(function(rows) {
         return rows;
+    }).catch(function(error){
+        throw error;
     });
 }
 
@@ -80,6 +90,8 @@ function createTemplate({ notificationTypeId, mediumId, template }){
     var obj = [notificationTypeId, mediumId, template];
     return mysqlService.execQueryParams(query,obj).then(function(rows) {
         return rows;
+    }).catch(function(error){
+        throw error;
     });
 }
 
@@ -89,6 +101,8 @@ function deleteTemplate(id) {
 
     return mysqlService.execQueryParams(query, obj).then(function(rows) {
         return rows;
+    }).catch(function(error){
+        throw error;
     });
 }
 

@@ -9,6 +9,8 @@ function generateTemplateLog({templateId, mediumId, notificationTypeId, content,
     var obj = [templateId, notificationTypeId, mediumId, content, userId];
     return mysqlService.execQueryParams(query,obj).then(function(rows) {
         return rows;
+    }).catch(function(error){
+        throw error;
     });
 }
 

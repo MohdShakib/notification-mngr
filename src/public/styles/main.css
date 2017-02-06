@@ -165,3 +165,12 @@ pre {
 .el-submenu-title:hover, .el-menu-item:hover{
     background-color: #20a0ff !important;
 }
+
+/* override loader css */
+.el-loading-mask {
+    top: 60px !important;
+}
+
+.el-loading-mask .el-loading-spinner{
+    top: 10% !important;
+}

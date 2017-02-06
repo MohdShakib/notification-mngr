@@ -163,6 +163,8 @@ export default {
                 this.notificationName = data.notificationName;
 
                 this.extractData = data.extractData || {};
+                this.$delete(this.extractData, 'unSubscribedLink');
+
             }, (error) => {
                 this.loading = false;
                 console.log('error-callback............');

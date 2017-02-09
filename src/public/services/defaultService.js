@@ -16,7 +16,7 @@ export function getNotificationTypes(){
         return SINGLETON_PROMISE.NOTIFICATION_TYPES;
     }
 
-    SINGLETON_PROMISE.NOTIFICATION_TYPES = apiService.get('/notification-types').then((notificationTypes) => {
+    SINGLETON_PROMISE.NOTIFICATION_TYPES = apiService.get(apiConfig.apiHandlers.getNotificationTypes().url).then((notificationTypes) => {
         return notificationTypes;
     }, () => {
         SINGLETON_PROMISE.NOTIFICATION_TYPES = null;
@@ -30,7 +30,7 @@ export function getNotificationMediums(){
         return SINGLETON_PROMISE.NOTIIFICATION_MEDIUMS;
     }
 
-    SINGLETON_PROMISE.NOTIIFICATION_MEDIUMS = apiService.get('/notification-mediums').then((notificationMediums) => {
+    SINGLETON_PROMISE.NOTIIFICATION_MEDIUMS = apiService.get(apiConfig.apiHandlers.getNotificationMediums().url).then((notificationMediums) => {
         return notificationMediums;
     }, () => {
         SINGLETON_PROMISE.NOTIIFICATION_MEDIUMS = null;

@@ -3,7 +3,7 @@
 import axios from 'axios'
 
 var axiosInstance = axios.create({
-  baseURL: 'http://localhost:9009',
+  //baseURL: '/', //http://localhost:9009
   /* other custom settings */
 });
 

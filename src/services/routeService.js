@@ -1,7 +1,8 @@
 "use strict";
 
 const slash = require('express-slash'),
-    logger = require('./loggerService');
+    logger = require('./loggerService'),
+    userService = require('./userService');
 
 var routeService = {};
 
@@ -19,28 +20,37 @@ module.exports.setup = function(app, router){
         return next();
     });
 
+    function userData(req, res, next) {
+        let error = new Error('Authencation failed !');
+        error.status = 401;
 
+        userService.isValidUserLoggedIn(req).then((response) => {
+            next();
+        }, (err) => {
+            next(error);
+        });
+    }
 
-    app.get('/audience-manager/segments', require('api-handlers/segmentsList').getAllSegements);
+    app.get('/apis/audience-manager/segments', require('api-handlers/segmentsList').getAllSegements);
 
-    app.get('/template-detail/:id?', require('api-handlers/templates/templateDetail'));
-    app.get('/template-listings/:mediumId?', require('api-handlers/templates/templateListings'));
-    app.post('/template/create', require('api-handlers/templates/createTemplate'));
-    app.post('/template/update/:id', require('api-handlers/templates/updateTemplateDetail').updateTemplate);
-    app.delete('/template/delete/:id', require('api-handlers/templates/updateTemplateDetail').deleteTemplate);
+    app.get('/apis/template-detail/:id?', require('api-handlers/templates/templateDetail'));
+    app.get('/apis/template-listings/:mediumId?', require('api-handlers/templates/templateListings'));
+    app.post('/apis/template/create', userData, require('api-handlers/templates/createTemplate'));
+    app.post('/apis/template/update/:id', userData, require('api-handlers/templates/updateTemplateDetail').updateTemplate);
+    app.delete('/apis/template/delete/:id', userData, require('api-handlers/templates/updateTemplateDetail').deleteTemplate);
 
-    app.get('/notification-types', require('api-handlers/notifications/notificationDetail').notificationTypesList);
-    app.get('/notification-mediums', require('api-handlers/notifications/notificationDetail').notificationMediumsList);
-    app.get('/notification-detail/:id', require('api-handlers/notifications/notificationDetail').notificationDetailsById);
-    app.get('/notification-listings', require('api-handlers/notifications/notificationListings'));
-    app.post('/notification-types/create/:notificationTypeName', require('api-handlers/notifications/notificationDetail').createNotificationType);
-    app.post('/notification-types/schedule', require('api-handlers/notifications/scheduleNotification').scheduleNotification);
+    app.get('/apis/notification-types', require('api-handlers/notifications/notificationDetail').notificationTypesList);
+    app.get('/apis/notification-mediums', require('api-handlers/notifications/notificationDetail').notificationMediumsList);
+    app.get('/apis/notification-detail/:id', require('api-handlers/notifications/notificationDetail').notificationDetailsById);
+    app.get('/apis/notification-listings', require('api-handlers/notifications/notificationListings'));
+    app.post('/apis/notification-types/create/:notificationTypeName', userData, require('api-handlers/notifications/notificationDetail').createNotificationType);
+    app.post('/apis/notification-types/schedule', userData, require('api-handlers/notifications/scheduleNotification').scheduleNotification);
 
-    app.get('/campaign-detail/:id', require('api-handlers/campaigns/campaignDetail').getCampaignDetailsById);
-    app.get('/campaign-listings', require('api-handlers/campaigns/campaignListings'));
-    app.post('/campaign/create', require('api-handlers/campaigns/upsertCampaign').upsertCampaign);
-    app.post('/campaign/update/:id', require('api-handlers/campaigns/upsertCampaign').upsertCampaign);
-    app.delete('/campaign/delete/:id', require('api-handlers/campaigns/upsertCampaign').deleteCampaign);
+    app.get('/apis/campaign-detail/:id', require('api-handlers/campaigns/campaignDetail').getCampaignDetailsById);
+    app.get('/apis/campaign-listings', require('api-handlers/campaigns/campaignListings'));
+    app.post('/apis/campaign/create', userData, require('api-handlers/campaigns/upsertCampaign').upsertCampaign);
+    app.post('/apis/campaign/update/:id', userData, require('api-handlers/campaigns/upsertCampaign').upsertCampaign);
+    app.delete('/apis/campaign/delete/:id', userData, require('api-handlers/campaigns/upsertCampaign').deleteCampaign);
 
     app.get('/apis/users/details', require('api-handlers/users/usersAuth').userDetails);
     app.post('/apis/users/doSocialLogin/:provider', require('api-handlers/users/usersAuth').doSocialLogin);

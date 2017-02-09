@@ -21,81 +21,91 @@ let config = {
         },
         getTemplateDetails({id}){
             return {
-                url: id ? `/template-detail/${id}` : '/template-detail'
+                url: id ? `/apis/template-detail/${id}` : '/apis/template-detail'
             }
         },
         getTemplateListings({mediumId}){
             return {
-                url: mediumId ? `/template-listings/${mediumId}` : '/template-listings'
+                url: mediumId ? `/apis/template-listings/${mediumId}` : '/apis/template-listings'
             }
         },
         createTemplate(){
             return {
-                url: `/template/create`
+                url: `/apis/template/create`
             }
         },
         updateTemplate({ id }){
             return {
-                url: `/template/update/${id}`
+                url: `/apis/template/update/${id}`
             }
         },
         deleteTemplate({id}){
             return {
-                url: `/template/delete/${id}`
+                url: `/apis/template/delete/${id}`
             }
         },
         createNotificationType({notificationTypeName}){
             return {
-                url: `/notification-types/create/${notificationTypeName}`
+                url: `/apis/notification-types/create/${notificationTypeName}`
             }
         },
         getNotificationListings(){
             return {
-                url: '/notification-listings'
+                url: '/apis/notification-listings'
             }
         },
         getNotificationDetail({
             id
         }){
             return {
-                url: `/notification-detail/${id}`
+                url: `/apis/notification-detail/${id}`
             }
         },
         scheduleNotification(){
             return {
-                url: `/notification-types/schedule`
+                url: `/apis/notification-types/schedule`
             }
         },
         getSegementsList(){
             return {
-                url: `/audience-manager/segments`
+                url: `/apis/audience-manager/segments`
             }
         },
         createCampaign(){
             return {
-                url: `/campaign/create`
+                url: `/apis/campaign/create`
             }
         },
         updateCampaign({ id }){
             return {
-                url: `/campaign/update/${id}`
+                url: `/apis/campaign/update/${id}`
             }
         },
         deleteCampaign({ id }){
             return {
-                url: `/campaign/delete/${id}`
+                url: `/apis/campaign/delete/${id}`
             }
         },
         campaignDetailById({id}){
             return {
-                url: `/campaign-detail/${id}`
+                url: `/apis/campaign-detail/${id}`
             }
         },
         getCampaignsList(){
             return {
-                url: `/campaign-listings`
+                url: `/apis/campaign-listings`
             }
-        }
+        },
+        getNotificationMediums(){
+            return {
+                url:  `/apis/notification-mediums`
+            }
+        },
+        getNotificationTypes(){
+            return {
+                url:  `/apis/notification-types`
+            }
+        },
     }
 }
 

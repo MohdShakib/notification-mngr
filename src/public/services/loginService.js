@@ -76,10 +76,7 @@ function internalLoginCall(provider, token){
     };
 
     let url = apiConfig.apiHandlers.socialLoginApi(provider).url;
-    return apiService.post(url, loginData, {
-        baseURL: '/'
-    }).then((response)=>{
-        console.log('internalLoginCall success: ', response);
+    return apiService.post(url, loginData).then((response)=>{
         return response;
     }, (error)=>{
         throw error;
@@ -87,9 +84,7 @@ function internalLoginCall(provider, token){
 }
 
 function userLogout(){
-    return apiService.post(apiConfig.apiHandlers.userLogout().url, null, {
-        baseURL: '/'
-    }).then((response) => {
+    return apiService.post(apiConfig.apiHandlers.userLogout().url).then((response) => {
         return response;
     }, (error) => {
         throw error;
@@ -97,9 +92,7 @@ function userLogout(){
 }
 
 function isUserLoggedIn(){
-    return apiService.get(apiConfig.apiHandlers.userDetails().url, {
-        baseURL: '/'
-    }).then((response) => {
+    return apiService.get(apiConfig.apiHandlers.userDetails().url).then((response) => {
         return response;
     }, (error) => {
         throw error;

@@ -16,6 +16,21 @@ let apis = {
             mockUrl: '/flushApiResponse.js'
         }
     },
+    socialLogin(provider){
+        return {
+            url: `madrox/app/v1/login/${provider}`
+        }
+    },
+    userDetails(){
+        return {
+            url: `madrox/app/v1/user/details`
+        }
+    },
+    logout(){
+        return {
+            url: `madrox/app/v1/logout`
+        }
+    },
     getAudienceAccessToken({} = {}){
         return {
             url: '/oauth/token',

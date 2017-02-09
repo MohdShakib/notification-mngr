@@ -12,31 +12,31 @@ let apiService = {};
 
 var apiUrls = [{
     regex: new RegExp(/^\/?pixie/),
-    baseUrl: process.env['BASE_URL_PIXIE']
+    baseUrlKey: 'BASE_URL_PIXIE'
 }, {
     regex: new RegExp(/^\/?compass/),
-    baseUrl: process.env['BASE_URL_COMPASS']
+    baseUrlKey: 'BASE_URL_COMPASS'
 }, {
     regex: new RegExp(/^\/?madelyne/),
-    baseUrl: process.env['BASE_URL_MADELYNE']
+    baseUrlKey: 'BASE_URL_MADELYNE'
 }, {
     regex: new RegExp(/^\/?madrox/),
-    baseUrl: process.env['BASE_URL_MADROX']
+    baseUrlKey: 'BASE_URL_MADROX'
 }, {
     regex: new RegExp(/^\/?dawnstar/),
-    baseUrl: process.env['BASE_URL_DAWNSTAR']
+    baseUrlKey: 'BASE_URL_DAWNSTAR'
 }, {
     regex: new RegExp(/^\/?columbus/),
-    baseUrl: process.env['BASE_URL_COLUMBUS']
+    baseUrlKey: 'BASE_URL_COLUMBUS'
 }, {
     regex: new RegExp(/^\/?petra/),
-    baseUrl: process.env['BASE_URL_PETRA']
+    baseUrlKey: 'BASE_URL_PETRA'
 }, {
     regex: new RegExp(/^\/?sapphire/),
-    baseUrl: process.env['BASE_URL_SAPPHIRE']
+    baseUrlKey: 'BASE_URL_SAPPHIRE'
 }, {
     regex: new RegExp(/^\/?kira/),
-    baseUrl: process.env['BASE_URL_KIRA']
+    baseUrlKey: 'BASE_URL_KIRA'
 }];
 
 
@@ -50,7 +50,8 @@ var getAPIBaseUrl = function(url, baseUrl) {
             return url.match(apiType.regex);
         });
         if (filteredAPITypes.length) {
-            return filteredAPITypes[0].baseUrl;
+            let baseUrlKey = filteredAPITypes[0].baseUrlKey;
+            return process.env[baseUrlKey];
         }
         return process.env['API_BASE_URL'];
     }
@@ -124,6 +125,7 @@ var _getIP = function(req) {
 
 function _getHeaders(params, req, extraConfig={}) {
     let headers = req.headers || {};
+
     let reqHeaders = {};
     if (headers['cookie']) {
         reqHeaders['Cookie'] = headers['cookie'];
@@ -135,12 +137,13 @@ function _getHeaders(params, req, extraConfig={}) {
         reqHeaders['Client-IP'] = _getIP(req);
     }
 
-    if(extraConfig.authorization){
-        reqHeaders['Authorization'] = extraConfig['authorization'];
+    if (headers['X-host']) {
+       reqHeaders['X-host'] = headers['X-host'];
     }
 
-    if(!extraConfig.noClientIP){
-        reqHeaders['Client-IP'] = _getIP(req);
+
+    if(extraConfig.authorization){
+        reqHeaders['Authorization'] = extraConfig['authorization'];
     }
 
     reqHeaders['Accept-Encoding'] = 0;

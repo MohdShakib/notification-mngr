@@ -1,4 +1,5 @@
 import Vue from 'vue'
+//import vueResource from 'vue-resource'
 import App from './App.vue'
 import router from './router'
 import ElementUI from 'element-ui'
@@ -9,6 +10,7 @@ import apiService from './services/apiService'
 import 'element-ui/lib/theme-default/index.css'
 import './styles/main.css'
 
+//Vue.use(vueResource);
 Vue.use(vueFilters);
 Vue.use(ElementUI, { locale });
 

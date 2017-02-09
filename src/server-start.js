@@ -70,6 +70,8 @@ app.use(bodyParser.urlencoded({
 app.locals.environment = app.get('env'); //environment setting
 
 app.use(function(req, res, next){
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+    //res.setHeader('Access-Control-Allow-Origin', 'http://ntf.makaan-ws.com:8080');
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'POST, GET, PUT, DELETE, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');

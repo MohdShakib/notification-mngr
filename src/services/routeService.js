@@ -42,6 +42,10 @@ module.exports.setup = function(app, router){
     app.post('/campaign/update/:id', require('api-handlers/campaigns/upsertCampaign').upsertCampaign);
     app.delete('/campaign/delete/:id', require('api-handlers/campaigns/upsertCampaign').deleteCampaign);
 
+    app.get('/apis/users/details', require('api-handlers/users/usersAuth').userDetails);
+    app.post('/apis/users/doSocialLogin/:provider', require('api-handlers/users/usersAuth').doSocialLogin);
+    app.post('/apis/users/logout', require('api-handlers/users/usersAuth').logout);
+
     app.use(function(err, req, res, next) {
         let statusCode = err.status || 500;
         return res.status(statusCode).send({

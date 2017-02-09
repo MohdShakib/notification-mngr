@@ -4,6 +4,21 @@ const getURL = require('../../services/utilService').getURL;
 
 let config = {
     apiHandlers: {
+        socialLoginApi(provider){
+            return {
+                url: `/apis/users/doSocialLogin/${provider}`
+            }
+        },
+        userDetails(){
+            return {
+                url: `/apis/users/details`
+            }
+        },
+        userLogout(){
+            return {
+                url: `/apis/users/logout`
+            }
+        },
         getTemplateDetails({id}){
             return {
                 url: id ? `/template-detail/${id}` : '/template-detail'

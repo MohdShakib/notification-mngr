@@ -25,6 +25,10 @@ module.exports.setup = function(app, router){
         error.status = 401;
 
         userService.isValidUserLoggedIn(req).then((response) => {
+            let data = response || {};
+            req.user = {
+                id: data.id
+            }
             next();
         }, (err) => {
             next(error);

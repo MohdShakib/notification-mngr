@@ -3,6 +3,7 @@
 const   apiService = require('./apiService'),
         apiConfig = require('../config/apiConfig');
 
+const USER_ROLE = "nm-admin"; // USER ROLE IN ORDER TO TREATER AS VALID LOGGEDID USER WITHA ACCESS ROLE_ID IS 57
 
 module.exports.isUserLoggedIn = function(req){
     return apiService.get(apiConfig.userDetails(), {
@@ -20,15 +21,13 @@ module.exports.isValidUserLoggedIn = function(req){
         req
     }).then((response)=>{
         let data = response && response.data;
-        console.log('_________________________________',data.email);
-        if(data && data.email.indexOf('@proptiger')){
+        if(data &&  data.roles && data.roles.indexOf(USER_ROLE) > -1){ //data.email.indexOf('@proptiger')
             data.isValid = true;
             return data;
         }else {
             throw (new Error('not valid user'));
         }
     }, (err) => {
-        console.log('______________',err);
         throw err;
     });
 }

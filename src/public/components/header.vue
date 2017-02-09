@@ -27,8 +27,9 @@
                 <el-menu-item index="2">
                     <router-link class="header-link" to="/templates">Templates</router-link>
                 </el-menu-item>
-                <el-menu-item index="3">
-                    <router-link class="header-link" to="/campaigns">Campaigns</router-link>
+                <el-menu-item  index="3" style="opacity:0.5;cursor:default;">
+                    <!-- <router-link class="header-link"  to="/campaigns">Campaigns</router-link> -->
+                    <span class="header-link">Campaigns</span>
                 </el-menu-item>
             </el-menu>
         </div>
